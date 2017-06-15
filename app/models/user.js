@@ -25,6 +25,10 @@ const UserSchema = new Schema({
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
+  admin: { type: Boolean, default: false },
+  preferenses: {
+    favouriteSpots: [{ type: Schema.Types.ObjectId, ref: 'Spot' }]
+  },
   facebook: {}
 });
 
