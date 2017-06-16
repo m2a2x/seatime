@@ -28,13 +28,8 @@ exports.index = asyncf(function* (req, res) {
   if (_id) options.criteria = { _id };
 
   const spots = yield Spot.list(options);
-  const count = yield Spot.count();
-
-  respond(res, 'spots/index', {
-    title: 'Spots',
-    spots: spots,
-    page: page + 1,
-    pages: Math.ceil(count / limit)
+  res.json({
+      data: spots
   });
 });
 

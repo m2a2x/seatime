@@ -52,7 +52,15 @@ module.exports = function (app, passport) {
   app.param('userId', users.load);
 
   // home route
-  app.get('/', spots.index);
+  app.get('/', function(req, res){
+      res.redirect('/index.html');
+  });
+
+  app.get('/dashboard', function(req, res){
+      res.redirect('/index.html');
+  });
+
+  app.get('/api/spots', spots.index);
 
   // crawler
   app.get('/crawler', crawler.get);

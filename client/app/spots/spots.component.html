@@ -1,0 +1,22 @@
+<h2>My Spotes</h2>
+<div>
+  <label>Spot name:</label> <input #spotName />
+  <button (click)="add(spotName.value); spotName.value=''">
+    Add
+  </button>
+</div>
+<ul class="spotes">
+  <li *ngFor="let spot of spots" (click)="onSelect(spot)"
+      [class.selected]="spot === selectedSpot">
+    <span class="badge">{{spot.id}}</span>
+    <span>{{spot.name}}</span>
+    <button class="delete"
+      (click)="delete(spot); $event.stopPropagation()">x</button>
+  </li>
+</ul>
+<div *ngIf="selectedSpot">
+  <h2>
+    {{selectedSpot.name | uppercase}} is my spot
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
