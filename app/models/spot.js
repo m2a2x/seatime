@@ -62,6 +62,12 @@ SpotSchema.statics = {
       .limit(limit)
       .skip(limit * page)
       .exec();
+  },
+
+  getSpot: function (_id) {
+      const criteria = {_id};
+      return this.find(criteria)
+          .exec();
   }
 };
 

@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const csrf = require('csurf');
 const cors = require('cors');
-const upload = require('multer')();
+const path = require('path');
 
 const mongoStore = require('connect-mongo')(session);
 const winston = require('winston');
@@ -23,11 +23,14 @@ const config = require('./');
 const pkg = require('../package.json');
 const env = process.env.NODE_ENV || 'development';
 
+
 /**
  * Expose
  */
 
 module.exports = function (app, passport) {
+  // create api router
+  var api = new express.Router();
 
   // Compression middleware (should be placed before express.static)
   app.use(compression({
@@ -41,7 +44,7 @@ module.exports = function (app, passport) {
   }));
 
   // Static files middleware
-  app.use(express.static(config.root + '/client'));
+  app.use(express.static(path.join(config.root , '/client')));
 
   // Use winston on production
   let log = 'dev';
@@ -100,10 +103,19 @@ module.exports = function (app, passport) {
   app.use(helpers(pkg.name));
 
   app.use(csrf());
+
+  app.use('/api', api);
   // This could be moved to view-helpers :-)
   app.use(function (req, res, next) {
     res.locals.csrf_token = req.csrfToken();
     next();
+  });
+
+
+  require(path.join(config.root, '/config/routes'))(app, api, passport);
+  app.use(function(req, res) {
+      // Use res.sendfile, as it streams instead of reading the file into memory.
+      res.sendFile(path.join(config.root, '/client/index.html'));
   });
 
   if (env === 'development') {

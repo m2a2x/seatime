@@ -10,26 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var spot_service_1 = require("./../services/spot.service");
-var DashboardComponent = (function () {
-    function DashboardComponent(spotService) {
-        this.spotService = spotService;
-        this.spotes = [];
+var user_service_1 = require("./user.service");
+var AuthenticationService = (function () {
+    function AuthenticationService(userService) {
+        this.userService = userService;
     }
-    DashboardComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.spotService.getSpots()
-            .then(function (spotes) { return _this.spotes = spotes.slice(1, 5); });
+    AuthenticationService.prototype.isLoggedIn = function () {
+        if (this.userService.getUser()) {
+            return true;
+        }
+        return false;
     };
-    return DashboardComponent;
+    return AuthenticationService;
 }());
-DashboardComponent = __decorate([
-    core_1.Component({
-        selector: 'my-dashboard',
-        templateUrl: './dashboard.component.html',
-        styleUrls: ['./dashboard.component.css']
-    }),
-    __metadata("design:paramtypes", [spot_service_1.SpotService])
-], DashboardComponent);
-exports.DashboardComponent = DashboardComponent;
-//# sourceMappingURL=dashboard.component.js.map
+AuthenticationService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [user_service_1.UserService])
+], AuthenticationService);
+exports.AuthenticationService = AuthenticationService;
+//# sourceMappingURL=auth.service.js.map

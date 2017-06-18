@@ -6,8 +6,6 @@
 
 const mongoose = require('mongoose');
 const { wrap: asyncf } = require('co');
-
-const { respond, respondOrRedirect } = require('../utils');
 const { getSpot } = require('../controllers/crawler');
 const Spot = mongoose.model('Spot');
 
@@ -34,7 +32,8 @@ exports.index = asyncf(function* (req, res) {
 });
 
 exports.show = asyncf(function* (req, res){
-  var spot = yield getSpot(req.params.id);
-
-  res.json(spot);
+  const spot = yield getSpot(req.params.id);
+  res.json({
+      data: spot
+  });
 });

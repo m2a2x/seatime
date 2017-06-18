@@ -27,7 +27,7 @@ const UserSchema = new Schema({
   authToken: { type: String, default: '' },
   admin: { type: Boolean, default: false },
   preferenses: {
-    favouriteSpots: [{ type: Schema.Types.ObjectId, ref: 'Spot' }]
+    favouriteSpots: [{ type: Number, ref: 'Spot' }]
   },
   facebook: {}
 });
@@ -169,6 +169,9 @@ UserSchema.statics = {
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+  findUser: function (options) {
+      return this.findOne(options.criteria).exec();
   }
 };
 

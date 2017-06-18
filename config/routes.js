@@ -24,57 +24,61 @@ const fail = {
  * Expose routes
  */
 
-module.exports = function (app, passport) {
-  const pauth = passport.authenticate.bind(passport);
+module.exports = function (app, api, passport) {
+    const pauth = passport.authenticate.bind(passport);
 
-  // user routes
-  app.get('/login', users.login);
-  app.get('/signup', users.signup);
-  app.get('/logout', users.logout);
-  app.post('/users', users.create);
-  
-  app.post('/users/session',
-    pauth('local', {
-      failureRedirect: '/login',
-      failureFlash: 'Invalid email or password.'
-    }), users.session);
-  app.get('/users/:userId', users.show);
+    // user routes
+    /*app.get('/login', users.login);
+   app.get('/signup', users.signup);
+   app.post('/users', users.create);*/
 
-  app.get(
-    '/auth/facebook',
-    pauth('facebook', {
-      scope: [ 'email', 'user_about_me'],
-      failureRedirect: '/login'
-    }),
-    users.signin
-  );
-  app.get('/auth/facebook/callback', pauth('facebook', fail), users.authCallback);
-  app.param('userId', users.load);
+    // crawler
+    app.get('/crawler', crawler.get);
 
-  // home route
-  app.get('/', function(req, res){
-      res.redirect('/index.html');
-  });
+    // fill db
+    app.get('/test', builder.test);
 
-  app.get('/dashboard', function(req, res){
-      res.redirect('/index.html');
-  });
+    app.post('/users/session',
+        pauth('local', {
+            failureRedirect: '/login',
+            failureFlash: 'Invalid email or password.'
+        }), users.session);
 
-  app.get('/api/spots', spots.index);
+    app.get('/auth/facebook',
+        pauth('facebook', {
+            scope: ['email', 'user_about_me'],
+            failureRedirect: '/login'
+        }),
+        users.signin
+    );
+    app.get('/auth/facebook/callback',
+        pauth('facebook', fail),
+        users.authCallback);
 
-  // crawler
-  app.get('/crawler', crawler.get);
+    app.get('/logout', users.logout);
 
 
-  // fill db
-  app.get('/test', builder.test);
 
-  // spots
-  app.get('/spots/:id', spots.show);
+    // API
+    api.get('/users/:userId', users.show);
+    api.param('userId', users.load);
 
-  /**
-   * Error handling
-   */
+    api.get('/user', users.getCurrent);
+
+    api.get('/spots', spots.index);
+    // spots
+    api.get('/spots/:id', spots.show);
+
+    api.post('/user/addspot/:id', auth.requiresLogin, users.addSpot);
+};
+
+
+
+
+
+
+
+  /*
 
   app.use(function (err, req, res, next) {
     // treat as 404
@@ -105,22 +109,14 @@ module.exports = function (app, passport) {
     res.status(404).render('404', payload);
   });
 };
-
-
-
-// article routes
-/*app.param('id', articles.load);
+   app.param('id', articles.load);
  app.get('/articles', articles.index);
  app.get('/articles/new', auth.requiresLogin, articles.new);
  app.post('/articles', auth.requiresLogin, articles.create);
- app.get('/articles/:id', articles.show);*/
+ app.get('/articles/:id', articles.show);
 
-//article with auth
-/*app.get('/articles/:id/edit', articleAuth, articles.edit);
+ app.get('/articles/:id/edit', articleAuth, articles.edit);
  app.put('/articles/:id', articleAuth, articles.update);
  app.delete('/articles/:id', articleAuth, articles.destroy);
- */
 
-
-//const articles = require('../app/controllers/articles');
-//const comments = require('../app/controllers/comments');
+*/

@@ -1,9 +1,16 @@
-<h3>Top Spotes</h3>
-<div class="grid grid-pad">
-  <a *ngFor="let spot of spots"  [routerLink]="['/detail', spot._id]"  class="col-1-4">
-    <div class="module spot">
-      <h4>{{spot.name}}</h4>
-    </div>
-  </a>
+<h3>Dashboard</h3>
+<ul class="spotes">
+  <li *ngFor="let spot of spots" (click)="onSelect(spot)"
+      [class.selected]="spot === selectedSpot">
+    <span class="badge">{{spot.id}}</span>
+    <span>{{spot.name}}</span>
+    <button class="delete"
+            (click)="delete(spot); $event.stopPropagation()">x</button>
+  </li>
+</ul>
+<div *ngIf="selectedSpot">
+  <h2>
+    {{selectedSpot.name | uppercase}} is my spot
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
 </div>
-<!--<spot-search></spot-search>-->

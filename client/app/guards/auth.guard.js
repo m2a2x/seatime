@@ -10,22 +10,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
-var SpotSearchService = (function () {
-    function SpotSearchService(http) {
-        this.http = http;
+var router_1 = require("@angular/router");
+var auth_service_1 = require("../services/auth.service");
+var AuthGuard = (function () {
+    function AuthGuard(router, authService) {
+        this.router = router;
+        this.authService = authService;
     }
-    SpotSearchService.prototype.search = function (term) {
-        return this.http
-            .get("app/spotes/?name=" + term)
-            .map(function (response) { return response.json().data; });
+    AuthGuard.prototype.canActivate = function () {
+        if (this.authService.isLoggedIn()) {
+            // logged in so return true
+            return true;
+        }
+        // not logged in so redirect
+        this.router.navigate(['/']);
+        return false;
     };
-    return SpotSearchService;
+    return AuthGuard;
 }());
-SpotSearchService = __decorate([
+AuthGuard = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
-], SpotSearchService);
-exports.SpotSearchService = SpotSearchService;
-//# sourceMappingURL=spot-search.service.js.map
+    __metadata("design:paramtypes", [router_1.Router, auth_service_1.AuthenticationService])
+], AuthGuard);
+exports.AuthGuard = AuthGuard;
+//# sourceMappingURL=auth.guard.js.map

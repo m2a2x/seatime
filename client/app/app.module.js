@@ -11,15 +11,16 @@ var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 var app_routing_module_1 = require("./app-routing.module");
-// Imports for loading & configuring the in-memory web api
-// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-// import { InMemoryDataService }  from './in-memory-data.service';
 var app_component_1 = require("./app.component");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var spots_component_1 = require("./spots/spots.component");
 var spot_detail_component_1 = require("./spot-detail/spot-detail.component");
 var spot_service_1 = require("./services/spot.service");
-// import { SpotSearchComponent }  from './spot-search.component';
+var user_service_1 = require("./services/user.service");
+var navigation_component_1 = require("./navigation/navigation.component");
+var auth_service_1 = require("./services/auth.service");
+var auth_guard_1 = require("./guards/auth.guard");
+var api_service_1 = require("./services/api.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -31,16 +32,30 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             http_1.HttpModule,
-            // InMemoryWebApiModule.forRoot(InMemoryDataService),
             app_routing_module_1.AppRoutingModule
         ],
         declarations: [
             app_component_1.AppComponent,
             dashboard_component_1.DashboardComponent,
             spot_detail_component_1.SpotDetailComponent,
-            spots_component_1.SpotesComponent,
+            spots_component_1.SpotsComponent,
+            navigation_component_1.NavigationComponent
         ],
-        providers: [spot_service_1.SpotService],
+        providers: [
+            api_service_1.APIService,
+            auth_service_1.AuthenticationService,
+            auth_guard_1.AuthGuard,
+            spot_service_1.SpotService,
+            user_service_1.UserService,
+            {
+                provide: core_1.APP_INITIALIZER,
+                useFactory: function (userService, spotService) { return function () {
+                    return Promise.all([userService.initUser(), spotService.initSpots()]);
+                }; },
+                deps: [user_service_1.UserService, spot_service_1.SpotService],
+                multi: true
+            }
+        ],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);

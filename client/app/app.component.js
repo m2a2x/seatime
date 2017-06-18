@@ -9,14 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var AppComponent = (function () {
     function AppComponent() {
-        this.title = 'Seatime';
     }
     return AppComponent;
 }());
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: "\n    <h1>{{title}}</h1>\n    <!--\n    <nav>\n    <a routerLink=\"/dashboard\" routerLinkActive=\"active\">Dashboard</a>\n    <a routerLink=\"/spots\" routerLinkActive=\"active\">Spots</a>\n    </nav> -->\n    <router-outlet></router-outlet>\n  ",
+        template: "\n    <navigation></navigation>\n    <router-outlet></router-outlet>\n  ",
         styleUrls: ['./app.component.css']
     })
 ], AppComponent);

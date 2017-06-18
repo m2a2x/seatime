@@ -1,56 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { Router }            from '@angular/router';
 
-import { Spot }                from './spot';
-import { SpotService }         from './../services/spot.service';
+import { Spot }                from '../models/spot';
+import { SpotService }         from '../services/spot.service';
+import {UserService} from "../services/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'my-spotes',
   templateUrl: './spots.component.html',
   styleUrls: [ './spots.component.css' ]
 })
-export class SpotesComponent implements OnInit {
-  spotes: Spot[];
-  selectedSpot: Spot;
+export class SpotsComponent implements OnInit {
+  private spots: Spot[];
 
   constructor(
     private spotService: SpotService,
+    private userService: UserService,
     private router: Router) { }
 
-  getSpots(): void {
-    this.spotService
-        .getSpots()
-        .then(spotes => this.spotes = spotes);
-  }
-
-  add(name: string): void {
-    name = name.trim();
-    if (!name) { return; }
-    this.spotService.create(name)
-      .then(spot => {
-        this.spotes.push(spot);
-        this.selectedSpot = null;
-      });
-  }
-
-  delete(spot: Spot): void {
-    this.spotService
-        .delete(spot.id)
-        .then(() => {
-          this.spotes = this.spotes.filter(h => h !== spot);
-          if (this.selectedSpot === spot) { this.selectedSpot = null; }
-        });
-  }
 
   ngOnInit(): void {
-    this.getSpots();
+    this.spots = this.spotService.getSpots();
   }
 
-  onSelect(spot: Spot): void {
-    this.selectedSpot = spot;
+  public addSpot(spot: Spot, e: Event): void {
+    e.stopPropagation();
+    this.userService.addToFavourite(spot);
   }
 
-  gotoDetail(): void {
-    this.router.navigate(['/detail', this.selectedSpot.id]);
+  public gotoDetail(id: number): void {
+    this.router.navigate(['/detail', id]);
   }
 }

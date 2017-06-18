@@ -11,11 +11,14 @@ var router_1 = require("@angular/router");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var spots_component_1 = require("./spots/spots.component");
 var spot_detail_component_1 = require("./spot-detail/spot-detail.component");
+var auth_guard_1 = require("./guards/auth.guard");
 var routes = [
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: dashboard_component_1.DashboardComponent },
+    { path: '', redirectTo: '/spots', pathMatch: 'full' },
+    { path: 'dashboard', component: dashboard_component_1.DashboardComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'detail/:id', component: spot_detail_component_1.SpotDetailComponent },
-    { path: 'spotes', component: spots_component_1.SpotesComponent }
+    { path: 'spots', component: spots_component_1.SpotsComponent },
+    // otherwise redirect to home
+    { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {

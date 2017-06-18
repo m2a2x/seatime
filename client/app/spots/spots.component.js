@@ -10,61 +10,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var spot_service_1 = require("../services/spot.service");
+var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
-var spot_service_1 = require("./../services/spot.service");
-var SpotesComponent = (function () {
-    function SpotesComponent(spotService, router) {
+var SpotsComponent = (function () {
+    function SpotsComponent(spotService, userService, router) {
         this.spotService = spotService;
+        this.userService = userService;
         this.router = router;
     }
-    SpotesComponent.prototype.getSpots = function () {
-        var _this = this;
-        this.spotService
-            .getSpots()
-            .then(function (spotes) { return _this.spotes = spotes; });
+    SpotsComponent.prototype.ngOnInit = function () {
+        this.spots = this.spotService.getSpots();
     };
-    SpotesComponent.prototype.add = function (name) {
-        var _this = this;
-        name = name.trim();
-        if (!name) {
-            return;
-        }
-        this.spotService.create(name)
-            .then(function (spot) {
-            _this.spotes.push(spot);
-            _this.selectedSpot = null;
-        });
+    SpotsComponent.prototype.addSpot = function (spot, e) {
+        e.stopPropagation();
+        this.userService.addToFavourite(spot);
     };
-    SpotesComponent.prototype.delete = function (spot) {
-        var _this = this;
-        this.spotService
-            .delete(spot.id)
-            .then(function () {
-            _this.spotes = _this.spotes.filter(function (h) { return h !== spot; });
-            if (_this.selectedSpot === spot) {
-                _this.selectedSpot = null;
-            }
-        });
+    SpotsComponent.prototype.gotoDetail = function (id) {
+        this.router.navigate(['/detail', id]);
     };
-    SpotesComponent.prototype.ngOnInit = function () {
-        this.getSpots();
-    };
-    SpotesComponent.prototype.onSelect = function (spot) {
-        this.selectedSpot = spot;
-    };
-    SpotesComponent.prototype.gotoDetail = function () {
-        this.router.navigate(['/detail', this.selectedSpot.id]);
-    };
-    return SpotesComponent;
+    return SpotsComponent;
 }());
-SpotesComponent = __decorate([
+SpotsComponent = __decorate([
     core_1.Component({
         selector: 'my-spotes',
         templateUrl: './spots.component.html',
         styleUrls: ['./spots.component.css']
     }),
     __metadata("design:paramtypes", [spot_service_1.SpotService,
+        user_service_1.UserService,
         router_1.Router])
-], SpotesComponent);
-exports.SpotesComponent = SpotesComponent;
+], SpotsComponent);
+exports.SpotsComponent = SpotsComponent;
 //# sourceMappingURL=spots.component.js.map

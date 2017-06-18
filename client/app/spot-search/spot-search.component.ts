@@ -13,7 +13,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 import { SpotSearchService } from './../services/spot-search.service';
-import { Spot } from './../spots/spot';
+import { Spot } from '../models/spot';
 
 @Component({
   selector: 'spot-search',

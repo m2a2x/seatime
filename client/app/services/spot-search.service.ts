@@ -4,7 +4,7 @@ import { Http }       from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { Spot }           from './../spots/spot';
+import { Spot }           from '../models/spot';
 
 @Injectable()
 export class SpotSearchService {
