@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http"); // {Headers}
+var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 require("rxjs/add/operator/map");
 var api_service_1 = require("./api.service");
@@ -31,20 +31,6 @@ var SpotService = (function () {
     };
     SpotService.prototype.getSpot = function (id) {
         return this.apiService.getSpot(id).then(function (response) { return response[0]; });
-    };
-    SpotService.prototype.delete = function (id) {
-        var url = this.spotesUrl + "/" + id;
-        return this.http.delete(url, { headers: this.headers })
-            .toPromise()
-            .then(function () { return null; })
-            .catch(this.handleError);
-    };
-    SpotService.prototype.create = function (name) {
-        return this.http
-            .post(this.spotesUrl, JSON.stringify({ name: name }), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return res.json().data; })
-            .catch(this.handleError);
     };
     SpotService.prototype.update = function (spot) {
         var url = this.spotesUrl + "/" + spot._id;

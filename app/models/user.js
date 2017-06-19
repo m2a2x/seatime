@@ -165,13 +165,10 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username';
+    options.select = options.select || 'name preferenses';
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
-  },
-  findUser: function (options) {
-      return this.findOne(options.criteria).exec();
   }
 };
 

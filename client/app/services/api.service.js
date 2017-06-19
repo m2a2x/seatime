@@ -30,7 +30,17 @@ var APIService = (function () {
     APIService.prototype.addFavouriteSpot = function (spot) {
         console.log(this.headers);
         return this.http
-            .post('api/user/addspot' + "/" + spot._id, null, { headers: this.headers })
+            .post('api/user/spot' + "/" + spot._id, null, { headers: this.headers })
+            .toPromise()
+            .then(function (data) {
+            console.log(data);
+            return true;
+        });
+    };
+    APIService.prototype.removeFavouriteSpot = function (id) {
+        console.log(this.headers);
+        return this.http
+            .delete('api/user/spot' + "/" + id, { headers: this.headers })
             .toPromise()
             .then(function (data) {
             console.log(data);

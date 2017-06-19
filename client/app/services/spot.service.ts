@@ -1,11 +1,16 @@
 import { Injectable }    from '@angular/core';
-import { Http, Headers, Response } from '@angular/http'; // {Headers}
+import { Http, Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
-import { Spot } from '../models/spot';
 import {APIService} from "./api.service";
+
+export type Spot = {
+  _id: number;
+  name: string;
+}
+
 
 @Injectable()
 export class SpotService {
@@ -26,22 +31,6 @@ export class SpotService {
 
   getSpot(id: number): Promise<Spot> {
     return this.apiService.getSpot(id).then(response => response[0]);
-  }
-
-  delete(id: number): Promise<void> {
-    const url = `${this.spotesUrl}/${id}`;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
-  }
-
-  create(name: string): Promise<Spot> {
-    return this.http
-      .post(this.spotesUrl, JSON.stringify({name: name}), {headers: this.headers})
-      .toPromise()
-      .then(res => res.json().data as Spot)
-      .catch(this.handleError);
   }
 
   update(spot: Spot): Promise<Spot> {

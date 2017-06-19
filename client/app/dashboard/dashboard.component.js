@@ -10,33 +10,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var _ = require("lodash");
 var spot_service_1 = require("../services/spot.service");
 var router_1 = require("@angular/router");
+var user_service_1 = require("../services/user.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(spotService, router) {
+    function DashboardComponent(spotService, userService, router) {
         this.spotService = spotService;
+        this.userService = userService;
         this.router = router;
         this.spots = [];
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        this.spots = this.spotService.getSpots();
-    };
-    DashboardComponent.prototype.add = function (name) {
-        var _this = this;
-        name = name.trim();
-        if (!name) {
-            return;
-        }
-        this.spotService.create(name)
-            .then(function (spot) {
-            _this.spots.push(spot);
-            _this.selectedSpot = null;
+        var spots = this.spotService.getSpots();
+        var user = this.userService.getUser();
+        this.spots = _.filter(spots, function (spot) {
+            return _.includes(user.preferenses.favouriteSpots, spot._id);
         });
     };
     DashboardComponent.prototype.delete = function (spot) {
         var _this = this;
-        this.spotService
-            .delete(spot._id)
+        this.userService
+            .removeFavourite(spot._id)
             .then(function () {
             _this.spots = _this.spots.filter(function (h) { return h !== spot; });
             if (_this.selectedSpot === spot) {
@@ -59,6 +54,7 @@ DashboardComponent = __decorate([
         styleUrls: ['./dashboard.component.css']
     }),
     __metadata("design:paramtypes", [spot_service_1.SpotService,
+        user_service_1.UserService,
         router_1.Router])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;

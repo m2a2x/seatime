@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
+import { APIService } from "./api.service";
+import {Spot} from "./spot.service";
 
-import { User } from '../models/user';
-import {Spot} from "../models/spot";
-import {APIService} from "./api.service";
+export type User = {
+    _id: number;
+    name: string;
+    preferenses: {
+        favouriteSpots: number []
+    }
+}
 
 @Injectable()
 export class UserService {
@@ -12,8 +18,8 @@ export class UserService {
 
     public initUser(): Promise<boolean> {
         return this.apiService.getUser()
-            .then(response => {
-                this.user = response;
+            .then(user => {
+                this.user = user;
                 return true;
             });
     }
@@ -24,5 +30,9 @@ export class UserService {
 
     public addToFavourite(spot: Spot): void {
         this.apiService.addFavouriteSpot(spot);
+    }
+
+    public removeFavourite(id: number): Promise<boolean> {
+        return this.apiService.removeFavouriteSpot(id);
     }
 }

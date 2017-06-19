@@ -18,8 +18,8 @@ var UserService = (function () {
     UserService.prototype.initUser = function () {
         var _this = this;
         return this.apiService.getUser()
-            .then(function (response) {
-            _this.user = response;
+            .then(function (user) {
+            _this.user = user;
             return true;
         });
     };
@@ -28,6 +28,9 @@ var UserService = (function () {
     };
     UserService.prototype.addToFavourite = function (spot) {
         this.apiService.addFavouriteSpot(spot);
+    };
+    UserService.prototype.removeFavourite = function (id) {
+        return this.apiService.removeFavouriteSpot(id);
     };
     return UserService;
 }());

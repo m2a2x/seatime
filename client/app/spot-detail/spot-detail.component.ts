@@ -3,8 +3,7 @@ import { Component, OnInit }      from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location }               from '@angular/common';
 
-import { Spot }        from '../models/spot';
-import { SpotService } from './../services/spot.service';
+import {Spot, SpotService} from '../services/spot.service';
 
 @Component({
   selector: 'spot-detail',

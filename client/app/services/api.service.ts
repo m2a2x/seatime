@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
-import {User} from "../models/user";
-import {Spot} from "../models/spot";
+import {User} from "./user.service";
+import {Spot} from "./spot.service";
 
 
 export type UserData = {
@@ -10,6 +10,7 @@ export type UserData = {
 };
 
 @Injectable()
+
 export class APIService {
     private headers: Headers = new Headers({'Content-Type': 'application/json'});
 
@@ -31,7 +32,18 @@ export class APIService {
     public addFavouriteSpot(spot: Spot): Promise<boolean> {
         console.log(this.headers);
         return this.http
-            .post(`${'api/user/addspot'}/${spot._id}`, null, {headers: this.headers})
+            .post(`${'api/user/spot'}/${spot._id}`, null, {headers: this.headers})
+            .toPromise()
+            .then((data) => {
+                console.log(data);
+                return true;
+            })
+    }
+
+    public removeFavouriteSpot(id: number): Promise<boolean> {
+        console.log(this.headers);
+        return this.http
+            .delete(`${'api/user/spot'}/${id}`, {headers: this.headers})
             .toPromise()
             .then((data) => {
                 console.log(data);

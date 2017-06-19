@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Spot }                from '../models/spot';
-import { SpotService }         from '../services/spot.service';
+import {Spot, SpotService}         from '../services/spot.service';
 import {UserService} from "../services/user.service";
 import {Router} from "@angular/router";
 

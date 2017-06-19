@@ -69,7 +69,8 @@ module.exports = function (app, api, passport) {
     // spots
     api.get('/spots/:id', spots.show);
 
-    api.post('/user/addspot/:id', auth.requiresLogin, users.addSpot);
+    api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
+    api.delete('/user/spots/:id', articleAuth, users.removeSpot);
 };
 
 
