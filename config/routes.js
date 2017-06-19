@@ -76,7 +76,7 @@ module.exports = function (app, api, passport) {
 
     api.param('userId', users.load);
 
-    api.get('/users/:userId', users.show);
+    api.get('/user/:userId', users.show);
 
     api.get('/user', users.getCurrent);
 
@@ -87,6 +87,16 @@ module.exports = function (app, api, passport) {
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
 
     api.delete('/user/spots/:id', auth.requiresLogin, users.removeSpot);
+
+    api.get('*', function(req, res){
+        res.send('Api doesn\'t exists', 404);
+    });
+    api.delete('*', function(req, res){
+        res.send('Api doesn\'t exists', 404);
+    });
+    api.put('*', function(req, res){
+        res.send('Api doesn\'t exists', 404);
+    });
 };
 
 

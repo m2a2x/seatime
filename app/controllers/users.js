@@ -83,7 +83,6 @@ exports.login = function (req, res) {
 };
 
 exports.getCurrent = function (req, res) {
-    console.log(req.user);
     res.json({
         user: req.user,
         token: req.csrfToken()
@@ -91,21 +90,14 @@ exports.getCurrent = function (req, res) {
 };
 
 exports.removeSpot = async(function* (req, res, next) {
-    var spot, user;
     const userId = req.user.id;
     try {
-        spot = yield Spot.findOne({
-            _id: _.parseInt(req.params.id)
-        });
-        if (!spot) return next(new Error('Spot not found'));
-        user = yield User.findOne({
-            _id: userId
-        });
-        if (!user) return next(new Error('User not found'));
-
-        User.update( {_id: userId}, { $pullAll: {uid: [req.params.deleteUid] } } )
-        user.preferenses.favouriteSpots.push(spot._id);
-        yield user.save();
+        yield User.update({ _id: userId }, {
+            $pull: {
+                'preferenses.favouriteSpots': _.parseInt(req.params.id)
+            }
+        },
+        { safe: true, multi:true });
     } catch (err) {
         return next(err);
     }

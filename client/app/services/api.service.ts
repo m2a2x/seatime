@@ -32,7 +32,7 @@ export class APIService {
     public addFavouriteSpot(spot: Spot): Promise<boolean> {
         console.log(this.headers);
         return this.http
-            .post(`${'api/user/spot'}/${spot._id}`, null, {headers: this.headers})
+            .post(`${'api/user/spots'}/${spot._id}`, null, {headers: this.headers})
             .toPromise()
             .then((data) => {
                 console.log(data);
@@ -43,7 +43,7 @@ export class APIService {
     public removeFavouriteSpot(id: number): Promise<boolean> {
         console.log(this.headers);
         return this.http
-            .delete(`${'api/user/spot'}/${id}`, {headers: this.headers})
+            .delete(`${'api/user/spots'}/${id}`, {headers: this.headers})
             .toPromise()
             .then((data) => {
                 console.log(data);
