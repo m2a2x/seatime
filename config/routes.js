@@ -1,9 +1,4 @@
 'use strict';
-
-/*
- * Module dependencies.
- */
-
 const users = require('../app/controllers/users');
 const spots = require('../app/controllers/spots');
 const crawler = require('../app/controllers/crawler');
@@ -13,8 +8,6 @@ const auth = require('./middlewares/authorization');
 /**
  * Route middlewares
  */
-
-const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
 
 const fail = {
   failureRedirect: '/login'
@@ -27,59 +20,81 @@ const fail = {
 module.exports = function (app, api, passport) {
     const pauth = passport.authenticate.bind(passport);
 
-    // user routes
-    /*app.get('/login', users.login);
-   app.get('/signup', users.signup);
-   app.post('/users', users.create);*/
+    /**
+     * Crawler, don't use without purpose
+     */
+    app.get('/crawler', auth.requiresLogin, crawler.get);
 
-    // crawler
-    app.get('/crawler', crawler.get);
-
-    // fill db
+    /**
+     * DB fill
+     */
     app.get('/test', builder.test);
 
+    /**
+     * Local Auth
+     */
     app.post('/users/session',
         pauth('local', {
-            failureRedirect: '/login',
+            failureRedirect: fail.failureRedirect,
             failureFlash: 'Invalid email or password.'
         }), users.session);
 
+    /**
+     * Facebook
+     */
     app.get('/auth/facebook',
         pauth('facebook', {
             scope: ['email', 'user_about_me'],
-            failureRedirect: '/login'
-        }),
-        users.signin
+            failureRedirect: fail.failureRedirect
+        }), users.signin
     );
-    app.get('/auth/facebook/callback',
-        pauth('facebook', fail),
-        users.authCallback);
-
-    app.get('/logout', users.logout);
+    app.get('/auth/facebook/callback', pauth('facebook', fail), users.authCallback);
 
 
+    /**
+     * Google
+     */
+    app.get('/auth/google',
+        pauth('google', {
+            failureRedirect: fail.failureRedirect,
+            scope: [
+                'https://www.googleapis.com/auth/userinfo.profile',
+                'https://www.googleapis.com/auth/userinfo.email'
+            ]
+        }), users.signin
+    );
+    app.get('/auth/google/callback', pauth('google', fail), users.authCallback);
 
-    // API
-    api.get('/users/:userId', users.show);
+    /**
+     * Logout
+     */
+    app.get('/logout', users.session);
+
+    /**
+     * Api call
+     */
+
     api.param('userId', users.load);
+
+    api.get('/users/:userId', users.show);
 
     api.get('/user', users.getCurrent);
 
     api.get('/spots', spots.index);
-    // spots
+
     api.get('/spots/:id', spots.show);
 
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
-    api.delete('/user/spots/:id', articleAuth, users.removeSpot);
+
+    api.delete('/user/spots/:id', auth.requiresLogin, users.removeSpot);
 };
 
 
+/*app.get('/login', users.login);
+ app.get('/signup', users.signup);
+ app.post('/users', users.create);*/
 
-
-
-
-
-  /*
+/* Errors handling
 
   app.use(function (err, req, res, next) {
     // treat as 404
@@ -110,14 +125,4 @@ module.exports = function (app, api, passport) {
     res.status(404).render('404', payload);
   });
 };
-   app.param('id', articles.load);
- app.get('/articles', articles.index);
- app.get('/articles/new', auth.requiresLogin, articles.new);
- app.post('/articles', auth.requiresLogin, articles.create);
- app.get('/articles/:id', articles.show);
-
- app.get('/articles/:id/edit', articleAuth, articles.edit);
- app.put('/articles/:id', articleAuth, articles.update);
- app.delete('/articles/:id', articleAuth, articles.destroy);
-
 */

@@ -136,13 +136,13 @@ exports.addSpot = async(function* (req, res, next) {
 /**
  * Show sign up form
  */
-
+/*
 exports.signup = function (req, res) {
   res.render('users/signup', {
     title: 'Sign up',
     user: new User()
   });
-};
+}; */
 
 /**
  * Logout
