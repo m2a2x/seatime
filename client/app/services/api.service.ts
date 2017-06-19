@@ -25,7 +25,6 @@ export class APIService {
                     this.headers.append('x-csrf-token', userData.token);
                     return userData.user;
                 })
-
                 .catch(this.handleError);
     }
 
@@ -38,6 +37,7 @@ export class APIService {
                 console.log(data);
                 return true;
             })
+            .catch(this.handleError);
     }
 
     public removeFavouriteSpot(id: number): Promise<boolean> {
@@ -49,6 +49,7 @@ export class APIService {
                 console.log(data);
                 return true;
             })
+            .catch(this.handleError);
     }
 
     public getSpot(id?: number): Promise<Spot[]> {

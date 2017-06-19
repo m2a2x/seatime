@@ -35,7 +35,8 @@ var APIService = (function () {
             .then(function (data) {
             console.log(data);
             return true;
-        });
+        })
+            .catch(this.handleError);
     };
     APIService.prototype.removeFavouriteSpot = function (id) {
         console.log(this.headers);
@@ -45,7 +46,8 @@ var APIService = (function () {
             .then(function (data) {
             console.log(data);
             return true;
-        });
+        })
+            .catch(this.handleError);
     };
     APIService.prototype.getSpot = function (id) {
         var url = "" + 'api/spots';
