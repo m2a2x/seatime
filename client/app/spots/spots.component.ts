@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Spot, SpotService}         from '../services/spot.service';
+import {Country, Spot, Spots, SpotService}         from '../services/spot.service';
 import {UserService} from "../services/user.service";
 import {Router} from "@angular/router";
+import * as _ from "lodash";
 
 @Component({
   selector: 'my-spotes',
@@ -10,6 +11,7 @@ import {Router} from "@angular/router";
 })
 export class SpotsComponent implements OnInit {
   private spots: Spot[];
+  private countries: Country[];
 
   constructor(
     private spotService: SpotService,
@@ -17,8 +19,14 @@ export class SpotsComponent implements OnInit {
     private router: Router) { }
 
 
-  ngOnInit(): void {
-    this.spots = this.spotService.getSpots();
+  public ngOnInit(): void {
+    this.countries = _.toArray<Country>(this.spotService.getCountries());
+  }
+
+  private sortByCountry(id: number) {
+    this.spots = _.filter<Spot>(this.spotService.getSpots(), {
+      _country: id
+    });
   }
 
   public addSpot(spot: Spot, e: Event): void {

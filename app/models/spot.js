@@ -53,21 +53,13 @@ SpotSchema.statics = {
    * @api private
    */
 
-  list: function (options) {
-    const criteria = options.criteria || {};
-    const page = options.page || 0;
-    const limit = options.limit || 30;
-    return this.find(criteria)
-      .sort('country')
-      .limit(limit)
-      .skip(limit * page)
-      .exec();
+  list: function () {
+    return this.find({}).sort('country').exec();
   },
 
   getSpot: function (_id) {
       const criteria = {_id};
-      return this.find(criteria)
-          .exec();
+      return this.find(criteria).exec();
   }
 };
 

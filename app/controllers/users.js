@@ -82,13 +82,6 @@ exports.login = function (req, res) {
   });
 };
 
-exports.getCurrent = function (req, res) {
-    res.json({
-        user: req.user,
-        token: req.csrfToken()
-    });
-};
-
 exports.removeSpot = async(function* (req, res, next) {
     const userId = req.user.id;
     try {

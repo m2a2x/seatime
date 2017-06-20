@@ -1,39 +1,55 @@
 import { Injectable }    from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import * as _ from "lodash";
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
 import {APIService} from "./api.service";
 
+export type Country = {
+  _id: number;
+  name: string;
+};
+
+export type Countries = _.Dictionary<Country>;
+
 export type Spot = {
   _id: number;
+  _country: number;
   name: string;
 }
 
+export type Spots = _.Dictionary<Spot>;
 
 @Injectable()
 export class SpotService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
   private spotesUrl = 'api/spots';
-  private spots: Spot[] = [];
+  private spots: Spots;
+  private countries: Countries;
 
   constructor(private http: Http, private apiService: APIService) { }
 
-  initSpots(): Promise<Spot[]> {
-    return this.apiService.getSpot().then(response => this.spots = response);
+  public set(spots: Spots, countries: Countries): void {
+    this.spots = spots;
+    this.countries = countries;
   }
 
-  getSpots(): Spot[] {
+  public getSpots(): Spots {
     return this.spots;
   }
 
-  getSpot(id: number): Promise<Spot> {
+  public getCountries(): Countries {
+    return this.countries;
+  }
+
+  public getSpot(id: number): Promise<Spot> {
     return this.apiService.getSpot(id).then(response => response[0]);
   }
 
-  update(spot: Spot): Promise<Spot> {
+  public update(spot: Spot): Promise<Spot> {
     const url = `${this.spotesUrl}/${spot._id}`;
     return this.http
       .put(url, JSON.stringify(spot), {headers: this.headers})

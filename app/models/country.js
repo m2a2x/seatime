@@ -23,4 +23,11 @@ const CountrySchema = new Schema({
     createdAt  : { type : Date, default : Date.now }
   }
 });
+
+CountrySchema.statics = {
+    list: function () {
+        return this.find({}).exec();
+    },
+};
+
 mongoose.model('Country', CountrySchema);

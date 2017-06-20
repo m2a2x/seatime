@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import {User} from "./user.service";
-import {Spot} from "./spot.service";
+import {Spot, Spots, Countries} from "./spot.service";
 
-
-export type UserData = {
+export type Reload = {
+    spots: Spots,
+    countries: Countries,
     user: User,
     token: string
 };
@@ -16,17 +17,6 @@ export class APIService {
 
     constructor(private http: Http) {}
 
-
-    public getUser(): Promise<User> {
-        return this.http.get(`${'api/user'}`)
-                .toPromise()
-                .then((response) => {
-                    let userData: UserData = response.json() as UserData;
-                    this.headers.append('x-csrf-token', userData.token);
-                    return userData.user;
-                })
-                .catch(this.handleError);
-    }
 
     public addFavouriteSpot(spot: Spot): Promise<boolean> {
         console.log(this.headers);
@@ -52,14 +42,23 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public getSpot(id?: number): Promise<Spot[]> {
-        let url = `${'api/spots'}`;
-        if (id) {
-            url += `/${id}`;
-        }
+    public getSpot(id: number): Promise<Spot[]> {
+        let url = `${'api/spots'}/${id}`;
         return this.http.get(url)
             .toPromise()
             .then(response => response.json().data as Spot[])
+            .catch(this.handleError);
+    }
+
+    public reload(): Promise<Reload> {
+        let url = `${'api/reload'}`;
+        return this.http.get(url)
+            .toPromise()
+            .then((response) => {
+                let data: Reload = response.json().data as Reload;
+                this.headers.append('x-csrf-token', data.token);
+                return data;
+            })
             .catch(this.handleError);
     }
 

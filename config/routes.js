@@ -1,6 +1,7 @@
 'use strict';
 const users = require('../app/controllers/users');
 const spots = require('../app/controllers/spots');
+const global = require('../app/controllers/global');
 const crawler = require('../app/controllers/crawler');
 const builder = require('../app/controllers/builder');
 const auth = require('./middlewares/authorization');
@@ -78,9 +79,7 @@ module.exports = function (app, api, passport) {
 
     api.get('/user/:userId', users.show);
 
-    api.get('/user', users.getCurrent);
-
-    api.get('/spots', spots.index);
+    api.get('/reload', global.index);
 
     api.get('/spots/:id', spots.show);
 

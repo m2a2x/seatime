@@ -19,7 +19,6 @@ var DashboardComponent = (function () {
         this.spotService = spotService;
         this.userService = userService;
         this.router = router;
-        this.spots = [];
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var spots = this.spotService.getSpots();

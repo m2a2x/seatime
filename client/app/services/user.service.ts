@@ -16,12 +16,8 @@ export class UserService {
 
     constructor(private apiService: APIService) {}
 
-    public initUser(): Promise<boolean> {
-        return this.apiService.getUser()
-            .then(user => {
-                this.user = user;
-                return true;
-            });
+    public set(user: User): void {
+        this.user = user;
     }
 
     public getUser(): User {

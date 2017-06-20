@@ -15,13 +15,8 @@ var UserService = (function () {
     function UserService(apiService) {
         this.apiService = apiService;
     }
-    UserService.prototype.initUser = function () {
-        var _this = this;
-        return this.apiService.getUser()
-            .then(function (user) {
-            _this.user = user;
-            return true;
-        });
+    UserService.prototype.set = function (user) {
+        this.user = user;
     };
     UserService.prototype.getUser = function () {
         return this.user;

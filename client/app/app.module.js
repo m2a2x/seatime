@@ -10,6 +10,7 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
+var ngx_bootstrap_1 = require("ngx-bootstrap");
 var app_routing_module_1 = require("./app-routing.module");
 var app_component_1 = require("./app.component");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
@@ -32,7 +33,8 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             http_1.HttpModule,
-            app_routing_module_1.AppRoutingModule
+            app_routing_module_1.AppRoutingModule,
+            ngx_bootstrap_1.BsDropdownModule.forRoot()
         ],
         declarations: [
             app_component_1.AppComponent,
@@ -49,10 +51,14 @@ AppModule = __decorate([
             user_service_1.UserService,
             {
                 provide: core_1.APP_INITIALIZER,
-                useFactory: function (userService, spotService) { return function () {
-                    return Promise.all([userService.initUser(), spotService.initSpots()]);
+                useFactory: function (apiService, userService, spotService) { return function () {
+                    return apiService.reload().then(function (response) {
+                        userService.set(response.user);
+                        spotService.set(response.spots, response.countries);
+                        return true;
+                    });
                 }; },
-                deps: [user_service_1.UserService, spot_service_1.SpotService],
+                deps: [api_service_1.APIService, user_service_1.UserService, spot_service_1.SpotService],
                 multi: true
             }
         ],

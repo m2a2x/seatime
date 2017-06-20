@@ -15,6 +15,7 @@ const Spot = mongoose.model('Spot');
  */
 
 exports.index = asyncf(function* (req, res) {
+  /*
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const _id = req.query.item;
   const limit = 30;
@@ -24,8 +25,8 @@ exports.index = asyncf(function* (req, res) {
   };
 
   if (_id) options.criteria = { _id };
-
-  const spots = yield Spot.list(options);
+  */
+  const spots = yield Spot.list();
   res.json({
       data: spots
   });

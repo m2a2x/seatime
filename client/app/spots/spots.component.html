@@ -1,10 +1,23 @@
-<h2>All Spotes</h2>
+<div>
+  <h2>All Spotes</h2>
 
-<div class="grid grid-pad">
-  <a *ngFor="let spot of spots"  (click)="gotoDetail(spot._id)" class="col-1-4">
-    <div class="module spot">
-      <h4>{{spot.name}}</h4>
-      <div (click)="addSpot(spot, $event)">Add spot</div>
-    </div>
-  </a>
+  <div class="btn-group" dropdown>
+    <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+      Countries ids <span class="caret"></span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
+      <li *ngFor="let country of countries" role="menuitem" (click)="sortByCountry(country._id)">
+        <span class="dropdown-item">{{country._id}}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="grid grid-pad">
+    <a *ngFor="let spot of spots"  (click)="gotoDetail(spot._id)" class="col-1-4">
+      <div class="module spot">
+        <h4>{{spot.name}}</h4>
+        <div (click)="addSpot(spot, $event)">Add spot</div>
+      </div>
+    </a>
+  </div>
 </div>

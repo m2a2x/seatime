@@ -20,14 +20,16 @@ var SpotService = (function () {
         this.apiService = apiService;
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         this.spotesUrl = 'api/spots';
-        this.spots = [];
     }
-    SpotService.prototype.initSpots = function () {
-        var _this = this;
-        return this.apiService.getSpot().then(function (response) { return _this.spots = response; });
+    SpotService.prototype.set = function (spots, countries) {
+        this.spots = spots;
+        this.countries = countries;
     };
     SpotService.prototype.getSpots = function () {
         return this.spots;
+    };
+    SpotService.prototype.getCountries = function () {
+        return this.countries;
     };
     SpotService.prototype.getSpot = function (id) {
         return this.apiService.getSpot(id).then(function (response) { return response[0]; });

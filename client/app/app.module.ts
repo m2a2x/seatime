@@ -2,6 +2,7 @@ import {APP_INITIALIZER, NgModule}      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule }    from '@angular/http';
+import { BsDropdownModule } from 'ngx-bootstrap';
 
 import { AppRoutingModule }       from './app-routing.module';
 import { AppComponent }           from './app.component';
@@ -13,7 +14,7 @@ import { UserService }            from './services/user.service';
 import { NavigationComponent }    from './navigation/navigation.component';
 import { AuthenticationService }  from './services/auth.service';
 import { AuthGuard }              from './guards/auth.guard';
-import {APIService} from "./services/api.service";
+import {APIService, Reload} from "./services/api.service";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {APIService} from "./services/api.service";
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BsDropdownModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -38,10 +40,14 @@ import {APIService} from "./services/api.service";
     UserService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (userService: UserService, spotService: SpotService) => () => {
-        return Promise.all([userService.initUser(), spotService.initSpots()]);
+      useFactory: (apiService: APIService, userService: UserService, spotService: SpotService) => () => {
+        return apiService.reload().then((response: Reload): boolean => {
+          userService.set(response.user);
+          spotService.set(response.spots, response.countries);
+          return true;
+        });
       },
-      deps: [UserService, SpotService],
+      deps: [APIService, UserService, SpotService],
       multi: true
     }
   ],

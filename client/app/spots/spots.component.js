@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var spot_service_1 = require("../services/spot.service");
 var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
+var _ = require("lodash");
 var SpotsComponent = (function () {
     function SpotsComponent(spotService, userService, router) {
         this.spotService = spotService;
@@ -20,7 +21,12 @@ var SpotsComponent = (function () {
         this.router = router;
     }
     SpotsComponent.prototype.ngOnInit = function () {
-        this.spots = this.spotService.getSpots();
+        this.countries = _.toArray(this.spotService.getCountries());
+    };
+    SpotsComponent.prototype.sortByCountry = function (id) {
+        this.spots = _.filter(this.spotService.getSpots(), {
+            _country: id
+        });
     };
     SpotsComponent.prototype.addSpot = function (spot, e) {
         e.stopPropagation();

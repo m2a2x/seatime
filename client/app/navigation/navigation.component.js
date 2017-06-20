@@ -10,9 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var auth_service_1 = require("../services/auth.service");
 var NavigationComponent = (function () {
-    function NavigationComponent() {
+    function NavigationComponent(authService) {
+        this.authService = authService;
+        this.isLoggedIn = false;
     }
+    NavigationComponent.prototype.ngOnInit = function () {
+        this.isLoggedIn = this.authService.isLoggedIn();
+    };
     return NavigationComponent;
 }());
 NavigationComponent = __decorate([
@@ -21,7 +27,7 @@ NavigationComponent = __decorate([
         templateUrl: './navigation.component.html',
         styleUrls: ['./navigation.component.css']
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthenticationService])
 ], NavigationComponent);
 exports.NavigationComponent = NavigationComponent;
 //# sourceMappingURL=navigation.component.js.map

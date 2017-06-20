@@ -16,17 +16,6 @@ var APIService = (function () {
         this.http = http;
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
     }
-    APIService.prototype.getUser = function () {
-        var _this = this;
-        return this.http.get("" + 'api/user')
-            .toPromise()
-            .then(function (response) {
-            var userData = response.json();
-            _this.headers.append('x-csrf-token', userData.token);
-            return userData.user;
-        })
-            .catch(this.handleError);
-    };
     APIService.prototype.addFavouriteSpot = function (spot) {
         console.log(this.headers);
         return this.http
@@ -50,13 +39,22 @@ var APIService = (function () {
             .catch(this.handleError);
     };
     APIService.prototype.getSpot = function (id) {
-        var url = "" + 'api/spots';
-        if (id) {
-            url += "/" + id;
-        }
+        var url = 'api/spots' + "/" + id;
         return this.http.get(url)
             .toPromise()
             .then(function (response) { return response.json().data; })
+            .catch(this.handleError);
+    };
+    APIService.prototype.reload = function () {
+        var _this = this;
+        var url = "" + 'api/reload';
+        return this.http.get(url)
+            .toPromise()
+            .then(function (response) {
+            var data = response.json().data;
+            _this.headers.append('x-csrf-token', data.token);
+            return data;
+        })
             .catch(this.handleError);
     };
     APIService.prototype.handleError = function (error) {

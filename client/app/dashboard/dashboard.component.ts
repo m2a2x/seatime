@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as _ from "lodash";
 
-import {Spot, SpotService} from '../services/spot.service';
+import {Spot, Spots, SpotService} from '../services/spot.service';
 import { Router }            from '@angular/router';
 import {UserService, User} from "../services/user.service";
 
@@ -12,23 +12,23 @@ import {UserService, User} from "../services/user.service";
 })
 
 export class DashboardComponent implements OnInit {
-  private spots: Spot[] = [];
+  private spots: Spot[];
   private selectedSpot: Spot;
 
   constructor(private spotService: SpotService,
               private userService: UserService,
               private router: Router) { }
 
-  ngOnInit(): void {
-    let spots: Spot[] = this.spotService.getSpots();
+  public ngOnInit(): void {
+    let spots: Spots = this.spotService.getSpots();
     let user: User = this.userService.getUser();
-    this.spots = _.filter(spots, (spot: Spot): boolean => {
+    this.spots = _.filter<Spot>(spots, (spot: Spot): boolean => {
       return _.includes<number>(user.preferenses.favouriteSpots, spot._id);
     });
   }
 
 
-  delete(spot: Spot): void {
+  public delete(spot: Spot): void {
     this.userService
         .removeFavourite(spot._id)
         .then(() => {
@@ -37,11 +37,11 @@ export class DashboardComponent implements OnInit {
         });
   }
 
-  onSelect(spot: Spot): void {
+  public onSelect(spot: Spot): void {
     this.selectedSpot = spot;
   }
 
-  gotoDetail(): void {
+  public gotoDetail(): void {
     this.router.navigate(['/detail', this.selectedSpot._id]);
   }
 }
