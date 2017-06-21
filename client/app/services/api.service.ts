@@ -42,11 +42,19 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public getSpot(id: number): Promise<Spot[]> {
+    public getSpot(id: number): Promise<any> {
         let url = `${'api/spots'}/${id}`;
         return this.http.get(url)
             .toPromise()
-            .then(response => response.json().data as Spot[])
+            .then(response => response.json().data)
+            .catch(this.handleError);
+    }
+
+    public getSpotForecast(id: number): Promise<any> {
+        let url = `${'api/spot/forecast'}/${id}`;
+        return this.http.get(url)
+            .toPromise()
+            .then(response => response.json().data)
             .catch(this.handleError);
     }
 

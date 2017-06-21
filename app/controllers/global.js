@@ -24,8 +24,8 @@ exports.index = asyncf(function* (req, res) {
       data: {
           countries: _.keyBy(countries, '_id'),
           spots: _.keyBy(spots, '_id'),
-          user: req.user,
-          token: req.csrfToken()
+          user: req.isAuthenticated() ? req.user : null,
+          token: req.isAuthenticated() ? req.csrfToken() : null
       }
   });
 });

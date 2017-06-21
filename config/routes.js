@@ -31,6 +31,8 @@ module.exports = function (app, api, passport) {
      */
     app.get('/test', builder.test);
 
+    app.get('/merge', builder.merge);
+
     /**
      * Local Auth
      */
@@ -69,7 +71,7 @@ module.exports = function (app, api, passport) {
     /**
      * Logout
      */
-    app.get('/logout', users.session);
+    app.get('/logout', users.logout);
 
     /**
      * Api call
@@ -82,6 +84,8 @@ module.exports = function (app, api, passport) {
     api.get('/reload', global.index);
 
     api.get('/spots/:id', spots.show);
+
+    api.get('/spot/forecast/:id', spots.forecast);
 
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
 

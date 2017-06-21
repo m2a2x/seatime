@@ -32,7 +32,13 @@ var SpotService = (function () {
         return this.countries;
     };
     SpotService.prototype.getSpot = function (id) {
+        return this.spots[id];
+    };
+    SpotService.prototype.getSpotData = function (id) {
         return this.apiService.getSpot(id).then(function (response) { return response[0]; });
+    };
+    SpotService.prototype.getSpotForecast = function (id) {
+        return this.apiService.getSpotForecast(id);
     };
     SpotService.prototype.update = function (spot) {
         var url = this.spotesUrl + "/" + spot._id;

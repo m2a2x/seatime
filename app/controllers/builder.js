@@ -8,12 +8,11 @@
 const mongoose = require('mongoose');
 const tress = require('tress');
 const { wrap: asyncf } = require('co');
+const mswd = require('../../assets/mswd');
 
-const { respond, respondOrRedirect } = require('../utils');
 const util = require('util');
 
 const fs = require("fs");
-const resolve = require('url').resolve;
 const _ = require('lodash');
 
 const Continent = mongoose.model('Continent');
@@ -21,26 +20,43 @@ const Country = mongoose.model('Country');
 const Spot = mongoose.model('Spot');
 const Counter = mongoose.model('Counter');
 
+exports.merge = function (req, res) {};
+
 // test methods, read from file
 exports.test = asyncf(function* (req, res) {
-  var file = fs.readFileSync('assets/crawler.json'),
-      jsonContent = JSON.parse(file);
-  var idInc = yield Counter.getIncreament();
+  var file,
+      continentsDb,
+      countriesDb,
+      spotsDb,
+      idInc,
+      q;
 
-  jsonContent.countries = _.toArray(jsonContent.countries);
+  yield mongoose.connection.db.dropDatabase();
+  idInc = yield Counter.getIncreament();
 
-  var q = tress(function(job, done) {
+  file  = fs.readFileSync('assets/continents.json');
+  continentsDb = JSON.parse(file);
+
+  file  = fs.readFileSync('assets/countries.json');
+  countriesDb = JSON.parse(file);
+
+  file  = fs.readFileSync('assets/spots.json');
+  spotsDb = JSON.parse(file);
+
+  q = tress(function(job, done) {
     var id = idInc++,
         item;
 
     switch (job.type) {
       case 'Continent':
-        item = new Continent(mapContinent(job, id));
-        item.save(function () {
-          var countries = _.remove(jsonContent.countries, function (item) {
+        item = new Continent(mswd.mapContinent(job, id));
+        item.save(function (err) {
+          var countries = _.remove(countriesDb, function (item) {
             return item.continent_id === job._id;
           });
-
+          if (err) {
+                console.log(err);
+          }
           q.push(_.map(countries, function (item) {
             return _.extend({}, item, {type: 'Country', parentId: id});
           }));
@@ -49,10 +65,12 @@ exports.test = asyncf(function* (req, res) {
         break;
 
       case 'Country':
-        item = new Country(mapCountry(job, id, job.parentId));
+        item = new Country(mswd.mapCountry(job, id, job.parentId));
         item.save(function (err) {
-          console.log(err);
-          var spots = _.remove(jsonContent.spots, function (item) {
+          if (err) {
+            console.log(err);
+          }
+          var spots = _.remove(spotsDb, function (item) {
             return item.country_id === job._id;
           });
 
@@ -64,16 +82,18 @@ exports.test = asyncf(function* (req, res) {
         break;
 
       case 'Spot':
-        item = new Spot(mapSpot(job, id, job.parentId));
+        item = new Spot(mswd.mapSpot(job, id, job.parentId));
         item.save(function (err) {
-          console.log(err);
+          if (err) {
+            console.log(err);
+          }
           done();
         });
         break;
     }
   }, 10);
 
-  q.push(_.map(jsonContent.continents, function (item) {
+  q.push(_.map(continentsDb, function (item) {
       return _.extend({}, item, {type: 'Continent'});
     })
   );
@@ -86,57 +106,3 @@ exports.test = asyncf(function* (req, res) {
     });
   });
 });
-
-function mapContinent(continent, id) {
-  return {
-    _id: id,
-    name: continent.name,
-    meta: {
-      mswd: {
-        id: continent._id
-      }
-    }
-  };
-}
-
-function mapCountry(item, id, parentId) {
-  return {
-      _id: id,
-      _continent: parentId,
-      name: item.name,
-      meta: {
-        mswd: {
-          id: item._id,
-          region_id: item.region_id
-        }
-      }
-  };
-}
-function mapSpot(item, id, parentId) {
-  return {
-    _id: id,
-    _country: parentId,
-    name: item.name,
-    description: item.description,
-    isBigWave: item.isBigWave,
-    optimumSwellAngle: item.optimumSwellAngle,
-    optimumWindAngle: item.optimumWindAngle,
-    hasAdvancedForecast: item.hasAdvancedForecast,
-    meta: {
-      offset: item.offset,
-      mswd: {
-        id: item._id,
-        surfAreaId: item.surfAreaId,
-        url: item.url,
-        modelName: item.modelName
-      },
-      multiplier: item.multiplier,
-      dataLat: item.dataLat,
-      dataLon: item.dataLon,
-      lat: item.lat,
-      lon: item.lon,
-      timeZoneAbbr: item.timeZoneAbbr,
-      timezone: item.timezone
-    }
-  };
-}

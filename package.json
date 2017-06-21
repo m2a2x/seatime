@@ -51,5 +51,6 @@
     "tress": "^1.0.3",
     "view-helpers": "~0.1.5",
     "winston": "~2.3.0"
-  }
+  },
+  "false": {}
 }

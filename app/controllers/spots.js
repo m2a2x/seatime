@@ -6,7 +6,7 @@
 
 const mongoose = require('mongoose');
 const { wrap: asyncf } = require('co');
-const { getSpot } = require('../controllers/crawler');
+const { getSpot, getForecast } = require('../controllers/crawler');
 const Spot = mongoose.model('Spot');
 
 
@@ -32,9 +32,18 @@ exports.index = asyncf(function* (req, res) {
   });
 });
 
+exports.forecast = asyncf(function* (req, res){
+    const spot = yield Spot.findOne({_id: req.params.id});
+    const forecast = yield getForecast(spot.meta.mswd.id);
+    res.json({
+        data: forecast
+    });
+});
+
 exports.show = asyncf(function* (req, res){
-  const spot = yield getSpot(req.params.id);
+  const spot = yield Spot.findOne({_id: req.params.id});
+  const spotD = yield getSpot(spot.meta.mswd.id);
   res.json({
-      data: spot
+      data: spotD
   });
 });

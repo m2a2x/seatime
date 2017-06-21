@@ -88,6 +88,22 @@ exports.getSpot = function(spotId) {
   });
 };
 
+exports.getForecast = function(spotId) {
+    var url = getUrl(
+        'forecast?',
+        '&spot_id=' + spotId
+    );
+
+    return new Promise(function(resolve, reject){
+        needle.get(url, function(err, res){
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res.body);
+            }
+        });
+    });
+};
 
 
 /**
@@ -111,9 +127,11 @@ function getUrl(getter, extraGetter) {
 function getContinents(q, data, collection) {
   _.each(data, function (continent) {
     collection[continent._id] = continent;
+
+    // next level call
     q.push(
         getUrl(
-            'region?',
+            'country?',
             '&continent_id=' + continent._id
         )
     );
@@ -134,6 +152,8 @@ function getCountries(q, data, path, collection) {
       collection[country._id] = country;
       country.region_id = region._id;
       country.continent_id = parent_id;
+
+      // next level call
       q.push(
           getUrl(
               'spot?',

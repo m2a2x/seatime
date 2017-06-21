@@ -20,10 +20,10 @@ export class SpotsComponent implements OnInit {
 
 
   public ngOnInit(): void {
-    this.countries = _.toArray<Country>(this.spotService.getCountries());
+    this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
   }
 
-  private sortByCountry(id: number) {
+  public sortByCountry(id: number) {
     this.spots = _.filter<Spot>(this.spotService.getSpots(), {
       _country: id
     });

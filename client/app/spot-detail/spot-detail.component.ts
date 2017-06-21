@@ -2,6 +2,7 @@ import 'rxjs/add/operator/switchMap';
 import { Component, OnInit }      from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location }               from '@angular/common';
+import * as moment from 'moment';
 
 import {Spot, SpotService} from '../services/spot.service';
 
@@ -11,7 +12,8 @@ import {Spot, SpotService} from '../services/spot.service';
   styleUrls: [ './spot-detail.component.css' ]
 })
 export class SpotDetailComponent implements OnInit {
-  spot: Spot;
+  public spot: Spot;
+  public swellData: any[];
 
   constructor(
     private spotService: SpotService,
@@ -20,14 +22,16 @@ export class SpotDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params
-      .switchMap((params: Params) => this.spotService.getSpot(+params['id']))
-      .subscribe(spot => this.spot = spot);
-  }
-
-  save(): void {
-    this.spotService.update(this.spot)
-      .then(() => this.goBack());
+    this.route.params.subscribe(params => {
+        this.spot = this.spotService.getSpot(+params['id']);
+        this.spotService.getSpotForecast(+params['id']).then(response => {
+          this.swellData = _.map(response, (item: any) => {
+            item.localTimestamp = moment(item.localTimestamp * 1000).format('DD MMM');
+            return item;
+          });
+        });
+      }
+    );
   }
 
   goBack(): void {

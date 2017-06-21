@@ -45,6 +45,13 @@ var APIService = (function () {
             .then(function (response) { return response.json().data; })
             .catch(this.handleError);
     };
+    APIService.prototype.getSpotForecast = function (id) {
+        var url = 'api/spot/forecast' + "/" + id;
+        return this.http.get(url)
+            .toPromise()
+            .then(function (response) { return response.json().data; })
+            .catch(this.handleError);
+    };
     APIService.prototype.reload = function () {
         var _this = this;
         var url = "" + 'api/reload';

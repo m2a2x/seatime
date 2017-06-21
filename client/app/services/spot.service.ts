@@ -45,8 +45,16 @@ export class SpotService {
     return this.countries;
   }
 
-  public getSpot(id: number): Promise<Spot> {
+  public getSpot(id: number): Spot {
+    return this.spots[id];
+  }
+
+  public getSpotData(id: number): Promise<Spot> {
     return this.apiService.getSpot(id).then(response => response[0]);
+  }
+
+  public getSpotForecast(id: number): Promise<any> {
+    return this.apiService.getSpotForecast(id);
   }
 
   public update(spot: Spot): Promise<Spot> {

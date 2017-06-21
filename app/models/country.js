@@ -3,7 +3,6 @@
 /**
  * Module dependencies.
  */
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -18,16 +17,19 @@ const CountrySchema = new Schema({
   meta: {
     mswd: {
       id: Number,
-      region_id: Number
+      region_id: Number,
+      url: { type : String, default : '', trim : true }
     },
+    iso: { type : String, default : '', trim : true },
     createdAt  : { type : Date, default : Date.now }
-  }
+  },
+  surfAreas: [{ type: Number, ref: 'Area' }]
 });
 
 CountrySchema.statics = {
     list: function () {
         return this.find({}).exec();
-    },
+    }
 };
 
 mongoose.model('Country', CountrySchema);

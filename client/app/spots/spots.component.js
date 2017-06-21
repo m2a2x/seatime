@@ -21,7 +21,7 @@ var SpotsComponent = (function () {
         this.router = router;
     }
     SpotsComponent.prototype.ngOnInit = function () {
-        this.countries = _.toArray(this.spotService.getCountries());
+        this.countries = _.sortBy(this.spotService.getCountries(), 'name');
     };
     SpotsComponent.prototype.sortByCountry = function (id) {
         this.spots = _.filter(this.spotService.getSpots(), {
