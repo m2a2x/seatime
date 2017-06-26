@@ -1,13 +1,10 @@
 <div *ngIf="spot">
   <h2>{{spot.name}} details!</h2>
   <div>
-    <ul *ngIf="swellData">
-      <li *ngFor="let item of swellData">
-        {{item.localTimestamp}}
-        <br>
-        {{item.condition.weatherText}}
-        <br>
-        Swell {{item.swell.maxBreakingHeight}} - {{item.swell.minBreakingHeight}}
+    <ul *ngIf="tideData">
+      <li *ngFor="let tide of tideData">
+        {{tide.state}}
+        {{tide.date}}
         <br>
       </li>
     </ul>

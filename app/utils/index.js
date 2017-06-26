@@ -1,6 +1,7 @@
 module.exports = {
   respond,
-  respondOrRedirect
+  respondOrRedirect,
+  getToday
 };
 
 function respond (res, tpl, obj, status) {
@@ -21,4 +22,13 @@ function respondOrRedirect ({ req, res }, url = '/', obj = {}, flash) {
     },
     json: () => res.json(obj)
   });
+}
+
+function getToday() {
+    var d = new Date();
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d.getTime();
 }

@@ -46,20 +46,13 @@ const SpotSchema = new Schema({
  */
 
 SpotSchema.statics = {
-  /**
-   * List spots
-   *
-   * @param {Object} options
-   * @api private
-   */
-
   list: function () {
     return this.find({}).sort('country').exec();
   },
 
-  getSpot: function (_id) {
-      const criteria = {_id};
-      return this.find(criteria).exec();
+  get: function (id) {
+      const criteria = {_id: id};
+      return this.findOne(criteria);
   }
 };
 

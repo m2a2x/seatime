@@ -13,6 +13,7 @@ require("rxjs/add/operator/switchMap");
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
+var _ = require("lodash");
 var moment = require("moment");
 var spot_service_1 = require("../services/spot.service");
 var SpotDetailComponent = (function () {
@@ -24,11 +25,17 @@ var SpotDetailComponent = (function () {
     SpotDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
-            _this.spot = _this.spotService.getSpot(+params['id']);
-            _this.spotService.getSpotForecast(+params['id']).then(function (response) {
-                _this.swellData = _.map(response, function (item) {
-                    item.localTimestamp = moment(item.localTimestamp * 1000).format('DD MMM');
-                    return item;
+            _this.spot = _this.spotService.get(+params['id']);
+            _this.spotId = +params['id'];
+            _this.spotService.getConditions(_this.spotId).then(function (response) {
+                // moment(item.localTimestamp * 1000).format('DD MMM');
+                _this.swellData = response.forecast;
+                _this.tideData = _.map(response.conditions.tide, function (tide) {
+                    return {
+                        shift: tide.shift,
+                        state: tide.state,
+                        date: moment(tide.timestamp * 1000).format('DD MMM, hh:mm')
+                    };
                 });
             });
         });

@@ -22,16 +22,13 @@ module.exports = function (app, api, passport) {
     const pauth = passport.authenticate.bind(passport);
 
     /**
-     * Crawler, don't use without purpose
-     */
-    app.get('/crawler', auth.requiresLogin, crawler.get);
-
-    /**
      * DB fill
      */
     app.get('/test', builder.test);
-
     app.get('/merge', builder.merge);
+
+    /** Crawler, don't use without purpose */
+    app.get('/crawler', auth.requiresLogin, crawler.get);
 
     /**
      * Local Auth
@@ -42,9 +39,7 @@ module.exports = function (app, api, passport) {
             failureFlash: 'Invalid email or password.'
         }), users.session);
 
-    /**
-     * Facebook
-     */
+    /** Facebook */
     app.get('/auth/facebook',
         pauth('facebook', {
             scope: ['email', 'user_about_me'],
@@ -54,9 +49,7 @@ module.exports = function (app, api, passport) {
     app.get('/auth/facebook/callback', pauth('facebook', fail), users.authCallback);
 
 
-    /**
-     * Google
-     */
+    /** Google */
     app.get('/auth/google',
         pauth('google', {
             failureRedirect: fail.failureRedirect,
@@ -68,28 +61,36 @@ module.exports = function (app, api, passport) {
     );
     app.get('/auth/google/callback', pauth('google', fail), users.authCallback);
 
-    /**
-     * Logout
-     */
+    /** Logout */
     app.get('/logout', users.logout);
+
 
     /**
      * Api call
      */
 
+    /** Load users param */
     api.param('userId', users.load);
 
+    /** Get user by Id */
     api.get('/user/:userId', users.show);
 
+    /** Global reload, return all data in one call */
     api.get('/reload', global.index);
 
-    api.get('/spots/:id', spots.show);
+    /** Get Conditions  Get Forecasts */
+    api.get('/spots/getConditions/:id', spots.condition);
 
-    api.get('/spot/forecast/:id', spots.forecast);
-
+    /** Get Favourite Spots */
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
 
+    /** Get Remove Favouirite Spot */
     api.delete('/user/spots/:id', auth.requiresLogin, users.removeSpot);
+
+
+    /**
+     * Invalid call
+     */
 
     api.get('*', function(req, res){
         res.send('Api doesn\'t exists', 404);

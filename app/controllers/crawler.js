@@ -5,19 +5,11 @@
  * Steal data
  */
 
-const mongoose = require('mongoose');
-
-const util = require('util');
-
 const tress = require('tress');
 const needle = require('needle');
-const resolve = require('url').resolve;
+const fs = require('fs');
 const _ = require('lodash');
-
-const Continent = mongoose.model('Continent');
-const Country = mongoose.model('Country');
-const Spot = mongoose.model('Spot');
-
+const {getMswdUrl: getUrl} = require('../../config/middlewares/mswd')
 
 exports.get = function(req, response) {
   var continents = {},
@@ -70,8 +62,8 @@ exports.get = function(req, response) {
   q.push(getUrl('continent?'));
 };
 
-
-exports.getSpot = function(spotId) {
+/*
+exports.getCondition = function(spotId) {
   var url = getUrl(
       'Tide?',
       '&spot_id=' + spotId
@@ -86,8 +78,19 @@ exports.getSpot = function(spotId) {
       }
     });
   });
+}; */
+
+exports.getCondition = function() {
+    return new Promise(function(resolve){
+        resolve(JSON.parse(fs.readFileSync('assets/tide.json')));
+    });
 };
 
+
+/**
+ * Forecast
+ */
+/*
 exports.getForecast = function(spotId) {
     var url = getUrl(
         'forecast?',
@@ -103,25 +106,16 @@ exports.getForecast = function(spotId) {
             }
         });
     });
+};*/
+
+exports.getForecast = function() {
+    return new Promise(function(resolve){
+        resolve(JSON.parse(fs.readFileSync('assets/forecast.json')));
+    });
 };
 
-
 /**
- * URL
- */
-
-
-function getUrl(getter, extraGetter) {
-  var URL = 'http://magicseaweed.com';
-  var api = '/api/4fa1b1a1cb45e3ade0ee1fe7560ff2ee/%s%s';
-  var params = 'lang=en&units=uk&access_token=false%s&fields=*';
-
-  params = util.format(params, extraGetter || '');
-  return resolve(URL, util.format(api, getter, params));
-}
-
-/**
- * CONTINENT
+ * Continent
  */
 
 function getContinents(q, data, collection) {

@@ -10,16 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 require("rxjs/add/operator/map");
 var api_service_1 = require("./api.service");
 var SpotService = (function () {
-    function SpotService(http, apiService) {
-        this.http = http;
+    function SpotService(apiService) {
         this.apiService = apiService;
-        this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        this.spotesUrl = 'api/spots';
     }
     SpotService.prototype.set = function (spots, countries) {
         this.spots = spots;
@@ -31,32 +27,17 @@ var SpotService = (function () {
     SpotService.prototype.getCountries = function () {
         return this.countries;
     };
-    SpotService.prototype.getSpot = function (id) {
+    SpotService.prototype.get = function (id) {
         return this.spots[id];
     };
-    SpotService.prototype.getSpotData = function (id) {
-        return this.apiService.getSpot(id).then(function (response) { return response[0]; });
-    };
-    SpotService.prototype.getSpotForecast = function (id) {
-        return this.apiService.getSpotForecast(id);
-    };
-    SpotService.prototype.update = function (spot) {
-        var url = this.spotesUrl + "/" + spot._id;
-        return this.http
-            .put(url, JSON.stringify(spot), { headers: this.headers })
-            .toPromise()
-            .then(function () { return spot; })
-            .catch(this.handleError);
-    };
-    SpotService.prototype.handleError = function (error) {
-        console.error('An error occurred', error); // for demo purposes only
-        return Promise.reject(error.message || error);
+    SpotService.prototype.getConditions = function (id) {
+        return this.apiService.getSpotConditions(id);
     };
     return SpotService;
 }());
 SpotService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http, api_service_1.APIService])
+    __metadata("design:paramtypes", [api_service_1.APIService])
 ], SpotService);
 exports.SpotService = SpotService;
 //# sourceMappingURL=spot.service.js.map

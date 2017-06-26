@@ -8,17 +8,19 @@
 const mongoose = require('mongoose');
 const tress = require('tress');
 const { wrap: asyncf } = require('co');
-const mswd = require('../../assets/mswd');
-
 const util = require('util');
-
-const fs = require("fs");
+const fs = require('fs');
 const _ = require('lodash');
+
+const mswd = require('../../assets/mswd');
+const crawler = require('../controllers/crawler');
 
 const Continent = mongoose.model('Continent');
 const Country = mongoose.model('Country');
 const Spot = mongoose.model('Spot');
 const Counter = mongoose.model('Counter');
+const Forecast = mongoose.model('Forecast');
+const Condition = mongoose.model('Condition');
 
 exports.merge = function (req, res) {};
 
@@ -28,11 +30,15 @@ exports.test = asyncf(function* (req, res) {
       continentsDb,
       countriesDb,
       spotsDb,
-      idInc,
+      idIncContinent,
+      idIncCountry,
+      idIncSpot,
       q;
 
   yield mongoose.connection.db.dropDatabase();
-  idInc = yield Counter.getIncreament();
+  idIncContinent = yield Counter.getIncreament('continentId');
+  idIncCountry = yield Counter.getIncreament('countryId');
+  idIncSpot = yield Counter.getIncreament('spotId');
 
   file  = fs.readFileSync('assets/continents.json');
   continentsDb = JSON.parse(file);
@@ -44,11 +50,12 @@ exports.test = asyncf(function* (req, res) {
   spotsDb = JSON.parse(file);
 
   q = tress(function(job, done) {
-    var id = idInc++,
-        item;
+    var item,
+        id;
 
     switch (job.type) {
       case 'Continent':
+        id = idIncContinent++;
         item = new Continent(mswd.mapContinent(job, id));
         item.save(function (err) {
           var countries = _.remove(countriesDb, function (item) {
@@ -65,6 +72,7 @@ exports.test = asyncf(function* (req, res) {
         break;
 
       case 'Country':
+        id = idIncCountry++;
         item = new Country(mswd.mapCountry(job, id, job.parentId));
         item.save(function (err) {
           if (err) {
@@ -82,6 +90,7 @@ exports.test = asyncf(function* (req, res) {
         break;
 
       case 'Spot':
+        id = idIncSpot++;
         item = new Spot(mswd.mapSpot(job, id, job.parentId));
         item.save(function (err) {
           if (err) {
@@ -99,10 +108,87 @@ exports.test = asyncf(function* (req, res) {
   );
 
   q.drain = asyncf(function* () {
-    yield Counter.setIncreament(idInc);
+    yield Counter.setIncreament('continentId', idIncContinent);
+    yield Counter.setIncreament('countryId', idIncCountry);
+    yield Counter.setIncreament('spotId', idIncSpot);
 
     res.json({
-      a: 'Finished with id ' + idInc
+      Continent: idIncContinent,
+      Country: idIncCountry,
+      Spot: idIncSpot
     });
   });
+});
+
+exports.uploadForecast = asyncf(function* (mswdId, spotId) {
+    var q,
+        idName = 'forecastId',
+        idInc,
+        items,
+        doc = Forecast;
+
+    idInc = yield Counter.getIncreament(idName);
+    items = yield crawler.getForecast(mswdId);
+
+    q = tress(asyncf(function* (job, done) {
+        var item,
+            id,
+            data;
+        id = idInc++;
+
+        data = mswd.mapForecast(job, id, spotId);
+        item = new doc(data);
+        item.save(function (err) {
+            if (err) {
+                console.log(err);
+            }
+            done();
+        });
+    }), 10);
+
+    q.push(items);
+
+    return new Promise(function(resolve){
+        q.drain = asyncf(function * () {
+            const data = yield doc.get(spotId);
+            yield Counter.setIncreament(idName, idInc);
+            resolve(data);
+        });
+    });
+});
+
+exports.uploadCondition = asyncf(function* (mswdId, spotId) {
+    var q,
+        idName = 'conditionId',
+        idInc,
+        items,
+        doc = Condition;
+
+    idInc = yield Counter.getIncreament(idName);
+    items = yield crawler.getCondition(mswdId);
+
+    q = tress(asyncf(function* (job, done) {
+        var item,
+            id,
+            data;
+        id = idInc++;
+        data = mswd.mapCondition(job, id, spotId);
+        item = new doc(data);
+        item.save(function (err) {
+            if (err) {
+                console.log(err);
+            }
+            done(item);
+        });
+    }), 10);
+
+    q.push(items);
+
+    return new Promise(function(resolve){
+        q.drain = asyncf(function * () {
+            const data = yield doc.get(spotId);
+            yield Counter.setIncreament(idName, idInc);
+            resolve(data);
+        });
+    });
 });

@@ -15,5 +15,8 @@ module.exports = {
     clientID: process.env.GOOGLE_CLIENTID,
     clientSecret: process.env.GOOGLE_SECRET,
     callbackURL: 'http://nodejs-express-demo.herokuapp.com/auth/google/callback'
+  },
+  mswd: {
+      clientID: process.env.MSWS_CLIENTID
   }
 };

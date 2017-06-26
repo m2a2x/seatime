@@ -21,26 +21,26 @@ const CounterSchema = new Schema({
  */
 
 CounterSchema.statics = {
-  getIncreament: function () {
+  getIncreament: function (id) {
     var doc = this;
-    return doc.findById({_id: 'entityId'})
+    return doc.findById({_id: id})
         .then(function (counter) {
             if (counter) {
               return counter.seq;
             } else {
-              return doc.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, {new: true, upsert: true})
+              return doc.findByIdAndUpdate({_id: id}, {$inc: { seq: 1} }, {new: true, upsert: true})
                 .then(function(counter) {
                    return counter.seq;
                 });
             }
         });
   },
-  setIncreament: function (id) {
+  setIncreament: function (id, seq) {
       var doc = this;
-      return doc.findById({_id: 'entityId'})
+      return doc.findById({_id: id})
           .then(function (counter) {
-              if (counter && counter.seq < id) {
-                  return doc.findByIdAndUpdate({_id: 'entityId'}, {seq: id})
+              if (counter && counter.seq < seq) {
+                  return doc.findByIdAndUpdate({_id: id}, {seq: seq})
                       .then(function(counter) {
                           return counter.seq;
                       });
@@ -48,7 +48,14 @@ CounterSchema.statics = {
                   return counter.seq;
               }
           });
-  }
+  },
+   getUpdated: function (id) {
+    var doc = this;
+    return doc.findByIdAndUpdate({_id: id}, {$inc: { seq: 1} }, {new: true, upsert: true})
+        .then(function(counter) {
+            return counter.seq;
+        });
+   }
 };
 
 

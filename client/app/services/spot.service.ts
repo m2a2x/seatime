@@ -24,13 +24,10 @@ export type Spots = _.Dictionary<Spot>;
 
 @Injectable()
 export class SpotService {
-
-  private headers = new Headers({'Content-Type': 'application/json'});
-  private spotesUrl = 'api/spots';
   private spots: Spots;
   private countries: Countries;
 
-  constructor(private http: Http, private apiService: APIService) { }
+  constructor(private apiService: APIService) { }
 
   public set(spots: Spots, countries: Countries): void {
     this.spots = spots;
@@ -45,30 +42,12 @@ export class SpotService {
     return this.countries;
   }
 
-  public getSpot(id: number): Spot {
+  public get(id: number): Spot {
     return this.spots[id];
   }
 
-  public getSpotData(id: number): Promise<Spot> {
-    return this.apiService.getSpot(id).then(response => response[0]);
-  }
-
-  public getSpotForecast(id: number): Promise<any> {
-    return this.apiService.getSpotForecast(id);
-  }
-
-  public update(spot: Spot): Promise<Spot> {
-    const url = `${this.spotesUrl}/${spot._id}`;
-    return this.http
-      .put(url, JSON.stringify(spot), {headers: this.headers})
-      .toPromise()
-      .then(() => spot)
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+  public getConditions(id: number): Promise<any> {
+    return this.apiService.getSpotConditions(id);
   }
 }
 

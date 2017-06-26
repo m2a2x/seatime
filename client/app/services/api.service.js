@@ -38,18 +38,11 @@ var APIService = (function () {
         })
             .catch(this.handleError);
     };
-    APIService.prototype.getSpot = function (id) {
-        var url = 'api/spots' + "/" + id;
+    APIService.prototype.getSpotConditions = function (id) {
+        var url = 'api/spots/getConditions' + "/" + id;
         return this.http.get(url)
             .toPromise()
-            .then(function (response) { return response.json().data; })
-            .catch(this.handleError);
-    };
-    APIService.prototype.getSpotForecast = function (id) {
-        var url = 'api/spot/forecast' + "/" + id;
-        return this.http.get(url)
-            .toPromise()
-            .then(function (response) { return response.json().data; })
+            .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     APIService.prototype.reload = function () {

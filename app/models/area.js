@@ -23,7 +23,8 @@ const AreaSchema = new Schema({
         createdAt  : { type : Date, default : Date.now }
     },
     country: { type: Number, ref: 'Country' },
-    timezone: { type : String, default : '', trim : true }
+    timezone: { type : String, default : '', trim : true },
+    createdAt  : { type : Date, default : Date.now }
 });
 
 
