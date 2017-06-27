@@ -1,4 +1,5 @@
 {
+  "cacheDirectories": ["client/node_modules"],
   "name": "seatime",
   "description": "Seatime work",
   "keywords": [
@@ -21,7 +22,7 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/cross-env NODE_ENV=development nodemon server.js",
-    "postinstall": "cd client/ npm install && ng build --aot -prod"
+    "postinstall": "cd client && npm install && ng build --aot -prod"
   },
   "dependencies": {
     "body-parser": "~1.17.0",
