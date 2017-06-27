@@ -1,119 +1,142 @@
 const _ = require('lodash');
 
-exports.mapContinent = function(continent, id) {
+exports.mapContinent = function(item, id) {
+    var _item = new ItemWrapper(item);
     return {
         _id: id,
-        name: continent.name,
+        name: _item.get('name'),
         meta: {
             mswd: {
-                id: continent._id
+                id: _item.get('_id')
             }
         }
     };
 };
 
 exports.mapCountry = function (item, id, parentId) {
+    var _item = new ItemWrapper(item);
     return {
         _id: id,
         _continent: parentId,
-        name: item.name,
+        name: _item.get('name'),
         meta: {
             mswd: {
-                id: item._id,
-                region_id: item.region_id,
-                url: item.url
+                id: _item.get('_id'),
+                region_id: _item.get('region_id'),
+                url: _item.get('url')
             },
-            iso: item.iso
+            iso: _item.get('iso')
         },
-        surfAreas: _.map(item.surfAreas, '_id')
+        surfAreas: _.map(_item.get('surfAreas'), '_id')
     };
 };
 
 exports.mapSpot = function (item, id, parentId) {
+    var _item = new ItemWrapper(item);
     return {
         _id: id,
         _country: parentId,
-        name: item.name,
-        description: item.description,
-        isBigWave: item.isBigWave,
-        optimumSwellAngle: item.optimumSwellAngle,
-        optimumWindAngle: item.optimumWindAngle,
-        hasAdvancedForecast: item.hasAdvancedForecast,
+        name: _item.get('name'),
+        description: _item.get('description'),
+        isBigWave: _item.get('isBigWave'),
+        optimumSwellAngle: _item.get('optimumSwellAngle'),
+        optimumWindAngle: _item.get('optimumWindAngle'),
+        hasAdvancedForecast: _item.get('hasAdvancedForecast'),
         meta: {
-            offset: item.offset,
+            offset: _item.get('offset'),
             mswd: {
-                id: item._id,
-                surfAreaId: item.surfAreaId,
-                url: item.url,
-                modelName: item.modelName
+                id: _item.get('_id'),
+                surfAreaId: _item.get('surfAreaId'),
+                url: _item.get('url'),
+                modelName: _item.get('modelName')
             },
-            multiplier: item.multiplier,
-            dataLat: item.dataLat,
-            dataLon: item.dataLon,
-            lat: item.lat,
-            lon: item.lon,
-            timeZoneAbbr: item.timeZoneAbbr,
-            timezone: item.timezone
+            multiplier: _item.get('multiplier'),
+            dataLat: _item.get('dataLat'),
+            dataLon: _item.get('dataLon'),
+            lat: _item.get('lat'),
+            lon: _item.get('lon'),
+            timeZoneAbbr: _item.get('timeZoneAbbr'),
+            timezone: _item.get('timezone')
         }
     };
 };
 
 exports.mapForecast = function(item, id, parentId) {
+    var _item = new ItemWrapper(item);
     return {
         _id: id,
         _spot: parentId,
 
         meta: {
-            timestamp: item.timestamp,
-            localTimestamp: item.localTimestamp,
-            issueTimestamp: item.issueTimestamp,
-            fadedRating: item.fadedRating,
-            solidRating: item.solidRating,
-            en_threeHourTimeText: item.en_threeHourTimeText,
-            threeHourTimeText: item.threeHourTimeText,
-            timezoneAbbr: item.timezoneAbbr,
+            timestamp: _item.get('timestamp'),
+            localTimestamp: _item.get('localTimestamp'),
+            issueTimestamp: _item.get('issueTimestamp'),
+            fadedRating: _item.get('fadedRating'),
+            solidRating: _item.get('solidRating'),
+            en_threeHourTimeText: _item.get('en_threeHourTimeText'),
+            threeHourTimeText: _item.get('threeHourTimeText'),
+            timezoneAbbr: _item.get('timezoneAbbr'),
 
 
             mswd: {
                 model: {
-                    id: item.model.id,
-                    name: item.model.name
+                    id: _item.get('model.id'),
+                    name: _item.get('model.name')
                 },
 
                 charts: {
-                    swell: item.charts.swell,
-                    period: item.charts.period,
-                    wind: item.charts.wind,
-                    pressure: item.charts.pressure,
-                    sst: item.charts.sst
+                    swell:  _item.get('charts.swell'),
+                    period: _item.get('charts.period'),
+                    wind: _item.get('charts.wind'),
+                    pressure: _item.get('charts.pressure'),
+                    sst: _item.get('charts.sst')
                 }
             }
         },
 
-        swell: JSON.stringify(item.swell),
-        wind: JSON.stringify(item.wind),
-        condition: JSON.stringify(item.condition)
+        swell: _item.toString('swell'),
+        wind: _item.toString('wind'),
+        condition: _item.toString('condition')
     };
 };
 
 exports.mapCondition = function (item, id, parentId) {
+    var _item = new ItemWrapper(item);
     return {
         _id: id,
         _spot: parentId,
-        tide: item.tide,
-        sunriseTwilight: item.sunriseTwilight,
-        sunrise: item.sunrise,
-        sunsetTwilight: item.sunsetTwilight,
-        sunset: item.sunset,
+        tide: _item.get('tide'),
+        sunriseTwilight: _item.get('sunriseTwilight'),
+        sunrise: _item.get('sunrise'),
+        sunsetTwilight: _item.get('sunsetTwilight'),
+        sunset: _item.get('sunset'),
         meta: {
-            timestamp: item.timestamp,
+            timestamp: _item.get('timestamp'),
             mswd: {
                 images: {
-                    full: item.images.full
+                    full: _item.get('images.full')
                 }
             },
-            unit: item.unit
+            unit: _item.get('unit')
         },
-        port: item.port
+        port: _item.get('port')
     };
 };
+
+function ItemWrapper(item) {
+    var _this = this;
+
+    _.extend(_this, {
+        get: function (key) {
+            return _.reduce(key.split('.'), function (result, key) {
+                if (result) {
+                    return result[key] || null;
+                }
+                return result;
+            }, item);
+        },
+        toString: function (key) {
+            return JSON.stringify(this.get(key));
+        }
+    });
+}

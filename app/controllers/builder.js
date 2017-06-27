@@ -157,7 +157,7 @@ exports.uploadForecast = asyncf(function* (mswdId, spotId) {
     });
 });
 
-exports.uploadCondition = asyncf(function* (mswdId, spotId) {
+exports.uploadCondition = asyncf(function* (mswdId, spotId, start, end) {
     var q,
         idName = 'conditionId',
         idInc,
@@ -165,7 +165,7 @@ exports.uploadCondition = asyncf(function* (mswdId, spotId) {
         doc = Condition;
 
     idInc = yield Counter.getIncreament(idName);
-    items = yield crawler.getCondition(mswdId);
+    items = yield crawler.getCondition(mswdId, start, end);
 
     q = tress(asyncf(function* (job, done) {
         var item,

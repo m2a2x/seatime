@@ -6,7 +6,6 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { wrap: async } = require('co');
 const { getToday } = require('../utils');
 
 /**
@@ -66,7 +65,7 @@ ConditionSchema.statics = {
         var dt = getToday() / 1000,
             fields = ['tide'];
 
-        return this.findOne({_spot: spotId, 'meta.timestamp': {$gt: dt}})
+        return this.find({_spot: spotId, 'meta.timestamp': {$gt: dt}})
             .select(fields)
             .exec()
             .then(function (data) {

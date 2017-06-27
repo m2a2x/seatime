@@ -1,10 +1,12 @@
 <div *ngIf="spot">
   <h2>{{spot.name}} details!</h2>
   <div>
-    <ul *ngIf="tideData">
-      <li *ngFor="let tide of tideData">
-        {{tide.state}}
-        {{tide.date}}
+    <ul *ngIf="conditionData">
+      <li *ngFor="let condition of conditionData">
+        <div *ngFor="let tide of condition.tide">
+          {{ tide.state }}
+          {{ getDate(tide.timestamp) }}
+        </div>
         <br>
       </li>
     </ul>

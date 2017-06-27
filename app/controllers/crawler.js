@@ -62,35 +62,31 @@ exports.get = function(req, response) {
   q.push(getUrl('continent?'));
 };
 
-/*
-exports.getCondition = function(spotId) {
-  var url = getUrl(
-      'Tide?',
-      '&spot_id=' + spotId
-  );
+/**
+ * Condition
+ */
 
-  return new Promise(function(resolve, reject){
-    needle.get(url, function(err, res){
-      if (err) {
-        reject(err);
-      } else {
-        resolve(res.body);
-      }
-    });
-  });
-}; */
+exports.getCondition = function(spotId, start, end) {
+    var url = getUrl(
+        'tide?',
+        '&spot_id=' + spotId + '&start=' + start + '&end=' + end
+    );
 
-exports.getCondition = function() {
-    return new Promise(function(resolve){
-        resolve(JSON.parse(fs.readFileSync('assets/tide.json')));
+    return new Promise(function(resolve, reject){
+        needle.get(url, function(err, res){
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res.body);
+            }
+        });
     });
 };
-
 
 /**
  * Forecast
  */
-/*
+
 exports.getForecast = function(spotId) {
     var url = getUrl(
         'forecast?',
@@ -105,12 +101,6 @@ exports.getForecast = function(spotId) {
                 resolve(res.body);
             }
         });
-    });
-};*/
-
-exports.getForecast = function() {
-    return new Promise(function(resolve){
-        resolve(JSON.parse(fs.readFileSync('assets/forecast.json')));
     });
 };
 

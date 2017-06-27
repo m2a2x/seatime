@@ -11,6 +11,7 @@ const Forecast = mongoose.model('Forecast');
 const Condition = mongoose.model('Condition');
 
 const { uploadForecast, uploadCondition } = require('../controllers/builder');
+const { getToday } = require('../utils');
 
 /**
  * List
@@ -27,7 +28,9 @@ exports.condition = async(function* (req, res){
     var spotId = req.params.id,
         data = {},
         callData,
-        spot;
+        spot,
+        startDate,
+        endDate;
 
     callData = yield Forecast.get(spotId);
     if (!callData) {
@@ -44,7 +47,12 @@ exports.condition = async(function* (req, res){
             // get spot
             spot = yield Spot.get(spotId);
         }
-        callData = yield uploadCondition(spot.meta.mswd.id, spot._id);
+
+        startDate = getToday() / 1000;
+        endDate = new Date(getToday());
+        endDate = (endDate.setMonth(endDate.getMonth() + 1)) / 1000;
+
+        callData = yield uploadCondition(spot.meta.mswd.id, spot._id, startDate, endDate);
     }
     data.conditions = callData;
     res.json(data);

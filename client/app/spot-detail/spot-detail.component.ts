@@ -7,11 +7,15 @@ import * as moment                from 'moment';
 
 import {Spot, SpotService} from '../services/spot.service';
 
-type Tide = {
+type Condition = {
+  tide: TideDataServer;
+};
+
+type TideDataServer = {
   shift: number;
   state: string;
-  date: string;
-};
+  timestamp: number;
+}
 
 @Component({
   selector: 'spot-detail',
@@ -22,7 +26,7 @@ type Tide = {
 export class SpotDetailComponent implements OnInit {
   public spot: Spot;
   public swellData: any[];
-  public tideData: Tide[];
+  public conditionData: Condition[];
   public spotId: number;
 
   constructor(
@@ -38,18 +42,15 @@ export class SpotDetailComponent implements OnInit {
 
 
         this.spotService.getConditions(this.spotId).then(response => {
-          // moment(item.localTimestamp * 1000).format('DD MMM');
           this.swellData = response.forecast;
-          this.tideData = _.map(response.conditions.tide, (tide: {shift: number, state: string, timestamp: number}): Tide => {
-            return {
-              shift: tide.shift,
-              state: tide.state,
-              date: moment(tide.timestamp * 1000).format('DD MMM, hh:mm')
-            };
-          });
+          this.conditionData = response.conditions as Condition[];
         });
       }
     );
+  }
+
+  public getDate(date: number): string {
+    return moment(date * 1000).format('DD MMM, hh:mm');
   }
 
   goBack(): void {
