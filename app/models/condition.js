@@ -69,7 +69,10 @@ ConditionSchema.statics = {
             .select(fields)
             .exec()
             .then(function (data) {
-                return data || null
+                if (data.length) {
+                    return data;
+                }
+                return null;
             });
     }
 };
