@@ -20,7 +20,7 @@
     "node": ">=6.x"
   },
   "scripts": {
-    "start": "./node_modules/.bin/cross-env NODE_ENV=development nodemon server.js"
+    "start": "./node_modules/.bin/cross-env NODE_ENV=development nodemon server.js",
     "postinstall": ".client/ npm install && ng build --aot -prod"
   },
   "dependencies": {
