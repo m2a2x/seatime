@@ -14,3 +14,9 @@
   </h2>
   <button (click)="gotoDetail()">View Details</button>
 </div>
+
+<div>
+  <input [value]="pair" (input)="pair = $event.target.value">
+  <button (click)="syncDevice()">Get Pair</button>
+
+</div>

@@ -6,6 +6,7 @@
 
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const { wrap: async } = require('co');
 
 const Schema = mongoose.Schema;
 const oAuthTypes = [
@@ -27,7 +28,11 @@ const UserSchema = new Schema({
   authToken: { type: String, default: '' },
   admin: { type: Boolean, default: false },
   preferenses: {
-    favouriteSpots: [{ type: Number, ref: 'Spot' }]
+    favouriteSpots: [{ type: Number, ref: 'Spot' }],
+    devices: [{
+        _id: {type: String, required: true },
+        name: { type: String, default: '' }
+    }]
   },
   facebook: {}
 });
@@ -169,6 +174,34 @@ UserSchema.statics = {
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+
+  addFavourite: function(userId, spotId) {
+      return this.update({ _id: userId }, {
+              $push: {
+                  'preferenses.favouriteSpots': spotId
+              }
+          });
+  },
+
+  removeFavourite: function (userId, spotId) {
+      return this.update({ _id: userId }, {
+              $pull: {
+                  'preferenses.favouriteSpots': spotId
+              }
+          },
+          { safe: true, multi:true });
+  },
+
+  addDevice: function(userId, deviceId, deviceName) {
+      return this.update({ _id: userId }, {
+          $push: {
+              'preferenses.devices': {
+                  _id: deviceId,
+                  name: deviceName
+              }
+          }
+      });
   }
 };
 

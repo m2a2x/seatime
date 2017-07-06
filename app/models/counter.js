@@ -12,7 +12,7 @@ const Schema = mongoose.Schema;
  */
 
 const CounterSchema = new Schema({
-  _id: {type: String, required: true},
+  _id: { type: String, required: true },
   seq: { type: Number, default: 0 }
 });
 
@@ -49,13 +49,14 @@ CounterSchema.statics = {
               }
           });
   },
-   getUpdated: function (id) {
+  getUpdated: function (id) {
     var doc = this;
     return doc.findByIdAndUpdate({_id: id}, {$inc: { seq: 1} }, {new: true, upsert: true})
         .then(function(counter) {
             return counter.seq;
         });
-   }
+  },
+
 };
 
 

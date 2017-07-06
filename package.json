@@ -1,5 +1,7 @@
 {
-  "cacheDirectories": ["client/node_modules"],
+  "cacheDirectories": [
+    "client/node_modules"
+  ],
   "name": "seatime",
   "description": "Seatime work",
   "keywords": [
@@ -38,6 +40,7 @@
     "express": "~4.15.0",
     "express-session": "~1.15.0",
     "forever": "~0.15.1",
+    "jsonwebtoken": "^7.4.1",
     "lodash": "~4.17.4",
     "method-override": "~2.3.5",
     "mongoose": "~4.10.4",

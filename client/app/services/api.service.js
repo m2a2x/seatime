@@ -17,7 +17,6 @@ var APIService = (function () {
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
     }
     APIService.prototype.addFavouriteSpot = function (spot) {
-        console.log(this.headers);
         return this.http
             .post('api/user/spots' + "/" + spot._id, null, { headers: this.headers })
             .toPromise()
@@ -28,7 +27,6 @@ var APIService = (function () {
             .catch(this.handleError);
     };
     APIService.prototype.removeFavouriteSpot = function (id) {
-        console.log(this.headers);
         return this.http
             .delete('api/user/spots' + "/" + id, { headers: this.headers })
             .toPromise()
@@ -54,6 +52,19 @@ var APIService = (function () {
             var data = response.json().data;
             _this.headers.append('x-csrf-token', data.token);
             return data;
+        })
+            .catch(this.handleError);
+    };
+    APIService.prototype.setSync = function (pair) {
+        var url = "" + 'api/sync';
+        return this.http.post(url, {
+            pair: pair
+        }, {
+            headers: this.headers
+        })
+            .toPromise()
+            .then(function (response) {
+            return response.json().IsSuccesful;
         })
             .catch(this.handleError);
     };

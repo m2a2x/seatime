@@ -51,8 +51,15 @@ SpotSchema.statics = {
   },
 
   get: function (id) {
-      const criteria = {_id: id};
-      return this.findOne(criteria);
+      return this.findOne({_id: id});
+  },
+
+  getMany: function (ids) {
+      return this.find({
+              _id: { $in: ids}
+          })
+          .select('_id name')
+          .exec();
   }
 };
 

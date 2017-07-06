@@ -10,6 +10,11 @@ export type Reload = {
     token: string
 };
 
+export type Pair = {
+    pair: number,
+    time: number
+};
+
 @Injectable()
 
 export class APIService {
@@ -19,7 +24,6 @@ export class APIService {
 
 
     public addFavouriteSpot(spot: Spot): Promise<boolean> {
-        console.log(this.headers);
         return this.http
             .post(`${'api/user/spots'}/${spot._id}`, null, {headers: this.headers})
             .toPromise()
@@ -31,7 +35,6 @@ export class APIService {
     }
 
     public removeFavouriteSpot(id: number): Promise<boolean> {
-        console.log(this.headers);
         return this.http
             .delete(`${'api/user/spots'}/${id}`, {headers: this.headers})
             .toPromise()
@@ -60,6 +63,27 @@ export class APIService {
                 return data;
             })
             .catch(this.handleError);
+    }
+
+
+    public setSync(pair: number): Promise<boolean> {
+        let url = `${'api/sync'}`;
+
+        return this.http.post(
+            url,
+            {
+                pair: pair
+            },
+            {
+                headers: this.headers
+            }
+        )
+            .toPromise()
+            .then((response) => {
+                return response.json().IsSuccesful as boolean;
+            })
+            .catch(this.handleError);
+
     }
 
 

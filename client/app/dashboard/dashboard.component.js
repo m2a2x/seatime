@@ -14,11 +14,14 @@ var _ = require("lodash");
 var spot_service_1 = require("../services/spot.service");
 var router_1 = require("@angular/router");
 var user_service_1 = require("../services/user.service");
+var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(spotService, userService, router) {
+    function DashboardComponent(spotService, userService, apiService, router) {
         this.spotService = spotService;
         this.userService = userService;
+        this.apiService = apiService;
         this.router = router;
+        this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var spots = this.spotService.getSpots();
@@ -44,6 +47,16 @@ var DashboardComponent = (function () {
     DashboardComponent.prototype.gotoDetail = function () {
         this.router.navigate(['/detail', this.selectedSpot._id]);
     };
+    DashboardComponent.prototype.syncDevice = function () {
+        var pair = _.parseInt(this.pair);
+        console.log(pair);
+        if (!pair) {
+            return;
+        }
+        this.apiService.setSync(pair).then(function (isSuccessful) {
+            console.log(isSuccessful);
+        });
+    };
     return DashboardComponent;
 }());
 DashboardComponent = __decorate([
@@ -54,6 +67,7 @@ DashboardComponent = __decorate([
     }),
     __metadata("design:paramtypes", [spot_service_1.SpotService,
         user_service_1.UserService,
+        api_service_1.APIService,
         router_1.Router])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;

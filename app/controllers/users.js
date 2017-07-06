@@ -83,14 +83,8 @@ exports.login = function (req, res) {
 };
 
 exports.removeSpot = async(function* (req, res, next) {
-    const userId = req.user.id;
     try {
-        yield User.update({ _id: userId }, {
-            $pull: {
-                'preferenses.favouriteSpots': _.parseInt(req.params.id)
-            }
-        },
-        { safe: true, multi:true });
+        yield User.removeFavourite(req.user.id, _.parseInt(req.params.id));
     } catch (err) {
         return next(err);
     }
@@ -98,20 +92,15 @@ exports.removeSpot = async(function* (req, res, next) {
 });
 
 exports.addSpot = async(function* (req, res, next) {
-    var spot, user;
     const userId = req.user.id;
     try {
-        spot = yield Spot.findOne({
+        const spot = yield Spot.findOne({
             _id: _.parseInt(req.params.id)
         });
-        if (!spot) return next(new Error('Spot not found'));
-        user = yield User.findOne({
-            _id: userId
-        });
-        if (!user) return next(new Error('User not found'));
-
-        user.preferenses.favouriteSpots.push(spot._id);
-        yield user.save();
+        if (!spot) {
+            return next(new Error('Spot not found'));
+        }
+        yield User.addFavourite(userId, spot._id);
     } catch (err) {
         return next(err);
     }

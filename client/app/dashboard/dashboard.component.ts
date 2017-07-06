@@ -4,6 +4,7 @@ import * as _                     from 'lodash';
 import {Spot, Spots, SpotService} from '../services/spot.service';
 import { Router }                 from '@angular/router';
 import {UserService, User}        from '../services/user.service';
+import {APIService, Pair} from "../services/api.service";
 
 @Component({
   selector: 'my-dashboard',
@@ -12,11 +13,13 @@ import {UserService, User}        from '../services/user.service';
 })
 
 export class DashboardComponent implements OnInit {
-  private spots: Spot[];
-  private selectedSpot: Spot;
+  public spots: Spot[];
+  public selectedSpot: Spot;
+  public pair: string = '';
 
   constructor(private spotService: SpotService,
               private userService: UserService,
+              private apiService: APIService,
               private router: Router) { }
 
   public ngOnInit(): void {
@@ -43,5 +46,16 @@ export class DashboardComponent implements OnInit {
 
   public gotoDetail(): void {
     this.router.navigate(['/detail', this.selectedSpot._id]);
+  }
+
+  public syncDevice(): void {
+    let pair: number = _.parseInt(this.pair);
+    console.log(pair);
+    if (!pair) {
+      return;
+    }
+    this.apiService.setSync(pair).then((isSuccessful: boolean) => {
+      console.log(isSuccessful);
+    });
   }
 }

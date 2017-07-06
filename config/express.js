@@ -12,7 +12,6 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-const csrf = require('csurf');
 const cors = require('cors');
 const path = require('path');
 
@@ -101,16 +100,7 @@ module.exports = function (app, passport) {
 
   // should be declared after session
   app.use(helpers(pkg.name));
-
-  app.use(csrf());
-
   app.use('/api', api);
-  // This could be moved to view-helpers :-)
-  app.use(function (req, res, next) {
-    res.locals.csrf_token = req.csrfToken();
-    next();
-  });
-
 
   require(path.join(config.root, '/config/routes'))(app, api, passport);
   app.use(function(req, res) {
