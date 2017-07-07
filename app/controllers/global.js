@@ -52,15 +52,21 @@ exports.syncDevice = asyncf(function* (req, res) {
 
 exports.pairDevice = asyncf(function* (req, res) {
     const user = yield getPairedUser(req.body.uuid);
-    var pair;
+    var pair, data;
 
     if (!user) {
         pair = yield Pair.setPair(req.body.uuid, req.body.device);
+        res.json({
+            Pair: pair._id
+        });
+        return;
     }
 
+    data = yield getDeviceData(req.query.uuid);
     res.json({
-        Pair: !user ? pair._id : null
+        PairedData: data
     });
+
 });
 
 exports.getDeviceData = asyncf(function* (req, res) {
@@ -68,9 +74,10 @@ exports.getDeviceData = asyncf(function* (req, res) {
     res.json(data);
 });
 
-var getPairedUser = function (uuid) {
+var getPairedUser = function (uuid, select) {
     return User.load({
-        criteria: { 'preferenses.devices._id': uuid }
+        criteria: { 'preferenses.devices._id': uuid },
+        select: select
     });
 };
 
@@ -80,11 +87,25 @@ var getDeviceData = asyncf(function* (uuid) {
         spotIds,
         conditions = {};
 
-    spotIds = yield getPairedUser(uuid)
-        .select('preferenses.favouriteSpots')
+    function response(resolve, spots, conditions) {
+        return function() {
+            resolve({
+                spots: spots,
+                conditions: conditions
+            });
+        };
+    }
+
+    spotIds = yield (getPairedUser(uuid, 'preferenses.favouriteSpots')
         .then(function (data) {
-            return data.toObject().preferenses.favouriteSpots;
+            return data && data.toObject().preferenses.favouriteSpots || [];
+        }));
+
+    if (!spotIds.length) {
+        return new Promise(function(resolve){
+            response(resolve, null, null)();
         });
+    }
 
     spots = yield Spot.getMany(spotIds);
 
@@ -99,11 +120,6 @@ var getDeviceData = asyncf(function* (uuid) {
     q.push(spotIds);
 
     return new Promise(function(resolve){
-        q.drain = function() {
-            resolve({
-                spots: spots,
-                conditions: conditions
-            });
-        };
+        q.drain = response(resolve, spots, conditions);
     });
 });
