@@ -62,7 +62,7 @@ exports.pairDevice = asyncf(function* (req, res) {
         return;
     }
 
-    data = yield getDeviceData(req.query.uuid);
+    data = yield getDeviceData(req.body.uuid);
     res.json({
         PairedData: data
     });
