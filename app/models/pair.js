@@ -40,7 +40,7 @@ PairSchema.statics = {
         });
 
         if (pair) {
-            yield pair.remove();
+            return pair;
         }
 
         code = yield this.getUniq();

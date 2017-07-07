@@ -37,34 +37,6 @@ exports.index = asyncf(function* (req, res) {
   });
 });
 
-/*
-exports.getSync = asyncf(function* (req, res) {
-    const pair = yield Pair.getPair(req.user.id);
-
-    res.json({
-        pair: pair._id,
-        time: pair.time
-    });
-});
-*/
-/*
-exports.syncDevice = asyncf(function* (req, res) {
-    const pair = yield Pair.findPair(req.body.pair);
-    var data;
-
-    if (!pair) {
-        res.status(404);
-        return;
-    }
-
-    yield User.addDevice(pair.user_id, req.body.uuid, req.body.name);
-
-    data = yield getDeviceData({
-        _id: pair.user_id
-    });
-    res.json(data);
-});
-*/
 
 exports.syncDevice = asyncf(function* (req, res) {
     const pair = yield Pair.getPair(req.body.pair);
@@ -79,32 +51,40 @@ exports.syncDevice = asyncf(function* (req, res) {
 });
 
 exports.pairDevice = asyncf(function* (req, res) {
-    const pair = yield Pair.setPair(req.body.uuid, req.body.device);
+    const user = yield getPairedUser(req.body.uuid);
+    var pair;
+
+    if (!user) {
+        pair = yield Pair.setPair(req.body.uuid, req.body.device);
+    }
 
     res.json({
-        IsSuccesful: !!pair,
-        Pair: pair && pair._id || null
+        Pair: !user ? pair._id : null
     });
 });
 
 exports.getDeviceData = asyncf(function* (req, res) {
-    const data = yield getDeviceData({'preferenses.devices._id': req.query.uuid});
+    const data = yield getDeviceData(req.query.uuid);
     res.json(data);
 });
 
-var getDeviceData = asyncf(function* (criteria) {
+var getPairedUser = function (uuid) {
+    return User.load({
+        criteria: { 'preferenses.devices._id': uuid }
+    });
+};
+
+var getDeviceData = asyncf(function* (uuid) {
     var q,
         spots,
         spotIds,
         conditions = {};
 
-    spotIds = yield User.load({
-        criteria: criteria,
-        select: 'preferenses.favouriteSpots'
-    }).then(function (data) {
-        const user = data.toObject();
-        return user.preferenses.favouriteSpots;
-    });
+    spotIds = yield getPairedUser(uuid)
+        .select('preferenses.favouriteSpots')
+        .then(function (data) {
+            return data.toObject().preferenses.favouriteSpots;
+        });
 
     spots = yield Spot.getMany(spotIds);
 
