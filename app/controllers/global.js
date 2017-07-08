@@ -15,7 +15,6 @@ const Spot = mongoose.model('Spot');
 const User = mongoose.model('User');
 const Pair = mongoose.model('Pair');
 
-
 const { getCondition } = require('./spots');
 
 
@@ -85,13 +84,15 @@ var getDeviceData = asyncf(function* (uuid) {
     var q,
         spots,
         spotIds,
-        conditions = {};
+        conditions = [],
+        tides = [];
 
-    function response(resolve, spots, conditions) {
+    function response(resolve, spots, conditions, tides) {
         return function() {
             resolve({
                 spots: spots,
-                conditions: conditions
+                conditions: conditions,
+                tides: tides
             });
         };
     }
@@ -103,7 +104,7 @@ var getDeviceData = asyncf(function* (uuid) {
 
     if (!spotIds.length) {
         return new Promise(function(resolve){
-            response(resolve, null, null)();
+            response(resolve, null, null, null)();
         });
     }
 
@@ -111,7 +112,19 @@ var getDeviceData = asyncf(function* (uuid) {
 
     q = tress(function (id, done) {
         getCondition(id).then(function (data) {
-            conditions[id] = data;
+            _.each(data, function (item) {
+                item = item.toObject();
+
+                _.each(item.tide, function(t) {
+                    tides.push(_.extend(t, {
+                        spot_id: id
+                    }));
+                });
+
+                delete item.tide;
+                item.spot_id = id;
+                conditions.push(item);
+            });
             done();
         });
 
@@ -120,6 +133,6 @@ var getDeviceData = asyncf(function* (uuid) {
     q.push(spotIds);
 
     return new Promise(function(resolve){
-        q.drain = response(resolve, spots, conditions);
+        q.drain = response(resolve, spots, conditions, tides);
     });
 });
