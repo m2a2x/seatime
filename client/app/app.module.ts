@@ -15,6 +15,7 @@ import { NavigationComponent }    from './navigation/navigation.component';
 import { AuthenticationService }  from './services/auth.service';
 import { AuthGuard }              from './guards/auth.guard';
 import {APIService, Reload} from "./services/api.service";
+import {MapProvider} from "./services/map.provider";
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import {APIService, Reload} from "./services/api.service";
     AuthGuard,
     SpotService,
     UserService,
+    MapProvider,
     {
       provide: APP_INITIALIZER,
       useFactory: (apiService: APIService, userService: UserService, spotService: SpotService) => () => {

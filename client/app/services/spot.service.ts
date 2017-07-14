@@ -1,5 +1,4 @@
 import { Injectable }    from '@angular/core';
-import { Http, Headers } from '@angular/http';
 import * as _ from "lodash";
 
 import 'rxjs/add/operator/toPromise';

@@ -22,6 +22,7 @@ var navigation_component_1 = require("./navigation/navigation.component");
 var auth_service_1 = require("./services/auth.service");
 var auth_guard_1 = require("./guards/auth.guard");
 var api_service_1 = require("./services/api.service");
+var map_provider_1 = require("./services/map.provider");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -49,6 +50,7 @@ AppModule = __decorate([
             auth_guard_1.AuthGuard,
             spot_service_1.SpotService,
             user_service_1.UserService,
+            map_provider_1.MapProvider,
             {
                 provide: core_1.APP_INITIALIZER,
                 useFactory: function (apiService, userService, spotService) { return function () {

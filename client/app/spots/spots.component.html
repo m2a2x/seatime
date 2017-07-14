@@ -1,6 +1,6 @@
 <div>
-  <h2 style="text-align: center;">Places over the world</h2>
-  <div>
+  <div class="mapbg" #bgmap></div>
+  <div style="display: none">
     <ul class="pull-left" style="overflow: auto; width: 200px; height: calc(100vh - 100px); list-style: none;">
       <li *ngFor="let country of countries" (click)="sortByCountry(country._id)">
         <span>{{country.name}}</span>

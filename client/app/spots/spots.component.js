@@ -14,14 +14,17 @@ var spot_service_1 = require("../services/spot.service");
 var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
 var _ = require("lodash");
+var map_provider_1 = require("../services/map.provider");
 var SpotsComponent = (function () {
-    function SpotsComponent(spotService, userService, router) {
+    function SpotsComponent(spotService, userService, mapProvider, router) {
         this.spotService = spotService;
         this.userService = userService;
+        this.mapProvider = mapProvider;
         this.router = router;
     }
     SpotsComponent.prototype.ngOnInit = function () {
         this.countries = _.sortBy(this.spotService.getCountries(), 'name');
+        this.mapProvider.set(this.map.nativeElement);
     };
     SpotsComponent.prototype.sortByCountry = function (id) {
         this.spots = _.filter(this.spotService.getSpots(), {
@@ -37,14 +40,19 @@ var SpotsComponent = (function () {
     };
     return SpotsComponent;
 }());
+__decorate([
+    core_1.ViewChild('bgmap'),
+    __metadata("design:type", core_1.ElementRef)
+], SpotsComponent.prototype, "map", void 0);
 SpotsComponent = __decorate([
     core_1.Component({
-        selector: 'my-spotes',
+        selector: 'places-section',
         templateUrl: './spots.component.html',
         styleUrls: ['./spots.component.css']
     }),
     __metadata("design:paramtypes", [spot_service_1.SpotService,
         user_service_1.UserService,
+        map_provider_1.MapProvider,
         router_1.Router])
 ], SpotsComponent);
 exports.SpotsComponent = SpotsComponent;
