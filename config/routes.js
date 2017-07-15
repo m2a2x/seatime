@@ -81,7 +81,7 @@ module.exports = function (app, api, passport) {
     api.get('/user/:userId', csrf(), users.show);
 
     /** Global reload, return all data in one call */
-    api.get('/reload', csrf(), global.index);
+    api.get('/reload/', csrf(), global.index);
 
     /** Get Conditions  Get Forecasts */
     api.get('/spots/getConditions/:id', csrf(), spots.condition);
@@ -105,6 +105,9 @@ module.exports = function (app, api, passport) {
      */
 
     api.get('*', function(req, res){
+        res.send('Api doesn\'t exists', 404);
+    });
+    api.post('*', function(req, res){
         res.send('Api doesn\'t exists', 404);
     });
     api.delete('*', function(req, res){
