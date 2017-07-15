@@ -104,7 +104,7 @@ module.exports = function (app, passport) {
 
   require(path.join(config.root, '/config/routes'))(app, api, passport);
 
-  app.use(express.static(path.join(config.root, '/node_modules')));
+  app.use('/node_modules', express.static(path.join(config.root, '/node_modules')));
   app.use(function(req, res) {
       // Use res.sendfile, as it streams instead of reading the file into memory.
       res.sendFile(path.join(config.root, '/client/index.html'));
