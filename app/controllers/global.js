@@ -26,7 +26,7 @@ exports.index = asyncf(function* (req, res) {
     var resData = {},
         q,
         fields = [],
-        qspots = [],
+        qspots,
         favouritespots,
         params = req.query;
 
@@ -74,7 +74,7 @@ exports.index = asyncf(function* (req, res) {
                     }
                 case 'spots':
                     var spots = favouritespots || qspots;
-                    if (spots) {
+                    if (spots && spots.length) {
                         promise = Spot.getMany(spots);
                     } else {
                         promise = Spot.list();

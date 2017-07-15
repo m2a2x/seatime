@@ -2,6 +2,7 @@ import {NgModule}      from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule}   from '@angular/forms';
 import {HttpModule}    from '@angular/http';
+
 import {BsDropdownModule} from 'ngx-bootstrap';
 
 import {AppRoutingModule}       from './app-routing.module';
@@ -16,6 +17,7 @@ import {AuthGuard}              from './guards/auth.guard';
 import {APIService}             from "./services/api.service";
 import {MapProvider}            from "./services/map.provider";
 import {DataService}            from "./services/data.service";
+import {SmartinputModule} from "./smartinput/smartinput.module";
 
 import 'lodash';
 import 'rxjs/add/operator/toPromise';
@@ -27,6 +29,7 @@ import 'rxjs/add/operator/toPromise';
         FormsModule,
         HttpModule,
         AppRoutingModule,
+        SmartinputModule.forRoot(),
         BsDropdownModule.forRoot()
     ],
     declarations: [

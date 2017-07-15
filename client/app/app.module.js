@@ -23,6 +23,7 @@ var auth_guard_1 = require("./guards/auth.guard");
 var api_service_1 = require("./services/api.service");
 var map_provider_1 = require("./services/map.provider");
 var data_service_1 = require("./services/data.service");
+var smartinput_module_1 = require("./smartinput/smartinput.module");
 require("lodash");
 require("rxjs/add/operator/toPromise");
 var AppModule = (function () {
@@ -37,6 +38,7 @@ AppModule = __decorate([
             forms_1.FormsModule,
             http_1.HttpModule,
             app_routing_module_1.AppRoutingModule,
+            smartinput_module_1.SmartinputModule.forRoot(),
             ngx_bootstrap_1.BsDropdownModule.forRoot()
         ],
         declarations: [

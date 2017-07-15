@@ -14,6 +14,7 @@ var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
+var _ = require("lodash");
 var SpotsComponent = (function () {
     function SpotsComponent(dataService, userService, mapProvider, router) {
         this.dataService = dataService;
@@ -22,10 +23,14 @@ var SpotsComponent = (function () {
         this.router = router;
     }
     SpotsComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.dataService.reload('countries, spots').then(function (response) {
+            var data = response;
             // this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
+            _this.spots = _.toArray(data.spots);
         });
         this.mapProvider.set(this.map.nativeElement);
+        this.showDrop();
     };
     SpotsComponent.prototype.sortByCountry = function (id) {
         /* this.spots = _.filter<Spot>(this.spotService.getSpots(), {
@@ -38,6 +43,8 @@ var SpotsComponent = (function () {
     };
     SpotsComponent.prototype.gotoDetail = function (id) {
         this.router.navigate(['/detail', id]);
+    };
+    SpotsComponent.prototype.showDrop = function () {
     };
     return SpotsComponent;
 }());
