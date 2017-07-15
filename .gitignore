@@ -1,4 +1,5 @@
 node_modules/
+.idea/
 .monitor
 config/env/env.json
 Makefile

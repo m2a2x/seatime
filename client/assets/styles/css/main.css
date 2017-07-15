@@ -1,17 +1,3 @@
-.mapbg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; }
-
-places-section {
-  position: absolute;
-  top: 50px;
-  bottom: 0;
-  left: 0;
-  width: 100%; }
-
 /*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
 html {
   font-family: sans-serif;
@@ -2898,17 +2884,24 @@ tbody.collapse.show {
 
 .navbar {
   background-color: #5B86C2; }
-  .navbar .nav-link {
-    color: #fff;
-    font-size: 18px;
-    letter-spacing: 0.6px; }
-  .navbar .navbar-nav .nav-link {
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border-right: 1px solid #6D93C8;
-    font-size: 21px; }
-  .navbar .navbar-nav .nav-item:first-child .nav-link {
-    border-left: 1px solid #6D93C8; }
+  .navbar .navbar-nav {
+    width: 100%;
+    height: 50px; }
+    .navbar .navbar-nav .nav-item {
+      border-right: 1px solid #6D93C8; }
+      .navbar .navbar-nav .nav-item:first-child {
+        border-left: 1px solid #6D93C8; }
+      .navbar .navbar-nav .nav-item:last-child {
+        margin-left: auto;
+        border: 0; }
+    .navbar .navbar-nav .nav-link {
+      padding: 0 1rem;
+      color: #fff;
+      font-size: 21px;
+      line-height: 50px;
+      letter-spacing: 0.6px; }
+    .navbar .navbar-nav .login .nav-link {
+      font-size: 18px; }
 
 .align-baseline {
   vertical-align: baseline !important; }
@@ -4899,3 +4892,17 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
 @media print {
   .hidden-print {
     display: none !important; } }
+
+.mapbg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+places-section {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
