@@ -3,18 +3,21 @@
 /**
  * Module dependencies.
  */
+const _ = require('lodash');
 
 const mongoose = require('mongoose');
-const { wrap: async } = require('co');
+const tress = require('tress');
+const {wrap: async} = require('co');
+
 const Spot = mongoose.model('Spot');
 const Forecast = mongoose.model('Forecast');
 const Condition = mongoose.model('Condition');
 
-const { uploadForecast, uploadCondition } = require('../controllers/builder');
-const { getToday } = require('../utils');
+const {uploadForecast, uploadCondition} = require('../controllers/builder');
+const {getToday} = require('../utils');
 
 
-var getForecast = async(function* (spotId){
+var getForecast = async(function*(spotId) {
     var callData,
         spot;
 
@@ -30,7 +33,7 @@ var getForecast = async(function* (spotId){
     return callData;
 });
 
-var getCondition = async(function* (spotId){
+var getCondition = async(function*(spotId) {
     var callData,
         spot,
         startDate,
@@ -57,20 +60,56 @@ var getCondition = async(function* (spotId){
  * List
  */
 
-exports.index = async(function* (req, res) {
-  const spots = yield Spot.list();
-  res.json({
-      data: spots
-  });
+exports.index = async(function*(req, res) {
+    const spots = yield Spot.list();
+    res.json({
+        data: spots
+    });
 });
 
-exports.condition = async(function* (req, res){
-    var spotId = req.params.id,
-        data = {};
+exports.condition = async(function*(req, res) {
+    const params = req.query;
+    var forecast = [],
+        condition = [],
+        spots;
 
-    data.forecast = yield getForecast(spotId);
-    data.conditions = yield getCondition(spotId);
-    res.json(data);
+
+    if (params.spots) {
+        spots = _.reduce(params.spots.split(','), function (result, id) {
+            var id = _.parseInt(id.trim());
+            if (id) {
+                result.push(id);
+            }
+            return result;
+        }, []);
+    }
+
+    var q = tress(async(function*(id, done) {
+        var forecast = yield getForecast(id);
+        var condition = yield getCondition(id);
+        done(null, {
+            forecast: forecast,
+            condition: condition
+        });
+    }), 2);
+
+    q.drain = function () {
+        res.json({
+            forecast: forecast,
+            condition: condition
+        });
+    };
+
+    q.error = function (err) {
+        console.log('failed with error ' + err);
+    };
+
+    q.success = function (data) {
+        forecast.push(data.forecast);
+        condition.push(data.condition);
+    };
+
+    q.push(spots);
 });
 
 

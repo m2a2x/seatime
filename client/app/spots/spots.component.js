@@ -14,7 +14,6 @@ var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
-var _ = require("lodash");
 var SpotsComponent = (function () {
     function SpotsComponent(dataService, userService, mapProvider, router) {
         this.dataService = dataService;
@@ -27,7 +26,7 @@ var SpotsComponent = (function () {
         this.dataService.reload('countries, spots').then(function (response) {
             var data = response;
             // this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
-            _this.spots = _.toArray(data.spots);
+            _this.spots = data.spots;
         });
         this.mapProvider.set(this.map.nativeElement);
         this.showDrop();

@@ -36,9 +36,15 @@ var APIService = (function () {
         })
             .catch(this.handleError);
     };
-    APIService.prototype.getSpotConditions = function (id) {
-        var url = 'api/spots/getConditions' + "/" + id;
-        return this.http.get(url)
+    APIService.prototype.getSpotConditions = function (ids) {
+        var url = 'api/spots/getConditions';
+        var requestOptions = new http_1.RequestOptions();
+        var params = new http_1.URLSearchParams();
+        params.set('spots', ids.join(','));
+        requestOptions.params = params;
+        return this.http.get(url, {
+            search: params
+        })
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);

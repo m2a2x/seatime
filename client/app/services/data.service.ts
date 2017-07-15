@@ -7,15 +7,11 @@ export type Country = {
     name: string;
 };
 
-export type Countries = _.Dictionary<Country>;
-
 export type Spot = {
     _id: number;
     _country: number;
     name: string;
 }
-
-export type Spots = _.Dictionary<Spot>;
 
 @Injectable()
 export class DataService {

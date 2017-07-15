@@ -84,7 +84,7 @@ module.exports = function (app, api, passport) {
     api.get('/reload/', csrf(), global.index);
 
     /** Get Conditions  Get Forecasts */
-    api.get('/spots/getConditions/:id', csrf(), spots.condition);
+    api.get('/spots/getConditions/', csrf(), spots.condition);
 
     /** Set Sync and Pair */
     api.post('/sync', auth.requiresLogin, global.syncDevice);

@@ -37,7 +37,7 @@ exports.index = asyncf(function* (req, res) {
 
     if (params.spots) {
         qspots =_.reduce(params.spots.split(','), function (result, id) {
-            var id = _.parseInt(field.trim());
+            var id = _.parseInt(id.trim());
             if (id) {
                 result.push(id);
             }
@@ -89,7 +89,7 @@ exports.index = asyncf(function* (req, res) {
                 default:
                     done('Unexpected Field Name Parameter ' + job);
             }
-        });
+        }, 5);
 
         q.push(fields);
         q.error = function(err) {

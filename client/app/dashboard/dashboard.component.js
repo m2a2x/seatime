@@ -12,20 +12,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var _ = require("lodash");
 var router_1 = require("@angular/router");
+var data_service_1 = require("../services/data.service");
 var user_service_1 = require("../services/user.service");
 var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(userService, apiService, router) {
+    function DashboardComponent(userService, dataService, apiService, router) {
         this.userService = userService;
+        this.dataService = dataService;
         this.apiService = apiService;
         this.router = router;
         this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        var spots = []; // this.spotService.getSpots();
-        var user = this.userService.getUser();
-        this.spots = _.filter(spots, function (spot) {
-            return _.includes(user.preferenses.favouriteSpots, spot._id);
+        var _this = this;
+        this.dataService.reload('favourite')
+            .then(function (response) {
+            var data = response;
+            _this.spots = data.spots;
+            if (!_this.spots.length) {
+                return;
+            }
+            return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'));
+        })
+            .then(function (response) {
+            console.log(response);
         });
     };
     DashboardComponent.prototype.delete = function (spot) {
@@ -64,6 +74,7 @@ DashboardComponent = __decorate([
         styleUrls: ['./dashboard.component.css']
     }),
     __metadata("design:paramtypes", [user_service_1.UserService,
+        data_service_1.DataService,
         api_service_1.APIService,
         router_1.Router])
 ], DashboardComponent);

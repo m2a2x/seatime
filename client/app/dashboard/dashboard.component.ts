@@ -1,9 +1,9 @@
 import {Component, OnInit}      from '@angular/core';
 import * as _                     from 'lodash';
 import {Router}                   from '@angular/router';
-import {Spot}                     from '../services/data.service';
+import {DataService, Spot}                     from '../services/data.service';
 import {User, UserService}        from '../services/user.service';
-import {APIService}               from "../services/api.service";
+import {APIService, Reload}               from "../services/api.service";
 
 @Component({
     selector: 'my-dashboard',
@@ -17,16 +17,25 @@ export class DashboardComponent implements OnInit {
     public pair: string = '';
 
     constructor(private userService: UserService,
+                private dataService: DataService,
                 private apiService: APIService,
                 private router: Router) {
     }
 
     public ngOnInit(): void {
-        let spots: Spot[] = []; // this.spotService.getSpots();
-        let user: User = this.userService.getUser();
-        this.spots = _.filter<Spot>(spots, (spot: Spot): boolean => {
-            return _.includes<number>(user.preferenses.favouriteSpots, spot._id);
-        });
+        this.dataService.reload('favourite')
+            .then((response: Reload) => {
+                let data: Reload = response as Reload;
+                this.spots = data.spots;
+                if (!this.spots.length) {
+                    return;
+                }
+
+                return this.apiService.getSpotConditions(_.map(this.spots, '_id'));
+            })
+            .then((response) => {
+                console.log(response);
+            });
     }
 
 

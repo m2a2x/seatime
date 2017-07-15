@@ -1,14 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Countries, Country, Spot, Spots} from "../services/data.service";
+import {Country, Spot} from "../services/data.service";
 import {UserService} from "../services/user.service";
 import {Router} from "@angular/router";
 import {MapProvider} from "../services/map.provider";
 import {DataService} from "../services/data.service";
-import * as _ from 'lodash';
 
 type Reload = {
-    spots: Spots;
-    countries: Countries;
+    spots: Spot[];
+    countries: Country[];
 };
 
 @Component({
@@ -33,7 +32,7 @@ export class SpotsComponent implements OnInit {
     this.dataService.reload('countries, spots').then((response: Reload) => {
         let data: Reload = response as Reload;
       // this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
-        this.spots = _.toArray(data.spots);
+        this.spots = data.spots;
     });
     this.mapProvider.set(this.map.nativeElement);
     this.showDrop();

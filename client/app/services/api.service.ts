@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, URLSearchParams } from '@angular/http';
-import {Countries, Spot, Spots} from "./data.service";
+import { Country, Spot} from "./data.service";
 import {User} from "./user.service";
 
 export type Reload = {
-    spots?: Spots,
-    countries?: Countries,
+    spots?: Spot[],
+    countries?: Country[],
     user?: User
 };
 
@@ -45,9 +45,18 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public getSpotConditions(id: number): Promise<any> {
-        let url = `${'api/spots/getConditions'}/${id}`;
-        return this.http.get(url)
+    public getSpotConditions(ids: number[]): Promise<any> {
+        let url = 'api/spots/getConditions';
+
+        let requestOptions = new RequestOptions();
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('spots', ids.join(','));
+        requestOptions.params = params;
+
+        return this.http.get(
+            url, {
+                search: params
+            })
             .toPromise()
             .then(response => response.json())
             .catch(this.handleError);
