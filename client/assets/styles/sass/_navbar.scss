@@ -1,0 +1,26 @@
+.navbar {
+	background-color: #5B86C2;
+
+	.nav-link {
+		color: #fff;
+		font-size: 18px;
+		letter-spacing: 0.6px;
+
+
+	}
+
+	.navbar-nav {
+		.nav-link {
+			padding-right: 1rem;
+    		padding-left: 1rem;
+    		border-right: 1px solid #6D93C8;
+			font-size: 21px;
+		}
+
+		.nav-item:first-child {
+			.nav-link {
+				border-left: 1px solid #6D93C8;
+			}
+		}
+	}
+}
