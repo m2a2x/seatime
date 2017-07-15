@@ -37,7 +37,7 @@ module.exports = function (app, passport) {
   }));
 
   app.use(cors({
-    origin: ['http://localhost:3000', 'https://reboil-demo.herokuapp.com'],
+    origin: ['http://localhost:3000'],
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     credentials: true
   }));
@@ -103,6 +103,8 @@ module.exports = function (app, passport) {
   app.use('/api', api);
 
   require(path.join(config.root, '/config/routes'))(app, api, passport);
+
+  app.use(express.static(path.join(config.root, '/node_modules')));
   app.use(function(req, res) {
       // Use res.sendfile, as it streams instead of reading the file into memory.
       res.sendFile(path.join(config.root, '/client/index.html'));
