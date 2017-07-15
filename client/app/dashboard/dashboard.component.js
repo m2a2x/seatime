@@ -11,20 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var _ = require("lodash");
-var spot_service_1 = require("../services/spot.service");
 var router_1 = require("@angular/router");
 var user_service_1 = require("../services/user.service");
 var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(spotService, userService, apiService, router) {
-        this.spotService = spotService;
+    function DashboardComponent(userService, apiService, router) {
         this.userService = userService;
         this.apiService = apiService;
         this.router = router;
         this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        var spots = this.spotService.getSpots();
+        var spots = []; // this.spotService.getSpots();
         var user = this.userService.getUser();
         this.spots = _.filter(spots, function (spot) {
             return _.includes(user.preferenses.favouriteSpots, spot._id);
@@ -65,8 +63,7 @@ DashboardComponent = __decorate([
         templateUrl: './dashboard.component.html',
         styleUrls: ['./dashboard.component.css']
     }),
-    __metadata("design:paramtypes", [spot_service_1.SpotService,
-        user_service_1.UserService,
+    __metadata("design:paramtypes", [user_service_1.UserService,
         api_service_1.APIService,
         router_1.Router])
 ], DashboardComponent);

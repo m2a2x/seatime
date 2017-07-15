@@ -1,9 +1,9 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Country, Spot, Spots, SpotService}         from '../services/spot.service';
+import {Country, Spot} from "../services/data.service";
 import {UserService} from "../services/user.service";
 import {Router} from "@angular/router";
-import * as _ from "lodash";
 import {MapProvider} from "../services/map.provider";
+import {DataService} from "../services/data.service";
 
 
 @Component({
@@ -18,21 +18,23 @@ export class SpotsComponent implements OnInit {
   private countries: Country[];
 
   constructor(
-    private spotService: SpotService,
+    private dataService: DataService,
     private userService: UserService,
     private mapProvider: MapProvider,
     private router: Router) { }
 
 
   public ngOnInit(): void {
-    this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
+    this.dataService.reload('countries, spots').then((response) => {
+      // this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
+    });
     this.mapProvider.set(this.map.nativeElement);
   }
 
   public sortByCountry(id: number) {
-    this.spots = _.filter<Spot>(this.spotService.getSpots(), {
+    /* this.spots = _.filter<Spot>(this.spotService.getSpots(), {
       _country: id
-    });
+    }); */
   }
 
   public addSpot(spot: Spot, e: Event): void {

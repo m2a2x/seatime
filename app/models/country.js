@@ -28,7 +28,7 @@ const CountrySchema = new Schema({
 
 CountrySchema.statics = {
     list: function () {
-        return this.find({}).exec();
+        return this.find({});
     }
 };
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { APIService } from "./api.service";
-import {Spot} from "./spot.service";
+import {Spot} from "./data.service";
+
 
 export type User = {
     _id: number;
@@ -16,7 +17,7 @@ export class UserService {
 
     constructor(private apiService: APIService) {}
 
-    public set(user: User): void {
+    public set(user: User | null): void {
         this.user = user;
     }
 

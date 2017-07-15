@@ -43,20 +43,21 @@ var APIService = (function () {
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
-    APIService.prototype.reload = function () {
-        var _this = this;
-        var url = "" + 'api/reload';
-        return this.http.get(url)
-            .toPromise()
-            .then(function (response) {
-            var data = response.json().data;
-            _this.headers.append('x-csrf-token', data.token);
-            return data;
+    APIService.prototype.reload = function (query) {
+        var url = 'api/reload';
+        var requestOptions = new http_1.RequestOptions();
+        var params = new http_1.URLSearchParams();
+        params.set('fields', query);
+        requestOptions.params = params;
+        return this.http.get(url, {
+            search: params
         })
+            .toPromise()
+            .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     APIService.prototype.setSync = function (pair) {
-        var url = "" + 'api/sync';
+        var url = 'api/sync';
         return this.http.post(url, {
             pair: pair
         }, {

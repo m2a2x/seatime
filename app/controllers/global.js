@@ -23,17 +23,88 @@ const { getCondition } = require('./spots');
  */
 
 exports.index = asyncf(function* (req, res) {
-  const countries = yield Country.list();
-  const spots = yield Spot.list();
+    var resData = {},
+        q,
+        fields = [],
+        qspots = [],
+        favouritespots,
+        params = req.query;
 
-  res.json({
-      data: {
-          countries: _.keyBy(countries, '_id'),
-          spots: _.keyBy(spots, '_id'),
-          user: req.isAuthenticated() ? req.user : null,
-          token: req.isAuthenticated() ? req.csrfToken() : null
-      }
-  });
+
+    if (req.isAuthenticated()) {
+        resData.user = req.user;
+    }
+
+    if (params.spots) {
+        qspots =_.reduce(params.spots.split(','), function (result, id) {
+            var id = _.parseInt(field.trim());
+            if (id) {
+                result.push(id);
+            }
+            return result;
+        }, []);
+    }
+
+    if (params.fields) {
+        fields = _.map(params.fields.split(','), function (name) {
+            return name.trim();
+        });
+
+
+        q = tress(function (job, done) {
+            var promise;
+            switch (job) {
+                case 'countries':
+                    promise = Country.list();
+                    promise.then(function(data) {
+                        done(null, {
+                            countries: data
+                        });
+                    });
+                    break;
+                case 'favourite':
+                    if (!resData.user) {
+                        done('User is not logged in');
+                        return;
+                    }
+                    favouritespots = resData.user.preferenses.favouriteSpots;
+                    if (!favouritespots || !favouritespots.length) {
+                        done(null);
+                        return;
+                    }
+                case 'spots':
+                    var spots = favouritespots || qspots;
+                    if (spots) {
+                        promise = Spot.getMany(spots);
+                    } else {
+                        promise = Spot.list();
+                    }
+
+                    promise.then(function(data) {
+                        done(null, {
+                            spots: data
+                        });
+                    });
+                    break;
+                default:
+                    done('Unexpected Field Name Parameter ' + job);
+            }
+        });
+
+        q.push(fields);
+        q.error = function(err) {
+            console.log(err);
+        };
+
+        q.success = function(data) {
+          _.merge(resData, data);
+        };
+        q.drain = function() {
+            res.json(resData);
+        };
+    } else {
+        res.json(resData);
+    }
 });
 
 

@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, RequestOptions, URLSearchParams } from '@angular/http';
+import {Countries, Spot, Spots} from "./data.service";
 import {User} from "./user.service";
-import {Spot, Spots, Countries} from "./spot.service";
 
 export type Reload = {
-    spots: Spots,
-    countries: Countries,
-    user: User,
-    token: string
+    spots?: Spots,
+    countries?: Countries,
+    user?: User
 };
 
 export type Pair = {
@@ -16,11 +15,12 @@ export type Pair = {
 };
 
 @Injectable()
-
 export class APIService {
     private headers: Headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(private http: Http) {}
+    constructor(
+        private http: Http
+    ) {}
 
 
     public addFavouriteSpot(spot: Spot): Promise<boolean> {
@@ -53,21 +53,28 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public reload(): Promise<Reload> {
-        let url = `${'api/reload'}`;
-        return this.http.get(url)
-            .toPromise()
-            .then((response) => {
-                let data: Reload = response.json().data as Reload;
-                this.headers.append('x-csrf-token', data.token);
-                return data;
+    public reload(query: string | ''): Promise<Reload> {
+        let url = 'api/reload';
+
+        let requestOptions = new RequestOptions();
+        let params: URLSearchParams = new URLSearchParams();
+
+        params.set('fields', query);
+        requestOptions.params = params;
+
+
+        return this.http.get(
+            url, {
+                search: params
             })
+            .toPromise()
+            .then(response => response.json() as Reload)
             .catch(this.handleError);
     }
 
 
     public setSync(pair: number): Promise<boolean> {
-        let url = `${'api/sync'}`;
+        let url = 'api/sync';
 
         return this.http.post(
             url,

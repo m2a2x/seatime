@@ -16,13 +16,15 @@ var app_component_1 = require("./app.component");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var spots_component_1 = require("./spots/spots.component");
 var spot_detail_component_1 = require("./spot-detail/spot-detail.component");
-var spot_service_1 = require("./services/spot.service");
 var user_service_1 = require("./services/user.service");
 var navigation_component_1 = require("./navigation/navigation.component");
 var auth_service_1 = require("./services/auth.service");
 var auth_guard_1 = require("./guards/auth.guard");
 var api_service_1 = require("./services/api.service");
 var map_provider_1 = require("./services/map.provider");
+var data_service_1 = require("./services/data.service");
+require("lodash");
+require("rxjs/add/operator/toPromise");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -46,23 +48,25 @@ AppModule = __decorate([
         ],
         providers: [
             api_service_1.APIService,
+            data_service_1.DataService,
             auth_service_1.AuthenticationService,
             auth_guard_1.AuthGuard,
-            spot_service_1.SpotService,
             user_service_1.UserService,
-            map_provider_1.MapProvider,
-            {
-                provide: core_1.APP_INITIALIZER,
-                useFactory: function (apiService, userService, spotService) { return function () {
-                    return apiService.reload().then(function (response) {
-                        userService.set(response.user);
-                        spotService.set(response.spots, response.countries);
-                        return true;
-                    });
-                }; },
-                deps: [api_service_1.APIService, user_service_1.UserService, spot_service_1.SpotService],
-                multi: true
-            }
+            map_provider_1.MapProvider
+            /*,
+             {
+             provide: APP_INITIALIZER,
+             useFactory: (apiService: APIService, userService: UserService, spotService: SpotService) => () => {
+             return apiService.reload().then((response: Reload): boolean => {
+             userService.set(response.user);
+             spotService.set(response.spots, response.countries);
+             return true;
+             });
+             },
+             deps: [APIService, UserService, SpotService],
+             multi: true
+             }
+             */
         ],
         bootstrap: [app_component_1.AppComponent]
     })

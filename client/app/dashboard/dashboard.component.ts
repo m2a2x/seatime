@@ -1,10 +1,9 @@
 import { Component, OnInit }      from '@angular/core';
 import * as _                     from 'lodash';
-
-import {Spot, Spots, SpotService} from '../services/spot.service';
 import { Router }                 from '@angular/router';
-import {UserService, User}        from '../services/user.service';
-import {APIService, Pair} from "../services/api.service";
+import {Spot}               from '../services/data.service';
+import {User, UserService}              from '../services/user.service';
+import { APIService }             from "../services/api.service";
 
 @Component({
   selector: 'my-dashboard',
@@ -17,13 +16,12 @@ export class DashboardComponent implements OnInit {
   public selectedSpot: Spot;
   public pair: string = '';
 
-  constructor(private spotService: SpotService,
-              private userService: UserService,
+  constructor(private userService: UserService,
               private apiService: APIService,
               private router: Router) { }
 
   public ngOnInit(): void {
-    let spots: Spots = this.spotService.getSpots();
+    let spots: Spot[] = []; // this.spotService.getSpots();
     let user: User = this.userService.getUser();
     this.spots = _.filter<Spot>(spots, (spot: Spot): boolean => {
       return _.includes<number>(user.preferenses.favouriteSpots, spot._id);

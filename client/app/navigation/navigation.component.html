@@ -1,6 +1,6 @@
 <nav>
-  <a routerLink="/dashboard" routerLinkActive="active" *ngIf="isLoggedIn">Dashboard</a>
+  <a routerLink="/dashboard" routerLinkActive="active" *ngIf="isLoggedIn()">Dashboard</a>
   <a routerLink="/spots" routerLinkActive="active">Spots</a>
-  <a href="/auth/facebook" target="_self" *ngIf="!isLoggedIn">Sign in</a>
-  <a href="/logout" target="_self" *ngIf="isLoggedIn">Logout</a>
+  <a href="/auth/facebook" target="_self" *ngIf="!isLoggedIn()">Sign in</a>
+  <a href="/logout" target="_self" *ngIf="isLoggedIn()">Logout</a>
 </nav>

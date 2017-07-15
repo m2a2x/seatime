@@ -6,11 +6,10 @@ import {AuthenticationService} from "../services/auth.service";
   templateUrl: './navigation.component.html',
   styleUrls: [ './navigation.component.css' ]
 })
-export class NavigationComponent implements OnInit {
-  private isLoggedIn: boolean = false;
+export class NavigationComponent {
   constructor(private authService: AuthenticationService) { }
 
-  public ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
+  public isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();;
   }
 }

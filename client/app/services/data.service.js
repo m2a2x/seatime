@@ -10,34 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-require("rxjs/add/operator/toPromise");
-require("rxjs/add/operator/map");
 var api_service_1 = require("./api.service");
-var SpotService = (function () {
-    function SpotService(apiService) {
+var user_service_1 = require("./user.service");
+var DataService = (function () {
+    function DataService(apiService, userService) {
         this.apiService = apiService;
+        this.userService = userService;
     }
-    SpotService.prototype.set = function (spots, countries) {
-        this.spots = spots;
-        this.countries = countries;
+    DataService.prototype.reload = function (params) {
+        var _this = this;
+        return this.apiService.reload(params).then(function (response) {
+            _this.userService.set(response.user);
+            delete response.user;
+            return response;
+        });
     };
-    SpotService.prototype.getSpots = function () {
-        return this.spots;
-    };
-    SpotService.prototype.getCountries = function () {
-        return this.countries;
-    };
-    SpotService.prototype.get = function (id) {
-        return this.spots[id];
-    };
-    SpotService.prototype.getConditions = function (id) {
-        return this.apiService.getSpotConditions(id);
-    };
-    return SpotService;
+    return DataService;
 }());
-SpotService = __decorate([
+DataService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [api_service_1.APIService])
-], SpotService);
-exports.SpotService = SpotService;
-//# sourceMappingURL=spot.service.js.map
+    __metadata("design:paramtypes", [api_service_1.APIService, user_service_1.UserService])
+], DataService);
+exports.DataService = DataService;
+//# sourceMappingURL=data.service.js.map

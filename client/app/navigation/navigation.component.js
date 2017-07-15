@@ -14,10 +14,10 @@ var auth_service_1 = require("../services/auth.service");
 var NavigationComponent = (function () {
     function NavigationComponent(authService) {
         this.authService = authService;
-        this.isLoggedIn = false;
     }
-    NavigationComponent.prototype.ngOnInit = function () {
-        this.isLoggedIn = this.authService.isLoggedIn();
+    NavigationComponent.prototype.isLoggedIn = function () {
+        return this.authService.isLoggedIn();
+        ;
     };
     return NavigationComponent;
 }());
