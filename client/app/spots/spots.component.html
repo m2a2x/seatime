@@ -1,12 +1,6 @@
 <div>
   <div class="mapbg" #bgmap></div>
-  <div>
-    <input [(ngModel)]="groupSelected"
-              [typeahead]="statesComplex"
-              typeaheadOptionField="name"
-              typeaheadGroupField="region"
-              class="form-control">
-  </div>
+  <div></div>
   <div style="display: none">
     <ul class="pull-left" style="overflow: auto; width: 200px; height: calc(100vh - 100px); list-style: none;">
       <li *ngFor="let country of countries" (click)="sortByCountry(country._id)">
