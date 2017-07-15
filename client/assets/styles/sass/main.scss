@@ -1,5 +1,5 @@
 
-// TODO: Add autoprefixer and minifi css
+// TODO: Add autoprefixer and minify css
 
 
 // Core variables and mixins
@@ -31,26 +31,7 @@
 @import "node_modules/bootstrap/scss/nav";
 @import "node_modules/bootstrap/scss/navbar";
 @import "navbar";
+@import "map";
 
 // Utility classes
 @import "node_modules/bootstrap/scss/utilities";
-
-
-.mapbg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-
-places-section {
-  position: absolute;
-  top: 50px;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
-
