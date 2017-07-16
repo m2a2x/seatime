@@ -9,71 +9,83 @@ const tress = require('tress');
 const needle = require('needle');
 const fs = require('fs');
 const _ = require('lodash');
-const {getMswdUrl: getUrl} = require('../../config/middlewares/mswd')
+const {getMswdUrl: getUrl, getMswdParams: getParams} = require('../../config/middlewares/mswd');
 
-exports.get = function(req, response) {
-  var continents = {},
-      countries = {},
-      spots = [];
-
-
-  var q = tress(function(url, callback){
-    needle.get(url, function(err, res){
-      if (err) throw err;
-
-      var path = res.req.path;
-
-      /**
-       * CONTINENT LEVEL
-       */
-
-      if (~path.indexOf('continent?')) {
-        getContinents(q, res.body, continents);
-      }
-
-      /**
-       * COUNTRY LEVEL
-       */
-
-      else if (~path.indexOf('region?')) {
-        getCountries(q, res.body, path, countries);
-      }
-
-      /**
-       * SPOT LEVEL
-       */
-
-      else if (~path.indexOf('spot?')) {
-        getSpots(res.body, path, spots);
-      }
-
-      callback();
+exports.test = function (req, response) {
+    needle.request('get', 'http://localhost:3000/api/reload', getParams({}), function (err, res) {
+        response.json(res.body);
     });
-  }, 10);
+};
 
-  q.drain = function() {
-    response.json({
-      continents: continents,
-      countries: countries,
-      spots: spots
+exports.get = function (req, response) {
+    var continents = {},
+        countries = {},
+        spots = [],
+        q;
+
+
+    q = tress(function (data, callback) {
+        needle.request('get', data.url, getParams(data.params), function (err, res) {
+            if (err) throw err;
+            const path = res.req.path;
+
+            /**
+             * CONTINENT LEVEL
+             */
+
+            if (~path.indexOf('continent?')) {
+                getContinents(q, res.body, continents);
+            }
+
+            /**
+             * COUNTRY LEVEL
+             */
+
+            else if (~path.indexOf('region?')) {
+                getCountries(q, res.body, path, countries);
+            }
+
+            /**
+             * SPOT LEVEL
+             */
+
+            else if (~path.indexOf('spot?')) {
+                getSpots(res.body, path, spots);
+            }
+
+            callback();
+        });
+    }, 10);
+
+    q.drain = function () {
+        response.json({
+            continents: continents,
+            countries: countries,
+            spots: spots
+        });
+    };
+
+    q.push({
+        url: getUrl('continent'),
+        params: getParams({})
     });
-  };
-
-  q.push(getUrl('continent?'));
 };
 
 /**
  * Condition
  */
 
-exports.getCondition = function(spotId, start, end) {
-    var url = getUrl(
-        'tide?',
-        '&spot_id=' + spotId + '&start=' + start + '&end=' + end
-    );
+exports.getCondition = function (spotId, start, end) {
+    var url = getUrl('tide');
 
-    return new Promise(function(resolve, reject){
-        needle.get(url, function(err, res){
+    const params = {
+        spot_id: spotId,
+        start: start,
+        end: end
+    };
+
+    return new Promise(function (resolve, reject) {
+        needle.request('get', url, getParams(params), function (err, res) {
             if (err) {
                 reject(err);
             } else {
@@ -87,14 +99,14 @@ exports.getCondition = function(spotId, start, end) {
  * Forecast
  */
 
-exports.getForecast = function(spotId) {
-    var url = getUrl(
-        'forecast?',
-        '&spot_id=' + spotId
-    );
+exports.getForecast = function (spotId) {
+    const url = getUrl('forecast');
+    const params = {
+        spot_id: spotId
+    };
 
-    return new Promise(function(resolve, reject){
-        needle.get(url, function(err, res){
+    return new Promise(function (resolve, reject) {
+        needle.request('get', url, getParams(params), function (err, res) {
             if (err) {
                 reject(err);
             } else {
@@ -109,17 +121,16 @@ exports.getForecast = function(spotId) {
  */
 
 function getContinents(q, data, collection) {
-  _.each(data, function (continent) {
-    collection[continent._id] = continent;
+    const url = getUrl('country');
+    _.each(data, function (continent) {
+        collection[continent._id] = continent;
 
-    // next level call
-    q.push(
-        getUrl(
-            'country?',
-            '&continent_id=' + continent._id
-        )
-    );
-  });
+        // next level call
+        const params = {
+            continent_id: continent._id
+        };
+        q.push({url: url, params: params});
+    });
 }
 
 /**
@@ -127,25 +138,24 @@ function getContinents(q, data, collection) {
  */
 
 function getCountries(q, data, path, collection) {
-  var myRegexp = /(?:^|\&)continent_id=(.*?)(?:\&|$)/g;
-  var parent_id = _.parseInt(myRegexp.exec(path)[1]);
+    const myRegexp = /(?:^|\&)continent_id=(.*?)(?:\&|$)/g;
+    const parent_id = _.parseInt(myRegexp.exec(path)[1]);
+    const url = getUrl('spot');
 
-  _.each(data, function (region) {
+    _.each(data, function (region) {
 
-    _.each(region.countries, function (country) {
-      collection[country._id] = country;
-      country.region_id = region._id;
-      country.continent_id = parent_id;
+        _.each(region.countries, function (country) {
+            collection[country._id] = country;
+            country.region_id = region._id;
+            country.continent_id = parent_id;
 
-      // next level call
-      q.push(
-          getUrl(
-              'spot?',
-              '&country_id=' + country._id
-          )
-      );
+            // next level call
+            const params = {
+                country_id: country._id
+            };
+            q.push({url: url, params: params});
+        });
     });
-  });
 }
 
 /**
@@ -153,11 +163,11 @@ function getCountries(q, data, path, collection) {
  */
 
 function getSpots(data, path, collection) {
-  var myRegexp = /(?:^|\&)country_id=(.*?)(?:\&|$)/g;
-  var parent_id = _.parseInt(myRegexp.exec(path)[1]);
+    const myRegexp = /(?:^|\&)country_id=(.*?)(?:\&|$)/g;
+    const parent_id = _.parseInt(myRegexp.exec(path)[1]);
 
-  _.each (data, function(spot) {
-    spot.country_id = parent_id;
-    collection.push(spot);
-  });
+    _.each(data, function (spot) {
+        spot.country_id = parent_id;
+        collection.push(spot);
+    });
 }

@@ -25,7 +25,7 @@ module.exports = function (app, api, apiDevice, passport) {
     /**
      * DB fill
      */
-    app.get('/test', builder.test);
+    app.get('/test', crawler.test);
     app.get('/merge', builder.merge);
 
     /** Crawler, don't use without purpose */
