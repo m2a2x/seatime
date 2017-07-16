@@ -3,34 +3,15 @@ import {SmartinputState} from "./smartinput.state";
 import {Subscription} from "rxjs";
 
 @Directive({
-    selector: '[smartinput]'
+    selector: '[smartinput]',
+    providers: [SmartinputState]
 })
 export class SmartinputDirective implements OnDestroy {
     @HostBinding('attr.aria-expanded') isOpen: boolean;
 
-    /*
-    @HostListener('click')
-    onClick(): void {
-        if (this.isDisabled) {
-            return;
-        }
-        this._state.toggleClick.emit();
-    }*/
-
-    @HostListener('focus')
-    onFocus(): void {
-        this._state.openMenu.emit();
-    }
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: any): void {
         if (this._state.autoClose && event.button !== 2 && !this._element.nativeElement.contains(event.target)) {
-            this._state.closeMenu.emit();
-        }
-    }
-
-    @HostListener('keyup.esc')
-    onEsc(): void {
-        if (this._state.autoClose) {
             this._state.closeMenu.emit();
         }
     }

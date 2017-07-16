@@ -1,9 +1,9 @@
-import {Component, OnInit}      from '@angular/core';
-import * as _                     from 'lodash';
-import {Router}                   from '@angular/router';
-import {DataService, Spot}                     from '../services/data.service';
-import {User, UserService}        from '../services/user.service';
-import {APIService, Reload}               from "../services/api.service";
+import {Component, OnInit} from '@angular/core';
+import * as _ from 'lodash';
+import {Router} from '@angular/router';
+import {DataService, Spot} from '../services/data.service';
+import {UserService} from '../services/user.service';
+import {APIService, Reload} from "../services/api.service";
 
 @Component({
     selector: 'my-dashboard',

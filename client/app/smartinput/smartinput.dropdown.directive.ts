@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import {SmartinputState} from "./smartinput.state";
 import {Subscription} from "rxjs";
-import {SmartinputComponent} from "./smartinput.component";
 
 @Directive({
     selector: '[smartinputdropdown]',
@@ -61,32 +60,14 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
     constructor(private _elementRef: ElementRef,
                 private componentFactoryResolver: ComponentFactoryResolver,
                 private _viewContainerRef: ViewContainerRef,
-                private _state: SmartinputState) {
-
-
-
-    }
+                private _state: SmartinputState) {}
 
     ngOnInit(): void {
         if (this._isInited) {
             return;
         }
         this._isInited = true;
-        /*
-        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(SmartinputComponent);
-        let componentRef = this._viewContainerRef.createComponent(componentFactory);
-
-        this._dropdown = (<SmartinputComponent>componentRef.instance);
-        this._dropdown.data = this.dataInput;
-
-        // this.onShown = this._dropdown.onShown;
-
-        */
-
-        // this.onHidden = this._dropdown.onHidden;
         this.isOpenChange = this._state.isOpenChange;
-
-        // set initial dropdown state from config
         this._state.autoClose = true;
 
         this._subscriptions.push(this._state
@@ -114,18 +95,12 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
         if (!this.isOpen) {
             return;
         }
-
         this._state.isOpenChange.emit(false);
     }
 
 
     toggle(value?: boolean): void {
         this.isShown = value;
-        /* if (value === false) {
-            return this.hide();
-        }
-
-        return this.show();*/
     }
 
     ngOnDestroy(): void {

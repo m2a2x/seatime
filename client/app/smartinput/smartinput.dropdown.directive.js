@@ -60,19 +60,7 @@ var SmartinputDropdownDirective = (function () {
             return;
         }
         this._isInited = true;
-        /*
-        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(SmartinputComponent);
-        let componentRef = this._viewContainerRef.createComponent(componentFactory);
-
-        this._dropdown = (<SmartinputComponent>componentRef.instance);
-        this._dropdown.data = this.dataInput;
-
-        // this.onShown = this._dropdown.onShown;
-
-        */
-        // this.onHidden = this._dropdown.onHidden;
         this.isOpenChange = this._state.isOpenChange;
-        // set initial dropdown state from config
         this._state.autoClose = true;
         this._subscriptions.push(this._state
             .openMenu.subscribe(function () { return _this.toggle(true); }));
@@ -100,11 +88,6 @@ var SmartinputDropdownDirective = (function () {
     };
     SmartinputDropdownDirective.prototype.toggle = function (value) {
         this.isShown = value;
-        /* if (value === false) {
-            return this.hide();
-        }
-
-        return this.show();*/
     };
     SmartinputDropdownDirective.prototype.ngOnDestroy = function () {
         // clean up subscriptions and destroy dropdown

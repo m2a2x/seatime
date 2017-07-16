@@ -16,9 +16,10 @@ var APIService = (function () {
         this.http = http;
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
     }
-    APIService.prototype.addFavouriteSpot = function (spot) {
+    APIService.prototype.addFavouriteSpot = function (id) {
+        var url = 'api/user/spots';
         return this.http
-            .post('api/user/spots' + "/" + spot._id, null, { headers: this.headers })
+            .post(url + "/" + id, null, { headers: this.headers })
             .toPromise()
             .then(function (data) {
             console.log(data);
@@ -59,7 +60,10 @@ var APIService = (function () {
             search: params
         })
             .toPromise()
-            .then(function (response) { return response.json(); })
+            .then(function (response) {
+            var headers = response.headers;
+            return response.json();
+        })
             .catch(this.handleError);
     };
     APIService.prototype.setSync = function (pair) {

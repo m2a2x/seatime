@@ -122,6 +122,7 @@ module.exports = function (app, api, passport) {
     app.use(function (req, res, next) {
         if (req.csrfToken) {
             res.locals.csrf_token = req.csrfToken();
+            res.cookie('XSRF-TOKEN', req.csrfToken());
         }
         next();
     });

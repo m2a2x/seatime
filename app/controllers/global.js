@@ -86,6 +86,14 @@ exports.index = asyncf(function* (req, res) {
                         });
                     });
                     break;
+                case 'spot_count':
+                    promise = Spot.count({});
+                    promise.then(function (count) {
+                        done(null, {
+                            spot_count: count
+                        });
+                    });
+                    break;
                 default:
                     done('Unexpected Field Name Parameter ' + job);
             }

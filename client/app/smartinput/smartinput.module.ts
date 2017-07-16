@@ -1,10 +1,11 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import {SmartinputDropdownDirective} from "./smartinput.dropdown.directive";
 import {SmartinputState} from "./smartinput.state";
-import {SmartinputComponent} from "./smartinput.component";
 import {BrowserModule} from '@angular/platform-browser';
-import {FilterPipe} from "./smartinput.pipe";
+import {SmartFilterPipe} from "./smartinput.pipe";
 import {FormsModule} from "@angular/forms";
+import {SmartinputDirective} from "./smartinput.directive";
+import {SmartinputInputDirective} from "./smartinput.input.directive";
 
 @NgModule({
     imports: [
@@ -12,14 +13,17 @@ import {FormsModule} from "@angular/forms";
         FormsModule
     ],
     declarations: [
-        SmartinputComponent,
         SmartinputDropdownDirective,
-        FilterPipe
+        SmartinputDirective,
+        SmartFilterPipe,
+        SmartinputInputDirective
     ],
     exports: [
-        SmartinputComponent
-    ],
-    entryComponents: [SmartinputComponent]
+        SmartinputDirective,
+        SmartinputDropdownDirective,
+        SmartFilterPipe,
+        SmartinputInputDirective
+    ]
 })
 export class SmartinputModule {
     public static forRoot(): ModuleWithProviders {

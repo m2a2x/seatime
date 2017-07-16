@@ -21,9 +21,6 @@ var UserService = (function () {
     UserService.prototype.getUser = function () {
         return this.user;
     };
-    UserService.prototype.addToFavourite = function (spot) {
-        this.apiService.addFavouriteSpot(spot);
-    };
     UserService.prototype.removeFavourite = function (id) {
         return this.apiService.removeFavouriteSpot(id);
     };

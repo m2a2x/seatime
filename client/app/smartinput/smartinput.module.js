@@ -9,10 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var smartinput_dropdown_directive_1 = require("./smartinput.dropdown.directive");
 var smartinput_state_1 = require("./smartinput.state");
-var smartinput_component_1 = require("./smartinput.component");
 var platform_browser_1 = require("@angular/platform-browser");
 var smartinput_pipe_1 = require("./smartinput.pipe");
 var forms_1 = require("@angular/forms");
+var smartinput_directive_1 = require("./smartinput.directive");
+var smartinput_input_directive_1 = require("./smartinput.input.directive");
 var SmartinputModule = SmartinputModule_1 = (function () {
     function SmartinputModule() {
     }
@@ -34,14 +35,17 @@ SmartinputModule = SmartinputModule_1 = __decorate([
             forms_1.FormsModule
         ],
         declarations: [
-            smartinput_component_1.SmartinputComponent,
             smartinput_dropdown_directive_1.SmartinputDropdownDirective,
-            smartinput_pipe_1.FilterPipe
+            smartinput_directive_1.SmartinputDirective,
+            smartinput_pipe_1.SmartFilterPipe,
+            smartinput_input_directive_1.SmartinputInputDirective
         ],
         exports: [
-            smartinput_component_1.SmartinputComponent
-        ],
-        entryComponents: [smartinput_component_1.SmartinputComponent]
+            smartinput_directive_1.SmartinputDirective,
+            smartinput_dropdown_directive_1.SmartinputDropdownDirective,
+            smartinput_pipe_1.SmartFilterPipe,
+            smartinput_input_directive_1.SmartinputInputDirective
+        ]
     })
 ], SmartinputModule);
 exports.SmartinputModule = SmartinputModule;

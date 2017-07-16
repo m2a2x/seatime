@@ -7,10 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var FilterPipe = (function () {
-    function FilterPipe() {
+var SmartFilterPipe = (function () {
+    function SmartFilterPipe() {
     }
-    FilterPipe.prototype.transform = function (items, filter) {
+    SmartFilterPipe.prototype.transform = function (items, filter) {
         var _this = this;
         if (!items || !filter) {
             return items;
@@ -25,7 +25,7 @@ var FilterPipe = (function () {
      * @param {Spot} filter The filter to apply.
      * @return {boolean} True if book satisfies filters, false if not.
      */
-    FilterPipe.prototype.applyFilter = function (item, filter) {
+    SmartFilterPipe.prototype.applyFilter = function (item, filter) {
         for (var field in filter) {
             if (filter[field]) {
                 if (typeof filter[field] === 'string') {
@@ -42,13 +42,13 @@ var FilterPipe = (function () {
         }
         return true;
     };
-    return FilterPipe;
+    return SmartFilterPipe;
 }());
-FilterPipe = __decorate([
+SmartFilterPipe = __decorate([
     core_1.Pipe({
         name: 'smartfilter',
         pure: false
     })
-], FilterPipe);
-exports.FilterPipe = FilterPipe;
+], SmartFilterPipe);
+exports.SmartFilterPipe = SmartFilterPipe;
 //# sourceMappingURL=smartinput.pipe.js.map

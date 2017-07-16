@@ -54,7 +54,8 @@ AppModule = __decorate([
             auth_service_1.AuthenticationService,
             auth_guard_1.AuthGuard,
             user_service_1.UserService,
-            map_provider_1.MapProvider
+            map_provider_1.MapProvider,
+            { provide: http_1.XSRFStrategy, useValue: new http_1.CookieXSRFStrategy('XSRF-TOKEN', 'XSRF-TOKEN') }
             /*,
              {
              provide: APP_INITIALIZER,

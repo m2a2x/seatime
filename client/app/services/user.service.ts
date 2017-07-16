@@ -25,10 +25,6 @@ export class UserService {
         return this.user;
     }
 
-    public addToFavourite(spot: Spot): void {
-        this.apiService.addFavouriteSpot(spot);
-    }
-
     public removeFavourite(id: number): Promise<boolean> {
         return this.apiService.removeFavouriteSpot(id);
     }

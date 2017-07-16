@@ -10,40 +10,68 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var user_service_1 = require("../services/user.service");
 var router_1 = require("@angular/router");
+var _ = require("lodash");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
+var api_service_1 = require("../services/api.service");
 var SpotsComponent = (function () {
-    function SpotsComponent(dataService, userService, mapProvider, router) {
+    function SpotsComponent(dataService, apiService, mapProvider, router) {
         this.dataService = dataService;
-        this.userService = userService;
+        this.apiService = apiService;
         this.mapProvider = mapProvider;
         this.router = router;
+        this.spots = [];
+        this.countries = [];
+        this.filter = {
+            name: ''
+        };
     }
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload('countries, spots').then(function (response) {
+        this.dataService.reload('countries, spots, spot_count').then(function (response) {
             var data = response;
-            // this.countries = _.sortBy<Country>(this.spotService.getCountries(), 'name');
+            _this.countries = _.sortBy(data.countries, 'name');
             _this.spots = data.spots;
+            _this.items = _this.countries;
+            _this.spot_count = data.spot_count;
         });
         this.mapProvider.set(this.map.nativeElement);
-        this.showDrop();
     };
     SpotsComponent.prototype.sortByCountry = function (id) {
-        /* this.spots = _.filter<Spot>(this.spotService.getSpots(), {
-          _country: id
-        }); */
+        return _.filter(this.spots, {
+            _country: id
+        });
     };
-    SpotsComponent.prototype.addSpot = function (spot, e) {
+    SpotsComponent.prototype.getCountry = function (id) {
+        var country;
+        country = _.find(this.countries, { _id: id });
+        if (country) {
+            return country.name;
+        }
+        return '';
+    };
+    SpotsComponent.prototype.itemSelect = function (id) {
+        if (id && this.firstLevelId) {
+            this.gotoDetail(id);
+            return;
+        }
+        this.firstLevelId = id;
+        if (id) {
+            this.items = this.sortByCountry(id);
+            return;
+        }
+        this.items = this.countries;
+    };
+    SpotsComponent.prototype.addSpot = function (id, e) {
         e.stopPropagation();
-        this.userService.addToFavourite(spot);
+        this.apiService.addFavouriteSpot(id);
     };
     SpotsComponent.prototype.gotoDetail = function (id) {
         this.router.navigate(['/detail', id]);
     };
-    SpotsComponent.prototype.showDrop = function () {
+    SpotsComponent.prototype.clearFirstLevel = function () {
+        this.itemSelect(undefined);
     };
     return SpotsComponent;
 }());
@@ -58,7 +86,7 @@ SpotsComponent = __decorate([
         styleUrls: ['./spots.component.css']
     }),
     __metadata("design:paramtypes", [data_service_1.DataService,
-        user_service_1.UserService,
+        api_service_1.APIService,
         map_provider_1.MapProvider,
         router_1.Router])
 ], SpotsComponent);

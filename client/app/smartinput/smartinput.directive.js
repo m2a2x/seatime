@@ -21,24 +21,8 @@ var SmartinputDirective = (function () {
         this._subscriptions.push(this._state
             .isOpenChange.subscribe(function (value) { return _this.isOpen = value; }));
     }
-    /*
-    @HostListener('click')
-    onClick(): void {
-        if (this.isDisabled) {
-            return;
-        }
-        this._state.toggleClick.emit();
-    }*/
-    SmartinputDirective.prototype.onFocus = function () {
-        this._state.openMenu.emit();
-    };
     SmartinputDirective.prototype.onDocumentClick = function (event) {
         if (this._state.autoClose && event.button !== 2 && !this._element.nativeElement.contains(event.target)) {
-            this._state.closeMenu.emit();
-        }
-    };
-    SmartinputDirective.prototype.onEsc = function () {
-        if (this._state.autoClose) {
             this._state.closeMenu.emit();
         }
     };
@@ -55,26 +39,15 @@ __decorate([
     __metadata("design:type", Boolean)
 ], SmartinputDirective.prototype, "isOpen", void 0);
 __decorate([
-    core_1.HostListener('focus'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], SmartinputDirective.prototype, "onFocus", null);
-__decorate([
     core_1.HostListener('document:click', ['$event']),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SmartinputDirective.prototype, "onDocumentClick", null);
-__decorate([
-    core_1.HostListener('keyup.esc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], SmartinputDirective.prototype, "onEsc", null);
 SmartinputDirective = __decorate([
     core_1.Directive({
-        selector: '[smartinput]'
+        selector: '[smartinput]',
+        providers: [smartinput_state_1.SmartinputState]
     }),
     __metadata("design:paramtypes", [core_1.ElementRef, smartinput_state_1.SmartinputState])
 ], SmartinputDirective);

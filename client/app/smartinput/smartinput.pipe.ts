@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform, Type} from '@angular/core';
 import {Spot} from "../services/data.service";
 
 
@@ -6,13 +6,13 @@ import {Spot} from "../services/data.service";
     name: 'smartfilter',
     pure: false
 })
-export class FilterPipe implements PipeTransform {
-    transform(items: Spot[], filter: Spot): Spot[] {
+export class SmartFilterPipe implements PipeTransform {
+    transform(items: Type<any>[], filter: Type<any>): Type<any>[] {
         if (!items || !filter) {
             return items;
         }
         // filter items array, items which match and return true will be kept, false will be filtered out
-        return items.filter((item: Spot) => this.applyFilter(item, filter));
+        return items.filter((item: Type<any>) => this.applyFilter(item, filter));
     }
 
     /**
@@ -22,7 +22,7 @@ export class FilterPipe implements PipeTransform {
      * @param {Spot} filter The filter to apply.
      * @return {boolean} True if book satisfies filters, false if not.
      */
-    applyFilter(item: Spot, filter: Spot): boolean {
+    applyFilter(item: Type<any>, filter: Type<any>): boolean {
         for (let field in filter) {
             if (filter[field]) {
                 if (typeof filter[field] === 'string') {

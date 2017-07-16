@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, URLSearchParams } from '@angular/http';
+import {Headers, Http, RequestOptions, Response, URLSearchParams} from '@angular/http';
 import { Country, Spot} from "./data.service";
 import {User} from "./user.service";
 
@@ -23,9 +23,10 @@ export class APIService {
     ) {}
 
 
-    public addFavouriteSpot(spot: Spot): Promise<boolean> {
+    public addFavouriteSpot(id: number): Promise<boolean> {
+        const url: string = 'api/user/spots';
         return this.http
-            .post(`${'api/user/spots'}/${spot._id}`, null, {headers: this.headers})
+            .post(`${url}/${id}`, null, {headers: this.headers})
             .toPromise()
             .then((data) => {
                 console.log(data);
@@ -77,7 +78,10 @@ export class APIService {
                 search: params
             })
             .toPromise()
-            .then(response => response.json() as Reload)
+            .then((response: Response) => {
+                let headers: Headers = response.headers;
+                return response.json() as Reload;
+            })
             .catch(this.handleError);
     }
 
