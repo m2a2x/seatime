@@ -31,7 +31,7 @@ var SpotsComponent = (function () {
     }
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload('countries, spots, spot_count').then(function (response) {
+        this.dataService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
             var data = response;
             _this.countries = _.sortBy(data.countries, 'name');
             _this.spots = _.map(data.spots, function (item) {

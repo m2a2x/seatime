@@ -14,15 +14,27 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 var moment = require("moment");
+var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var SpotDetailComponent = (function () {
-    function SpotDetailComponent(apiService, route, location) {
+    function SpotDetailComponent(dataService, apiService, route, location) {
+        this.dataService = dataService;
         this.apiService = apiService;
         this.route = route;
         this.location = location;
     }
     SpotDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.route.params.subscribe(function (params) {
+            _this.dataService.reload({ fields: 'spots', spots: [+params['id']].join('') })
+                .then(function (response) {
+                _this.spot = response.spots[0];
+                return _this.apiService.getSpotConditions([+params['id']]);
+            })
+                .then(function (response) {
+                _this.swellData = response.forecast[0];
+                _this.conditionData = response.condition[0];
+            });
             /* this.spot = this.apiService.get(+params['id']);
             this.spotId = +params['id'];
 
@@ -47,7 +59,8 @@ SpotDetailComponent = __decorate([
         templateUrl: './spot-detail.component.html',
         styleUrls: ['./spot-detail.component.css']
     }),
-    __metadata("design:paramtypes", [api_service_1.APIService,
+    __metadata("design:paramtypes", [data_service_1.DataService,
+        api_service_1.APIService,
         router_1.ActivatedRoute,
         common_1.Location])
 ], SpotDetailComponent);

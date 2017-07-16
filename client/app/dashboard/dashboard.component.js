@@ -23,7 +23,7 @@ var DashboardComponent = (function () {
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload('favourite')
+        this.dataService.reload({ fields: 'favourite' })
             .then(function (response) {
             var data = response;
             _this.spots = data.spots;

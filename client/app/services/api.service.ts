@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
-import {Headers, Http, RequestOptions, Response, URLSearchParams} from '@angular/http';
+import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Country, Spot} from "./data.service";
-import {User} from "./user.service";
+import { User } from "./user.service";
+import * as _ from 'lodash';
+
+export type DataQuery = {
+    [key: string]: string;
+}
 
 export type Reload = {
     spots?: Spot[],
@@ -56,13 +61,16 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public reload(query: string | ''): Promise<Reload> {
+    public reload(fields?: DataQuery): Promise<Reload> {
         const url: string = 'api/reload';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
 
-        params.set('fields', query);
+
+        _.each(fields, (k: string, i: string) => {
+            params.set(i, k);
+        });
         requestOptions.params = params;
 
 

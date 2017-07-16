@@ -47,7 +47,7 @@ export class SpotsComponent implements OnInit {
 
 
     public ngOnInit(): void {
-        this.dataService.reload('countries, spots, spot_count').then((response: Reload) => {
+        this.dataService.reload({fields: 'countries, spots, spot_count'}).then((response: Reload) => {
             let data: Reload = response as Reload;
 
             this.countries = _.sortBy<Country>(data.countries, 'name');

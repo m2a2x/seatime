@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.dataService.reload('favourite')
+        this.dataService.reload({fields: 'favourite'})
             .then((response: Reload) => {
                 let data: Reload = response as Reload;
                 this.spots = data.spots;

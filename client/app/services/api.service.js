@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var _ = require("lodash");
 var APIService = (function () {
     function APIService(http) {
         this.http = http;
@@ -45,11 +46,13 @@ var APIService = (function () {
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
-    APIService.prototype.reload = function (query) {
+    APIService.prototype.reload = function (fields) {
         var url = 'api/reload';
         var requestOptions = new http_1.RequestOptions();
         var params = new http_1.URLSearchParams();
-        params.set('fields', query);
+        _.each(fields, function (k, i) {
+            params.set(i, k);
+        });
         requestOptions.params = params;
         return this.http.get(url, {
             search: params

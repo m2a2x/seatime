@@ -17,9 +17,9 @@ var DataService = (function () {
         this.apiService = apiService;
         this.userService = userService;
     }
-    DataService.prototype.reload = function (params) {
+    DataService.prototype.reload = function (fields) {
         var _this = this;
-        return this.apiService.reload(params).then(function (response) {
+        return this.apiService.reload(fields).then(function (response) {
             _this.userService.set(response.user);
             delete response.user;
             return response;
