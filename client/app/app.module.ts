@@ -1,7 +1,7 @@
 import {NgModule}      from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule}   from '@angular/forms';
-import {CookieXSRFStrategy, HttpModule, XSRFStrategy}    from '@angular/http';
+import {CookieXSRFStrategy, HttpModule, RequestOptions, XSRFStrategy}    from '@angular/http';
 
 import {BsDropdownModule} from 'ngx-bootstrap';
 
@@ -46,7 +46,10 @@ import 'rxjs/add/operator/toPromise';
         AuthGuard,
         UserService,
         MapProvider,
-        { provide: XSRFStrategy, useValue: new CookieXSRFStrategy('XSRF-TOKEN', 'XSRF-TOKEN')}
+        {
+            provide: XSRFStrategy,
+            useValue: IlmsCookieStrategy()
+        }
         /*,
          {
          provide: APP_INITIALIZER,
@@ -66,4 +69,9 @@ import 'rxjs/add/operator/toPromise';
 })
 
 export class AppModule {
+}
+
+
+export function IlmsCookieStrategy() {
+    return new CookieXSRFStrategy('XSRF-TOKEN', 'X-XSRF-Token');
 }

@@ -79,7 +79,6 @@ export class APIService {
             })
             .toPromise()
             .then((response: Response) => {
-                let headers: Headers = response.headers;
                 return response.json() as Reload;
             })
             .catch(this.handleError);

@@ -61,7 +61,6 @@ var APIService = (function () {
         })
             .toPromise()
             .then(function (response) {
-            var headers = response.headers;
             return response.json();
         })
             .catch(this.handleError);

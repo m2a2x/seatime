@@ -55,7 +55,10 @@ AppModule = __decorate([
             auth_guard_1.AuthGuard,
             user_service_1.UserService,
             map_provider_1.MapProvider,
-            { provide: http_1.XSRFStrategy, useValue: new http_1.CookieXSRFStrategy('XSRF-TOKEN', 'XSRF-TOKEN') }
+            {
+                provide: http_1.XSRFStrategy,
+                useValue: IlmsCookieStrategy()
+            }
             /*,
              {
              provide: APP_INITIALIZER,
@@ -75,4 +78,8 @@ AppModule = __decorate([
     })
 ], AppModule);
 exports.AppModule = AppModule;
+function IlmsCookieStrategy() {
+    return new http_1.CookieXSRFStrategy('XSRF-TOKEN', 'X-XSRF-Token');
+}
+exports.IlmsCookieStrategy = IlmsCookieStrategy;
 //# sourceMappingURL=app.module.js.map
