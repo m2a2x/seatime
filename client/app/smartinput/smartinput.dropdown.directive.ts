@@ -52,14 +52,11 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
     @Output() isOpenChange: EventEmitter<any>;
 
 
-    // private _dropdown: SmartinputComponent;
     private _subscriptions: Subscription[] = [];
     private _isInited = false;
     private isShown = false;
 
     constructor(private _elementRef: ElementRef,
-                private componentFactoryResolver: ComponentFactoryResolver,
-                private _viewContainerRef: ViewContainerRef,
                 private _state: SmartinputState) {}
 
     ngOnInit(): void {

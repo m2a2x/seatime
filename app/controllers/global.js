@@ -124,7 +124,7 @@ exports.syncDevice = asyncf(function* (req, res) {
     }
 
     res.json({
-        IsSuccesful: !!pair
+        isSuccesful: !!pair
     });
 });
 

@@ -13,11 +13,9 @@ var core_1 = require("@angular/core");
 var _ = require("lodash");
 var router_1 = require("@angular/router");
 var data_service_1 = require("../services/data.service");
-var user_service_1 = require("../services/user.service");
 var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(userService, dataService, apiService, router) {
-        this.userService = userService;
+    function DashboardComponent(dataService, apiService, router) {
         this.dataService = dataService;
         this.apiService = apiService;
         this.router = router;
@@ -40,8 +38,7 @@ var DashboardComponent = (function () {
     };
     DashboardComponent.prototype.delete = function (spot) {
         var _this = this;
-        this.userService
-            .removeFavourite(spot._id)
+        this.apiService.removeFavouriteSpot(spot._id)
             .then(function () {
             _this.spots = _this.spots.filter(function (h) { return h !== spot; });
             if (_this.selectedSpot === spot) {
@@ -73,8 +70,7 @@ DashboardComponent = __decorate([
         templateUrl: './dashboard.component.html',
         styleUrls: ['./dashboard.component.css']
     }),
-    __metadata("design:paramtypes", [user_service_1.UserService,
-        data_service_1.DataService,
+    __metadata("design:paramtypes", [data_service_1.DataService,
         api_service_1.APIService,
         router_1.Router])
 ], DashboardComponent);

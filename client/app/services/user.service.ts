@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { APIService } from "./api.service";
-import {Spot} from "./data.service";
+import * as _ from 'lodash';
 
 
 export type User = {
     _id: number;
     name: string;
     preferenses: {
-        favouriteSpots: number []
+        favouriteSpots: number [],
+        devices: {_id: string, name: string}[]
     }
 }
 
@@ -15,7 +15,7 @@ export type User = {
 export class UserService {
     private user: User;
 
-    constructor(private apiService: APIService) {}
+    constructor() {}
 
     public set(user: User | null): void {
         this.user = user;
@@ -25,7 +25,7 @@ export class UserService {
         return this.user;
     }
 
-    public removeFavourite(id: number): Promise<boolean> {
-        return this.apiService.removeFavouriteSpot(id);
+    public isFavourite(id: number): boolean {
+        return _.includes(this.user.preferenses.favouriteSpots, id);
     }
 }

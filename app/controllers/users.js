@@ -88,7 +88,9 @@ exports.removeSpot = async(function* (req, res, next) {
     } catch (err) {
         return next(err);
     }
-    next();
+    res.json({
+        isSuccessful: true
+    });
 });
 
 exports.addSpot = async(function* (req, res, next) {
@@ -100,11 +102,24 @@ exports.addSpot = async(function* (req, res, next) {
         if (!spot) {
             return next(new Error('Spot not found'));
         }
+
+
+        if (_.includes(req.user.preferenses.favouriteSpots, spot._id)) {
+            console.log('Already added');
+            res.json({
+                isSuccessful: true
+            });
+            return;
+        }
+
+
         yield User.addFavourite(userId, spot._id);
     } catch (err) {
         return next(err);
     }
-    next();
+    res.json({
+        isSuccessful: true
+    });
 });
 
 /**

@@ -10,10 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var api_service_1 = require("./api.service");
+var _ = require("lodash");
 var UserService = (function () {
-    function UserService(apiService) {
-        this.apiService = apiService;
+    function UserService() {
     }
     UserService.prototype.set = function (user) {
         this.user = user;
@@ -21,14 +20,14 @@ var UserService = (function () {
     UserService.prototype.getUser = function () {
         return this.user;
     };
-    UserService.prototype.removeFavourite = function (id) {
-        return this.apiService.removeFavouriteSpot(id);
+    UserService.prototype.isFavourite = function (id) {
+        return _.includes(this.user.preferenses.favouriteSpots, id);
     };
     return UserService;
 }());
 UserService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [api_service_1.APIService])
+    __metadata("design:paramtypes", [])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

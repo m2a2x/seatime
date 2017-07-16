@@ -1,5 +1,4 @@
 'use strict';
-const csrf = require('csurf');
 
 const users = require('../app/controllers/users');
 const spots = require('../app/controllers/spots');
@@ -20,7 +19,7 @@ const fail = {
  * Expose routes
  */
 
-module.exports = function (app, api, passport) {
+module.exports = function (app, api, apiDevice, passport) {
     const pauth = passport.authenticate.bind(passport);
 
     /**
@@ -36,7 +35,6 @@ module.exports = function (app, api, passport) {
      * Local Auth
      */
     app.post('/users/session',
-        csrf(),
         pauth('local', {
             failureRedirect: fail.failureRedirect,
             failureFlash: 'Invalid email or password.'
@@ -44,18 +42,16 @@ module.exports = function (app, api, passport) {
 
     /** Facebook */
     app.get('/auth/facebook',
-        csrf(),
         pauth('facebook', {
             scope: ['email', 'user_about_me'],
             failureRedirect: fail.failureRedirect
         }), users.signin
     );
-    app.get('/auth/facebook/callback', csrf(), pauth('facebook', fail), users.authCallback);
+    app.get('/auth/facebook/callback', pauth('facebook', fail), users.authCallback);
 
 
     /** Google */
     app.get('/auth/google',
-        csrf(),
         pauth('google', {
             failureRedirect: fail.failureRedirect,
             scope: [
@@ -64,10 +60,10 @@ module.exports = function (app, api, passport) {
             ]
         }), users.signin
     );
-    app.get('/auth/google/callback', csrf(), pauth('google', fail), users.authCallback);
+    app.get('/auth/google/callback', pauth('google', fail), users.authCallback);
 
     /** Logout */
-    app.get('/logout', csrf(), users.logout);
+    app.get('/logout', users.logout);
 
 
     /**
@@ -78,26 +74,26 @@ module.exports = function (app, api, passport) {
     api.param('userId', users.load);
 
     /** Get user by Id */
-    api.get('/user/:userId', csrf(), users.show);
+    api.get('/user/:userId', users.show);
 
     /** Global reload, return all data in one call */
-    api.get('/reload/', csrf(), global.index);
+    api.get('/reload/', global.index);
 
     /** Get Conditions  Get Forecasts */
-    api.get('/spots/getConditions/', csrf(), spots.condition);
+    api.get('/spots/getConditions/', spots.condition);
 
     /** Set Sync and Pair */
     api.post('/sync', auth.requiresLogin, global.syncDevice);
-    api.post('/pair', global.pairDevice);
+    apiDevice.post('/pair', global.pairDevice);
 
     /** Get Device Data */
-    api.get('/deviceData', csrf(), global.getDeviceData);
+    api.get('/deviceData', global.getDeviceData);
 
     /** Get Favourite Spots */
-    api.post('/user/spots/:id', auth.requiresLogin, csrf(), users.addSpot);
+    api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
 
     /** Get Remove Favouirite Spot */
-    api.delete('/user/spots/:id', auth.requiresLogin, csrf(), users.removeSpot);
+    api.delete('/user/spots/:id', auth.requiresLogin, users.removeSpot);
 
 
     /**
@@ -115,16 +111,6 @@ module.exports = function (app, api, passport) {
     });
     api.put('*', function(req, res){
         res.send('Api doesn\'t exists', 404);
-    });
-
-
-    // This could be moved to view-helpers :-)
-    app.use(function (req, res, next) {
-        if (req.csrfToken) {
-            res.locals.csrf_token = req.csrfToken();
-            res.cookie('XSRF-TOKEN', req.csrfToken());
-        }
-        next();
     });
 };
 

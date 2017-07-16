@@ -18,9 +18,7 @@ export type Pair = {
 export class APIService {
     private headers: Headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(
-        private http: Http
-    ) {}
+    constructor(private http: Http) {}
 
 
     public addFavouriteSpot(id: number): Promise<boolean> {
@@ -28,26 +26,21 @@ export class APIService {
         return this.http
             .post(`${url}/${id}`, null, {headers: this.headers})
             .toPromise()
-            .then((data) => {
-                console.log(data);
-                return true;
-            })
+            .then(response => response.json())
             .catch(this.handleError);
     }
 
     public removeFavouriteSpot(id: number): Promise<boolean> {
+        const url: string = 'api/user/spots';
         return this.http
-            .delete(`${'api/user/spots'}/${id}`, {headers: this.headers})
+            .delete(`${url}/${id}`, {headers: this.headers})
             .toPromise()
-            .then((data) => {
-                console.log(data);
-                return true;
-            })
+            .then(response => response.json())
             .catch(this.handleError);
     }
 
     public getSpotConditions(ids: number[]): Promise<any> {
-        let url = 'api/spots/getConditions';
+        const url: string = 'api/spots/getConditions';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
@@ -64,7 +57,7 @@ export class APIService {
     }
 
     public reload(query: string | ''): Promise<Reload> {
-        let url = 'api/reload';
+        const url: string = 'api/reload';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
@@ -79,7 +72,6 @@ export class APIService {
             })
             .toPromise()
             .then((response: Response) => {
-                let headers: Headers = response.headers;
                 return response.json() as Reload;
             })
             .catch(this.handleError);
@@ -87,7 +79,7 @@ export class APIService {
 
 
     public setSync(pair: number): Promise<boolean> {
-        let url = 'api/sync';
+        const url: string = 'api/sync';
 
         return this.http.post(
             url,
@@ -100,7 +92,7 @@ export class APIService {
         )
             .toPromise()
             .then((response) => {
-                return response.json().IsSuccesful as boolean;
+                return response.json().isSuccesful as boolean;
             })
             .catch(this.handleError);
 

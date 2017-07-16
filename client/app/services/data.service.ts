@@ -11,6 +11,7 @@ export type Spot = {
     _id: number;
     _country: number;
     name: string;
+    favourite?: boolean
 }
 
 @Injectable()
