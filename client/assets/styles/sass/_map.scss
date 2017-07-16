@@ -36,6 +36,11 @@ places-section {
   width: 100%;
 }
 
+.gmnoprint, 
+a[href*="maps.google.com/maps"] {
+  display:none !important
+}
+
 .favourite {
   color: red;
 }

@@ -2932,8 +2932,9 @@ places-section {
   left: 0;
   width: 100%; }
 
-.favourite {
-  color: red; }
+.gmnoprint,
+a[href*="maps.google.com/maps"] {
+  display: none !important; }
 
 .align-baseline {
   vertical-align: baseline !important; }
