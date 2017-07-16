@@ -43,7 +43,6 @@ module.exports = function (app, api, apiDevice, passport) {
     /** Facebook */
     app.get('/auth/facebook',
         pauth('facebook', {
-            scope: ['email', 'user_about_me'],
             failureRedirect: fail.failureRedirect
         }), users.signin
     );
