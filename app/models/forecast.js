@@ -61,7 +61,7 @@ const ForecastSchema = new Schema({
 ForecastSchema.statics = {
     get: function (id) {
         var dt = new Date().getTime() / 1000,
-            fields = ['swell'];
+            fields = ['swell', '_spot'];
 
         return this
             .find({_spot: id, 'meta.localTimestamp': {$gt: dt}})

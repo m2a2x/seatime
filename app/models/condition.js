@@ -63,7 +63,7 @@ const ConditionSchema = new Schema({
 ConditionSchema.statics = {
     get: function (spotId) {
         var dt = getToday() / 1000,
-            fields = ['tide'];
+            fields = ['tide', '_spot'];
 
         return this.find({_spot: spotId, 'meta.timestamp': {$gt: dt}})
             .select(fields)
