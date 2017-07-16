@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {Router} from '@angular/router';
 import {DataService, Spot} from '../services/data.service';
-import {UserService} from '../services/user.service';
 import {APIService, Reload} from "../services/api.service";
 
 @Component({
@@ -16,8 +15,7 @@ export class DashboardComponent implements OnInit {
     public selectedSpot: Spot;
     public pair: string = '';
 
-    constructor(private userService: UserService,
-                private dataService: DataService,
+    constructor(private dataService: DataService,
                 private apiService: APIService,
                 private router: Router) {
     }
@@ -40,8 +38,7 @@ export class DashboardComponent implements OnInit {
 
 
     public delete(spot: Spot): void {
-        this.userService
-            .removeFavourite(spot._id)
+        this.apiService.removeFavouriteSpot(spot._id)
             .then(() => {
                 this.spots = this.spots.filter(h => h !== spot);
                 if (this.selectedSpot === spot) {

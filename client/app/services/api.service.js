@@ -21,20 +21,15 @@ var APIService = (function () {
         return this.http
             .post(url + "/" + id, null, { headers: this.headers })
             .toPromise()
-            .then(function (data) {
-            console.log(data);
-            return true;
-        })
+            .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     APIService.prototype.removeFavouriteSpot = function (id) {
+        var url = 'api/user/spots';
         return this.http
-            .delete('api/user/spots' + "/" + id, { headers: this.headers })
+            .delete(url + "/" + id, { headers: this.headers })
             .toPromise()
-            .then(function (data) {
-            console.log(data);
-            return true;
-        })
+            .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     APIService.prototype.getSpotConditions = function (ids) {

@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var _ = require("lodash");
+var user_service_1 = require("../services/user.service");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var SpotsComponent = (function () {
-    function SpotsComponent(dataService, apiService, mapProvider, router) {
+    function SpotsComponent(userService, dataService, apiService, mapProvider, router) {
+        this.userService = userService;
         this.dataService = dataService;
         this.apiService = apiService;
         this.mapProvider = mapProvider;
@@ -32,13 +34,16 @@ var SpotsComponent = (function () {
         this.dataService.reload('countries, spots, spot_count').then(function (response) {
             var data = response;
             _this.countries = _.sortBy(data.countries, 'name');
-            _this.spots = data.spots;
+            _this.spots = _.map(data.spots, function (item) {
+                item.favourite = _this.userService.isFavourite(item._id);
+                return item;
+            });
             _this.items = _this.countries;
             _this.spot_count = data.spot_count;
         });
         this.mapProvider.set(this.map.nativeElement);
     };
-    SpotsComponent.prototype.sortByCountry = function (id) {
+    SpotsComponent.prototype.getByCountry = function (id) {
         return _.filter(this.spots, {
             _country: id
         });
@@ -58,14 +63,22 @@ var SpotsComponent = (function () {
         }
         this.firstLevelId = id;
         if (id) {
-            this.items = this.sortByCountry(id);
+            this.items = this.getByCountry(id);
             return;
         }
         this.items = this.countries;
     };
-    SpotsComponent.prototype.addSpot = function (id, e) {
+    SpotsComponent.prototype.toggleSpot = function (spot, e) {
         e.stopPropagation();
-        this.apiService.addFavouriteSpot(id);
+        var isRemove = spot.favourite;
+        var action = isRemove ? 'removeFavouriteSpot' : 'addFavouriteSpot';
+        this.apiService[action](spot._id)
+            .then(function (response) {
+            if (response.isSuccessful) {
+                spot.favourite = isRemove ? false : true;
+            }
+            return;
+        });
     };
     SpotsComponent.prototype.gotoDetail = function (id) {
         this.router.navigate(['/detail', id]);
@@ -85,7 +98,8 @@ SpotsComponent = __decorate([
         templateUrl: './spots.component.html',
         styleUrls: ['./spots.component.css']
     }),
-    __metadata("design:paramtypes", [data_service_1.DataService,
+    __metadata("design:paramtypes", [user_service_1.UserService,
+        data_service_1.DataService,
         api_service_1.APIService,
         map_provider_1.MapProvider,
         router_1.Router])

@@ -6,7 +6,10 @@
             <ul class="dropdown-menu" role="menu">
                 <li *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id)" role="menuitem">
                     <span class="dropdown-item">{{item.name}}</span>
-                    <span *ngIf="!!firstLevelId" (click)="addSpot(item._id, $event)">Add spot</span>
+                    <span
+                            *ngIf="!!firstLevelId"
+                            [class.favourite]="item.favourite"
+                            (click)="toggleSpot(item, $event)">{{item.favourite ? 'Remove' : 'Add'}} spot</span>
                 </li>
             </ul>
         </div>

@@ -12,12 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var smartinput_state_1 = require("./smartinput.state");
 var SmartinputDropdownDirective = (function () {
-    function SmartinputDropdownDirective(_elementRef, componentFactoryResolver, _viewContainerRef, _state) {
+    function SmartinputDropdownDirective(_elementRef, _state) {
         this._elementRef = _elementRef;
-        this.componentFactoryResolver = componentFactoryResolver;
-        this._viewContainerRef = _viewContainerRef;
         this._state = _state;
-        // private _dropdown: SmartinputComponent;
         this._subscriptions = [];
         this._isInited = false;
         this.isShown = false;
@@ -120,8 +117,6 @@ SmartinputDropdownDirective = __decorate([
         }
     }),
     __metadata("design:paramtypes", [core_1.ElementRef,
-        core_1.ComponentFactoryResolver,
-        core_1.ViewContainerRef,
         smartinput_state_1.SmartinputState])
 ], SmartinputDropdownDirective);
 exports.SmartinputDropdownDirective = SmartinputDropdownDirective;

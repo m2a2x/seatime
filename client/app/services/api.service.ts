@@ -18,9 +18,7 @@ export type Pair = {
 export class APIService {
     private headers: Headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(
-        private http: Http
-    ) {}
+    constructor(private http: Http) {}
 
 
     public addFavouriteSpot(id: number): Promise<boolean> {
@@ -28,21 +26,16 @@ export class APIService {
         return this.http
             .post(`${url}/${id}`, null, {headers: this.headers})
             .toPromise()
-            .then((data) => {
-                console.log(data);
-                return true;
-            })
+            .then(response => response.json())
             .catch(this.handleError);
     }
 
     public removeFavouriteSpot(id: number): Promise<boolean> {
+        const url: string = 'api/user/spots';
         return this.http
-            .delete(`${'api/user/spots'}/${id}`, {headers: this.headers})
+            .delete(`${url}/${id}`, {headers: this.headers})
             .toPromise()
-            .then((data) => {
-                console.log(data);
-                return true;
-            })
+            .then(response => response.json())
             .catch(this.handleError);
     }
 

@@ -37,7 +37,9 @@ export class SpotsComponent implements OnInit {
         name: ''
     };
 
-    constructor(private dataService: DataService,
+    constructor(
+                public userService: UserService,
+                private dataService: DataService,
                 private apiService: APIService,
                 private mapProvider: MapProvider,
                 private router: Router) {
@@ -49,14 +51,17 @@ export class SpotsComponent implements OnInit {
             let data: Reload = response as Reload;
 
             this.countries = _.sortBy<Country>(data.countries, 'name');
-            this.spots = data.spots;
+            this.spots = _.map(data.spots, (item: Spot): Spot => {
+                item.favourite = this.userService.isFavourite(item._id);
+                return item;
+            });
             this.items = this.countries;
             this.spot_count = data.spot_count;
         });
         this.mapProvider.set(this.map.nativeElement);
     }
 
-    private sortByCountry(id: number): Spot[]  {
+    private getByCountry(id: number): Spot[]  {
         return _.filter<Spot>(this.spots, {
             _country: id
         });
@@ -79,16 +84,25 @@ export class SpotsComponent implements OnInit {
 
         this.firstLevelId = id;
         if (id) {
-            this.items = this.sortByCountry(id);
+            this.items = this.getByCountry(id);
             return;
         }
         this.items = this.countries;
     }
 
 
-    public addSpot(id: number, e: Event): void {
+    public toggleSpot(spot: Spot, e: Event): void {
         e.stopPropagation();
-        this.apiService.addFavouriteSpot(id);
+        let isRemove = spot.favourite;
+        let action: string = isRemove ? 'removeFavouriteSpot' : 'addFavouriteSpot';
+
+        this.apiService[action](spot._id)
+            .then((response: any)=> {
+                if (response.isSuccessful) {
+                    spot.favourite = isRemove ? false: true;
+                }
+                return;
+            });
     }
 
     private gotoDetail(id: number): void {
