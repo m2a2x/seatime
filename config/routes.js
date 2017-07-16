@@ -22,14 +22,8 @@ const fail = {
 module.exports = function (app, api, apiDevice, passport) {
     const pauth = passport.authenticate.bind(passport);
 
-    /**
-     * DB fill
-     */
-    app.get('/test', crawler.test);
-    app.get('/merge', builder.merge);
-
     /** Crawler, don't use without purpose */
-    app.get('/crawler', auth.requiresLogin, crawler.get);
+    // app.get('/crawler', auth.requiresLogin, crawler.get);
 
     /**
      * Local Auth

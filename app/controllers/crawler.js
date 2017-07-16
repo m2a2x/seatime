@@ -11,11 +11,6 @@ const fs = require('fs');
 const _ = require('lodash');
 const {getMswdUrl: getUrl, getMswdParams: getParams} = require('../../config/middlewares/mswd');
 
-exports.test = function (req, response) {
-    needle.request('get', 'http://localhost:3000/api/reload', getParams({}), function (err, res) {
-        response.json(res.body);
-    });
-};
 
 exports.get = function (req, response) {
     var continents = {},
