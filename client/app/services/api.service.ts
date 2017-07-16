@@ -47,7 +47,7 @@ export class APIService {
     }
 
     public getSpotConditions(ids: number[]): Promise<any> {
-        let url = 'api/spots/getConditions';
+        const url: string = 'api/spots/getConditions';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
@@ -64,7 +64,7 @@ export class APIService {
     }
 
     public reload(query: string | ''): Promise<Reload> {
-        let url = 'api/reload';
+        const url: string = 'api/reload';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
@@ -86,7 +86,7 @@ export class APIService {
 
 
     public setSync(pair: number): Promise<boolean> {
-        let url = 'api/sync';
+        const url: string = 'api/sync';
 
         return this.http.post(
             url,
@@ -99,7 +99,7 @@ export class APIService {
         )
             .toPromise()
             .then((response) => {
-                return response.json().IsSuccesful as boolean;
+                return response.json().isSuccesful as boolean;
             })
             .catch(this.handleError);
 

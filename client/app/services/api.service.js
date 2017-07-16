@@ -74,7 +74,7 @@ var APIService = (function () {
         })
             .toPromise()
             .then(function (response) {
-            return response.json().IsSuccesful;
+            return response.json().isSuccesful;
         })
             .catch(this.handleError);
     };
