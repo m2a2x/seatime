@@ -21,6 +21,9 @@ var UserService = (function () {
         return this.user;
     };
     UserService.prototype.isFavourite = function (id) {
+        if (!this.user) {
+            return false;
+        }
         return _.includes(this.user.preferenses.favouriteSpots, id);
     };
     return UserService;

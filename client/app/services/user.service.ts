@@ -26,6 +26,9 @@ export class UserService {
     }
 
     public isFavourite(id: number): boolean {
+        if (!this.user) {
+            return false;
+        }
         return _.includes(this.user.preferenses.favouriteSpots, id);
     }
 }
