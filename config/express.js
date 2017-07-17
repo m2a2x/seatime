@@ -123,14 +123,11 @@ module.exports = function (app, passport) {
     require(path.join(config.root, '/config/routes'))(app, api, apiDevice, passport);
 
     app.use('/node_modules', express.static(path.join(config.root, '/node_modules')));
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(config.root, 'client'));
     app.use(function (req, res) {
-        // Use res.sendfile, as it streams instead of reading the file into memory.
-        fs.readFile(path.join(config.root, '/client/index.html'), 'utf8', function (err,data) {
-            if (err) {
-                return console.log(err);
-            }
-            data = data.replace(/{MAP_API_KEY}/g, process.env.GOOGLE_MAP);
-            res.send(data);
+        res.render('index', {
+            MAP_API_KEY: process.env.GOOGLE_MAP
         });
     });
 
