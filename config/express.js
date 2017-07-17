@@ -22,7 +22,7 @@ const helpers = require('view-helpers');
 const config = require('./');
 const pkg = require('../package.json');
 const env = process.env.NODE_ENV || 'development';
-
+const fs = require('fs');
 
 /**
  * Expose
@@ -125,7 +125,13 @@ module.exports = function (app, passport) {
     app.use('/node_modules', express.static(path.join(config.root, '/node_modules')));
     app.use(function (req, res) {
         // Use res.sendfile, as it streams instead of reading the file into memory.
-        res.sendFile(path.join(config.root, '/client/index.html'));
+        fs.readFile(path.join(config.root, '/client/index.html'), 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+            data = data.replace(/{MAP_API_KEY}/g, process.env.GOOGLE_MAP);
+            res.send(data);
+        });
     });
 
     if (env === 'development') {
