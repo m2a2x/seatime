@@ -2885,7 +2885,6 @@ tbody.collapse.show {
 .navbar {
   background-color: #5B86C2; }
   .navbar .navbar-nav {
-    width: 100%;
     height: 50px; }
     .navbar .navbar-nav .nav-item {
       border-right: 1px solid #6D93C8; }
@@ -2935,6 +2934,9 @@ places-section {
 .gmnoprint,
 a[href*="maps.google.com/maps"] {
   display: none !important; }
+
+.favourite {
+  color: red; }
 
 .align-baseline {
   vertical-align: baseline !important; }
