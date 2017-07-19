@@ -3,13 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent }   from './dashboard/dashboard.component';
 import { SpotsComponent }       from './spots/spots.component';
-import { SpotDetailComponent }  from './spot-detail/spot-detail.component';
-import { AuthGuard }            from "./guards/auth.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: '/spots', pathMatch: 'full' },
   { path: 'dashboard',  component: DashboardComponent },
-  { path: 'detail/:id', component: SpotDetailComponent },
+  { path: 'spots/:id', component: SpotsComponent },
   { path: 'spots',     component: SpotsComponent },
 
   // otherwise redirect to home

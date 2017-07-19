@@ -1,11 +1,13 @@
-import {Component, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
-import {Router} from "@angular/router";
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from "@angular/router";
 import * as _ from 'lodash';
 import {Country, Spot} from "../services/data.service";
 import {UserService} from "../services/user.service";
 import {MapProvider} from "../services/map.provider";
 import {DataService} from "../services/data.service";
 import {APIService} from "../services/api.service";
+import {SpotDetailComponent} from "../spot-detail/spot-detail.component";
 
 type Reload = {
     spots: Spot[];
@@ -24,6 +26,7 @@ type List = {
 })
 export class SpotsComponent implements OnInit {
     @ViewChild('bgmap') map: ElementRef;
+    @ViewChild('detail') detail: SpotDetailComponent;
 
 
     public items: Spot[] | Country[];
@@ -32,6 +35,8 @@ export class SpotsComponent implements OnInit {
 
     public firstLevelId: number | undefined;
     public spot_count: number;
+    public inited: boolean;
+    public spotId: number | undefined;
 
     public filter: List = {
         name: ''
@@ -42,23 +47,33 @@ export class SpotsComponent implements OnInit {
                 private dataService: DataService,
                 private apiService: APIService,
                 private mapProvider: MapProvider,
-                private router: Router) {
+                private location: Location,
+                private route: ActivatedRoute,) {
     }
 
 
     public ngOnInit(): void {
-        this.dataService.reload({fields: 'countries, spots, spot_count'}).then((response: Reload) => {
-            let data: Reload = response as Reload;
+        this.route.params.subscribe(params => {
 
-            this.countries = _.sortBy<Country>(data.countries, 'name');
-            this.spots = _.map(data.spots, (item: Spot): Spot => {
-                item.favourite = this.userService.isFavourite(item._id);
-                return item;
+            this.spotId = +params['id'];
+
+            if (this.spotId) {
+                this.inited = true;
+            }
+
+            this.dataService.reload({fields: 'countries, spots, spot_count'}).then((response: Reload) => {
+                let data: Reload = response as Reload;
+
+                this.countries = _.sortBy<Country>(data.countries, 'name');
+                this.spots = _.map(data.spots, (item: Spot): Spot => {
+                    item.favourite = this.userService.isFavourite(item._id);
+                    return item;
+                });
+                this.items = this.countries;
+                this.spot_count = data.spot_count;
             });
-            this.items = this.countries;
-            this.spot_count = data.spot_count;
+            this.mapProvider.set(this.map.nativeElement);
         });
-        this.mapProvider.set(this.map.nativeElement);
     }
 
     private getByCountry(id: number): Spot[]  {
@@ -76,7 +91,12 @@ export class SpotsComponent implements OnInit {
         return '';
     }
 
-    public itemSelect(id: number | undefined): void {
+    public itemSelect(id: number | undefined, name?: string): void {
+        this.inited = true;
+
+        this.spotId = undefined;
+        this.location.go('/spots');
+
         if (id && this.firstLevelId) {
             this.gotoDetail(id);
             return;
@@ -84,6 +104,7 @@ export class SpotsComponent implements OnInit {
 
         this.firstLevelId = id;
         if (id) {
+            this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
             return;
         }
@@ -106,10 +127,12 @@ export class SpotsComponent implements OnInit {
     }
 
     private gotoDetail(id: number): void {
-        this.router.navigate(['/detail', id]);
+        this.location.go('/spots/' + id);
+        this.spotId = id;
     }
 
     public clearFirstLevel(): void {
         this.itemSelect(undefined);
+        this.mapProvider.reset();
     }
 }

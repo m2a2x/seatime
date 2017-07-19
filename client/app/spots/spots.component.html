@@ -4,7 +4,7 @@
         <span *ngIf="!!firstLevelId">{{getCountry(firstLevelId)}}<span (click)="clearFirstLevel()">clear</span></span><input smartinput-in [(ngModel)]="filter.name"/>
         <div smartinputdropdown>
             <ul class="dropdown-menu" role="menu">
-                <li *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id)" role="menuitem">
+                <li *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id, item.name)" role="menuitem">
                     <span class="dropdown-item">{{item.name}}</span>
                     <span
                             *ngIf="!!firstLevelId"
@@ -14,10 +14,13 @@
             </ul>
         </div>
     </div>
-    <div class="spots-number" *ngIf="spot_count">
+    <div class="spots-number" *ngIf="spot_count && !inited">
         <div class="spots-number__digits">{{spot_count}}</div>
         <div class="spots-number__text">
             Spots<br>Over the world
         </div>
     </div>
+
+
+    <spot-detail *ngIf="!!spotId" [spot-id]="spotId" style="position: relative; background: white;"></spot-detail>
 </div>

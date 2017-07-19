@@ -305,9 +305,7 @@ var MapProvider = (function () {
                 ]
             }
         ];
-    }
-    MapProvider.prototype.set = function (element) {
-        var mapOptions = {
+        this.mapOptions = {
             // How zoomed in you want the map to start at (always required)
             zoom: 2,
             // Disabling the default UI
@@ -322,8 +320,41 @@ var MapProvider = (function () {
             // This is where you would paste any style found on Snazzy Maps.
             styles: this.styles
         };
+        this.geocoder = new google.maps.Geocoder();
+    }
+    MapProvider.prototype.set = function (element) {
         // Create the Google Map using our element and options defined above
-        var map = new google.maps.Map(element, mapOptions);
+        this.map = new google.maps.Map(element, this.mapOptions);
+    };
+    MapProvider.prototype.reset = function () {
+        this.map.panTo(this.mapOptions.center);
+        this.map.setZoom(this.mapOptions.zoom);
+    };
+    MapProvider.prototype.setByName = function (name, zoom) {
+        var _this = this;
+        this.geocoder.geocode({ 'address': name }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                _this.map.panTo(results[0].geometry.location);
+                _this.smoothZoom(_this.map, zoom, _this.map.getZoom());
+            }
+        });
+    };
+    // the smooth zoom function
+    MapProvider.prototype.smoothZoom = function (map, max, cnt) {
+        var _this = this;
+        if (cnt >= max) {
+            return;
+        }
+        else {
+            var z_1;
+            z_1 = google.maps.event.addListener(map, 'zoom_changed', function () {
+                google.maps.event.removeListener(z_1);
+                _this.smoothZoom(map, max, cnt + 1);
+            });
+            setTimeout(function () {
+                map.setZoom(cnt);
+            }, 80);
+        }
     };
     return MapProvider;
 }());

@@ -10,11 +10,10 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var spots_component_1 = require("./spots/spots.component");
-var spot_detail_component_1 = require("./spot-detail/spot-detail.component");
 var routes = [
     { path: '', redirectTo: '/spots', pathMatch: 'full' },
     { path: 'dashboard', component: dashboard_component_1.DashboardComponent },
-    { path: 'detail/:id', component: spot_detail_component_1.SpotDetailComponent },
+    { path: 'spots/:id', component: spots_component_1.SpotsComponent },
     { path: 'spots', component: spots_component_1.SpotsComponent },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

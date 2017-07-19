@@ -10,19 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var common_1 = require("@angular/common");
 var router_1 = require("@angular/router");
 var _ = require("lodash");
 var user_service_1 = require("../services/user.service");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
+var spot_detail_component_1 = require("../spot-detail/spot-detail.component");
 var SpotsComponent = (function () {
-    function SpotsComponent(userService, dataService, apiService, mapProvider, router) {
+    function SpotsComponent(userService, dataService, apiService, mapProvider, location, route) {
         this.userService = userService;
         this.dataService = dataService;
         this.apiService = apiService;
         this.mapProvider = mapProvider;
-        this.router = router;
+        this.location = location;
+        this.route = route;
         this.spots = [];
         this.countries = [];
         this.filter = {
@@ -31,17 +34,23 @@ var SpotsComponent = (function () {
     }
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
-            var data = response;
-            _this.countries = _.sortBy(data.countries, 'name');
-            _this.spots = _.map(data.spots, function (item) {
-                item.favourite = _this.userService.isFavourite(item._id);
-                return item;
+        this.route.params.subscribe(function (params) {
+            _this.spotId = +params['id'];
+            if (_this.spotId) {
+                _this.inited = true;
+            }
+            _this.dataService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
+                var data = response;
+                _this.countries = _.sortBy(data.countries, 'name');
+                _this.spots = _.map(data.spots, function (item) {
+                    item.favourite = _this.userService.isFavourite(item._id);
+                    return item;
+                });
+                _this.items = _this.countries;
+                _this.spot_count = data.spot_count;
             });
-            _this.items = _this.countries;
-            _this.spot_count = data.spot_count;
+            _this.mapProvider.set(_this.map.nativeElement);
         });
-        this.mapProvider.set(this.map.nativeElement);
     };
     SpotsComponent.prototype.getByCountry = function (id) {
         return _.filter(this.spots, {
@@ -56,13 +65,17 @@ var SpotsComponent = (function () {
         }
         return '';
     };
-    SpotsComponent.prototype.itemSelect = function (id) {
+    SpotsComponent.prototype.itemSelect = function (id, name) {
+        this.inited = true;
+        this.spotId = undefined;
+        this.location.go('/spots');
         if (id && this.firstLevelId) {
             this.gotoDetail(id);
             return;
         }
         this.firstLevelId = id;
         if (id) {
+            this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
             return;
         }
@@ -81,10 +94,12 @@ var SpotsComponent = (function () {
         });
     };
     SpotsComponent.prototype.gotoDetail = function (id) {
-        this.router.navigate(['/detail', id]);
+        this.location.go('/spots/' + id);
+        this.spotId = id;
     };
     SpotsComponent.prototype.clearFirstLevel = function () {
         this.itemSelect(undefined);
+        this.mapProvider.reset();
     };
     return SpotsComponent;
 }());
@@ -92,6 +107,10 @@ __decorate([
     core_1.ViewChild('bgmap'),
     __metadata("design:type", core_1.ElementRef)
 ], SpotsComponent.prototype, "map", void 0);
+__decorate([
+    core_1.ViewChild('detail'),
+    __metadata("design:type", spot_detail_component_1.SpotDetailComponent)
+], SpotsComponent.prototype, "detail", void 0);
 SpotsComponent = __decorate([
     core_1.Component({
         selector: 'places-section',
@@ -102,7 +121,8 @@ SpotsComponent = __decorate([
         data_service_1.DataService,
         api_service_1.APIService,
         map_provider_1.MapProvider,
-        router_1.Router])
+        common_1.Location,
+        router_1.ActivatedRoute])
 ], SpotsComponent);
 exports.SpotsComponent = SpotsComponent;
 //# sourceMappingURL=spots.component.js.map
