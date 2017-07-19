@@ -1,0 +1,5 @@
+<div (click)="onSelect()">
+  <span class="badge">{{spot.id}}</span>
+  <span>{{spot.name}}</span>
+  <button class="delete" (click)="delete(); $event.stopPropagation()">x</button>
+</div>

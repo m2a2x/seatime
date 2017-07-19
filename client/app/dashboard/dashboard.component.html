@@ -1,19 +1,9 @@
 <h3>Dashboard</h3>
 <ul class="spotes">
-  <li *ngFor="let spot of spots" (click)="onSelect(spot)"
-      [class.selected]="spot === selectedSpot">
-    <span class="badge">{{spot.id}}</span>
-    <span>{{spot.name}}</span>
-    <button class="delete"
-            (click)="delete(spot); $event.stopPropagation()">x</button>
+  <li *ngFor="let spot of spots">
+    <dashboard-card [spot]="spot" (deleteSpot)="deleteSpot($event)"></dashboard-card>
   </li>
 </ul>
-<div *ngIf="selectedSpot">
-  <h2>
-    {{selectedSpot.name | uppercase}} is my spot
-  </h2>
-  <button (click)="gotoDetail()">View Details</button>
-</div>
 
 <div>
   <input [value]="pair" (input)="pair = $event.target.value">

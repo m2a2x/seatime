@@ -27,7 +27,7 @@ var DashboardComponent = (function () {
             .then(function (response) {
             var data = response;
             _this.spots = data.spots;
-            if (!_this.spots.length) {
+            if (!_this.spots || !_this.spots.length) {
                 return;
             }
             return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'));
@@ -35,22 +35,6 @@ var DashboardComponent = (function () {
             .then(function (response) {
             console.log(response);
         });
-    };
-    DashboardComponent.prototype.delete = function (spot) {
-        var _this = this;
-        this.apiService.removeFavouriteSpot(spot._id)
-            .then(function () {
-            _this.spots = _this.spots.filter(function (h) { return h !== spot; });
-            if (_this.selectedSpot === spot) {
-                _this.selectedSpot = null;
-            }
-        });
-    };
-    DashboardComponent.prototype.onSelect = function (spot) {
-        this.selectedSpot = spot;
-    };
-    DashboardComponent.prototype.gotoDetail = function () {
-        this.router.navigate(['/detail', this.selectedSpot._id]);
     };
     DashboardComponent.prototype.syncDevice = function () {
         var pair = _.parseInt(this.pair);
@@ -60,6 +44,11 @@ var DashboardComponent = (function () {
         }
         this.apiService.setSync(pair).then(function (isSuccessful) {
             console.log(isSuccessful);
+        });
+    };
+    DashboardComponent.prototype.deleteSpot = function (id) {
+        _.remove(this.spots, function (spot) {
+            return spot._id === id;
         });
     };
     return DashboardComponent;

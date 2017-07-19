@@ -26,6 +26,7 @@ var data_service_1 = require("./services/data.service");
 var smartinput_module_1 = require("./smartinput/smartinput.module");
 require("lodash");
 require("rxjs/add/operator/toPromise");
+var dashboard_card_component_1 = require("./dashboard-card/dashboard-card.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -44,6 +45,7 @@ AppModule = __decorate([
         declarations: [
             app_component_1.AppComponent,
             dashboard_component_1.DashboardComponent,
+            dashboard_card_component_1.DashboardCardComponent,
             spot_detail_component_1.SpotDetailComponent,
             spots_component_1.SpotsComponent,
             navigation_component_1.NavigationComponent

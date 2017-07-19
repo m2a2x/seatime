@@ -21,6 +21,7 @@ import {SmartinputModule} from "./smartinput/smartinput.module";
 
 import 'lodash';
 import 'rxjs/add/operator/toPromise';
+import {DashboardCardComponent} from "./dashboard-card/dashboard-card.component";
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import 'rxjs/add/operator/toPromise';
     declarations: [
         AppComponent,
         DashboardComponent,
+        DashboardCardComponent,
         SpotDetailComponent,
         SpotsComponent,
         NavigationComponent
