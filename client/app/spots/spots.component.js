@@ -104,7 +104,6 @@ var SpotsComponent = (function () {
     };
     SpotsComponent.prototype.gotoDetail = function (spot) {
         this.selectedSpot = spot;
-        this.mapProvider.setByCoodrinate(spot.meta.lat, spot.meta.lon, 12);
         this.location.go('/spots/' + spot._id);
     };
     SpotsComponent.prototype.clearFirstLevel = function () {

@@ -1,4 +1,6 @@
 import {Injectable} from "@angular/core";
+import * as _ from 'lodash';
+
 import Map = google.maps.Map;
 import MapOptions = google.maps.MapOptions;
 import MapTypeStyle = google.maps.MapTypeStyle;
@@ -7,12 +9,18 @@ import GeocoderStatus = google.maps.GeocoderStatus;
 import GeocoderResult = google.maps.GeocoderResult;
 import MapsEventListener = google.maps.MapsEventListener;
 import LatLng = google.maps.LatLng;
+import Marker = google.maps.Marker;
+import Symbol = google.maps.Symbol;
 
 
 @Injectable()
 export class MapProvider {
     private map: Map;
+
     private geocoder: Geocoder;
+
+    private markers: Marker[] = [];
+
     private styles: MapTypeStyle[] = [
         {
             "featureType": "administrative",
@@ -306,6 +314,7 @@ export class MapProvider {
             ]
         }
     ];
+
     private mapOptions: MapOptions = {
         // How zoomed in you want the map to start at (always required)
         zoom: 2,
@@ -339,6 +348,7 @@ export class MapProvider {
     }
 
     public reset(): void {
+        this.clearMarkers();
         this.map.panTo(this.mapOptions.center);
         this.map.setZoom(this.mapOptions.zoom);
     }
@@ -352,26 +362,60 @@ export class MapProvider {
         });
     }
 
-    public setByCoodrinate(lat: number, ln: number, zoom: number): void {
+    public setMarker(lat: number, ln: number, title: string) {
+        let location: LatLng = new google.maps.LatLng(lat, ln);
+
+        let icon: Symbol = {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#21C2FF',
+            fillOpacity: 0.9,
+            scale: 10,
+            strokeWeight: 0
+        };
+
+        this.markers.push(new google.maps.Marker({
+            position: location,
+            title: title,
+            icon: icon,
+        }));
+
+        _.each(this.markers, (marker: Marker): void => {
+            marker.setMap(this.map);
+        });
+    }
+
+    public clearMarkers(): void {
+        _.each(this.markers, (marker: Marker): void => {
+            marker.setMap(null);
+        });
+        this.markers.length = 0;
+    }
+
+    public setByCoodrinate(lat: number, ln: number, zoom: number): Promise<boolean> {
         let location: LatLng = new google.maps.LatLng(lat, ln);
         this.map.panTo(location);
-        this.smoothZoom(this.map, zoom, this.map.getZoom());
+        return new Promise((resolve) => {
+            this.smoothZoom(this.map, zoom, this.map.getZoom(), () => {
+                resolve(true);
+            });
+        });
     }
 
     // the smooth zoom function
-    public smoothZoom (map: Map, max: number, cnt: number): void {
+    public smoothZoom (map: Map, max: number, cnt: number, cb?: Function): void {
         if (cnt >= max) {
+            if (cb) {
+                cb();
+            }
             return;
         }
-        else {
-            let z: MapsEventListener;
-            z = google.maps.event.addListener(map, 'zoom_changed', () => {
-                google.maps.event.removeListener(z);
-                this.smoothZoom(map, max, cnt + 1);
-            });
-            setTimeout(() => {
-                map.setZoom(cnt)
-            }, 80);
-        }
+        let z: MapsEventListener;
+        z = google.maps.event.addListener(map, 'zoom_changed', () => {
+            google.maps.event.removeListener(z);
+            this.smoothZoom(map, max, cnt + 1, cb);
+        });
+        setTimeout(() => {
+            map.setZoom(cnt)
+        }, 80);
     }
 }

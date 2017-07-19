@@ -13,43 +13,32 @@ require("rxjs/add/operator/switchMap");
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var moment = require("moment");
-var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
+var map_provider_1 = require("../services/map.provider");
 var SpotDetailComponent = (function () {
-    function SpotDetailComponent(dataService, apiService, location, ref) {
-        this.dataService = dataService;
+    function SpotDetailComponent(mapProvider, apiService, location) {
+        this.mapProvider = mapProvider;
         this.apiService = apiService;
         this.location = location;
-        this.ref = ref;
     }
-    SpotDetailComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        /*this.dataService.reload({fields: 'spots', spots: [this.spot._id].join('')})
-            .then((response: Reload) => {
-                this.spot = response.spots[0];
-                return this.apiService.getSpotConditions([this.spotId]);
-            })
-            .then((response) => {
-                this.swellData = response.forecast[0];
-                this.conditionData = response.condition[0] as Condition[];
-            }); */
-        /* this.spot = this.apiService.get(+params['id']);
-         this.spotId = +params['id'];
-
-
-         this.apiService.getSpotConditions(this.spotId).then(response => {
-         this.swellData = response.forecast;
-         this.conditionData = response.conditions as Condition[];
-         }); */
-        this.apiService.getSpotConditions([this.spot._id]).then(function (response) {
-            _this.swellData = response.forecast[0];
-            _this.conditionData = response.condition[0];
-        });
-    };
+    Object.defineProperty(SpotDetailComponent.prototype, "spot", {
+        set: function (spot) {
+            var _this = this;
+            this.mapProvider
+                .setByCoodrinate(spot.meta.lat, spot.meta.lon, 14)
+                .then(function () {
+                _this.mapProvider.setMarker(spot.meta.lat, spot.meta.lon, spot.name);
+            });
+            this.apiService.getSpotConditions([spot._id]).then(function (response) {
+                _this.swellData = response.forecast[0];
+                _this.conditionData = response.condition[0];
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
     SpotDetailComponent.prototype.getDate = function (date) {
         return moment(date * 1000).format('DD MMM, hh:mm');
-    };
-    SpotDetailComponent.prototype.update = function () {
     };
     SpotDetailComponent.prototype.goBack = function () {
         this.location.back();
@@ -57,19 +46,19 @@ var SpotDetailComponent = (function () {
     return SpotDetailComponent;
 }());
 __decorate([
-    core_1.Input('spot'),
-    __metadata("design:type", Object)
-], SpotDetailComponent.prototype, "spot", void 0);
+    core_1.Input(),
+    __metadata("design:type", Object),
+    __metadata("design:paramtypes", [Object])
+], SpotDetailComponent.prototype, "spot", null);
 SpotDetailComponent = __decorate([
     core_1.Component({
         selector: 'spot-detail',
         templateUrl: './spot-detail.component.html',
         styleUrls: ['./spot-detail.component.css']
     }),
-    __metadata("design:paramtypes", [data_service_1.DataService,
+    __metadata("design:paramtypes", [map_provider_1.MapProvider,
         api_service_1.APIService,
-        common_1.Location,
-        core_1.ChangeDetectorRef])
+        common_1.Location])
 ], SpotDetailComponent);
 exports.SpotDetailComponent = SpotDetailComponent;
 //# sourceMappingURL=spot-detail.component.js.map

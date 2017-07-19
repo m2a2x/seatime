@@ -10,8 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var _ = require("lodash");
 var MapProvider = (function () {
     function MapProvider() {
+        this.markers = [];
         this.styles = [
             {
                 "featureType": "administrative",
@@ -327,6 +329,7 @@ var MapProvider = (function () {
         this.map = new google.maps.Map(element, this.mapOptions);
     };
     MapProvider.prototype.reset = function () {
+        this.clearMarkers();
         this.map.panTo(this.mapOptions.center);
         this.map.setZoom(this.mapOptions.zoom);
     };
@@ -339,27 +342,58 @@ var MapProvider = (function () {
             }
         });
     };
+    MapProvider.prototype.setMarker = function (lat, ln, title) {
+        var _this = this;
+        var location = new google.maps.LatLng(lat, ln);
+        var icon = {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#21C2FF',
+            fillOpacity: 0.9,
+            scale: 10,
+            strokeWeight: 0
+        };
+        this.markers.push(new google.maps.Marker({
+            position: location,
+            title: title,
+            icon: icon,
+        }));
+        _.each(this.markers, function (marker) {
+            marker.setMap(_this.map);
+        });
+    };
+    MapProvider.prototype.clearMarkers = function () {
+        _.each(this.markers, function (marker) {
+            marker.setMap(null);
+        });
+        this.markers.length = 0;
+    };
     MapProvider.prototype.setByCoodrinate = function (lat, ln, zoom) {
+        var _this = this;
         var location = new google.maps.LatLng(lat, ln);
         this.map.panTo(location);
-        this.smoothZoom(this.map, zoom, this.map.getZoom());
+        return new Promise(function (resolve) {
+            _this.smoothZoom(_this.map, zoom, _this.map.getZoom(), function () {
+                resolve(true);
+            });
+        });
     };
     // the smooth zoom function
-    MapProvider.prototype.smoothZoom = function (map, max, cnt) {
+    MapProvider.prototype.smoothZoom = function (map, max, cnt, cb) {
         var _this = this;
         if (cnt >= max) {
+            if (cb) {
+                cb();
+            }
             return;
         }
-        else {
-            var z_1;
-            z_1 = google.maps.event.addListener(map, 'zoom_changed', function () {
-                google.maps.event.removeListener(z_1);
-                _this.smoothZoom(map, max, cnt + 1);
-            });
-            setTimeout(function () {
-                map.setZoom(cnt);
-            }, 80);
-        }
+        var z;
+        z = google.maps.event.addListener(map, 'zoom_changed', function () {
+            google.maps.event.removeListener(z);
+            _this.smoothZoom(map, max, cnt + 1, cb);
+        });
+        setTimeout(function () {
+            map.setZoom(cnt);
+        }, 80);
     };
     return MapProvider;
 }());

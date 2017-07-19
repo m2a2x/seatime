@@ -8,7 +8,6 @@ import {MapProvider} from "../services/map.provider";
 import {DataService} from "../services/data.service";
 import {APIService} from "../services/api.service";
 import {SpotDetailComponent} from "../spot-detail/spot-detail.component";
-import {SpotDetailState} from "../spot-detail/spot.state";
 
 type Reload = {
     spots: Spot[];
@@ -140,7 +139,6 @@ export class SpotsComponent implements OnInit {
 
     private gotoDetail(spot: Spot): void {
         this.selectedSpot = spot;
-        this.mapProvider.setByCoodrinate(spot.meta.lat, spot.meta.lon, 12);
         this.location.go('/spots/' + spot._id);
     }
 
