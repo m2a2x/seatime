@@ -31,6 +31,7 @@ var SpotsComponent = (function () {
         this.filter = {
             name: ''
         };
+        this.previousValue = '';
     }
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -93,14 +94,13 @@ var SpotsComponent = (function () {
     SpotsComponent.prototype.findSpot = function (id) {
         return _.find(this.spots, { _id: id });
     };
-    SpotsComponent.prototype.onInput = function ($event) {
+    SpotsComponent.prototype.onInput = function () {
         if (this.firstLevelId && !this.filter.name.length) {
             var name_1 = this.getCountry(this.firstLevelId);
             this.itemSelect(undefined);
             this.filter.name = name_1;
             this.mapProvider.reset();
         }
-        console.log($event);
     };
     SpotsComponent.prototype.toggleSpot = function (spot, e) {
         e.stopPropagation();
@@ -117,6 +117,10 @@ var SpotsComponent = (function () {
     SpotsComponent.prototype.gotoDetail = function (spot) {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
+    };
+    SpotsComponent.prototype.clearSearch = function () {
+        this.itemSelect(undefined);
+        this.mapProvider.reset();
     };
     return SpotsComponent;
 }());

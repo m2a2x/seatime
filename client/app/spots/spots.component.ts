@@ -42,6 +42,8 @@ export class SpotsComponent implements OnInit {
         name: ''
     };
 
+    private previousValue: string = '';
+
     constructor(
                 public userService: UserService,
                 private dataService: DataService,
@@ -124,14 +126,13 @@ export class SpotsComponent implements OnInit {
         return _.find(this.spots, {_id: id}) as Spot;
     }
 
-    public onInput($event: EventInit): void {
+    public onInput(): void {
         if (this.firstLevelId && !this.filter.name.length) {
             let name: string = this.getCountry(this.firstLevelId);
             this.itemSelect(undefined);
             this.filter.name = name;
             this.mapProvider.reset();
         }
-        console.log($event);
     }
 
     public toggleSpot(spot: Spot, e: Event): void {
@@ -151,5 +152,10 @@ export class SpotsComponent implements OnInit {
     private gotoDetail(spot: Spot): void {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
+    }
+
+    public clearSearch(): void {
+        this.itemSelect(undefined);
+        this.mapProvider.reset();
     }
 }
