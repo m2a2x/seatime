@@ -1,5 +1,5 @@
 import 'rxjs/add/operator/switchMap';
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Location} from '@angular/common';
 import * as moment from 'moment';
 import {Spot} from "../services/data.service";

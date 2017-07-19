@@ -5,30 +5,20 @@
   color: white;
 }
 
-.spotes li {
+.spotitem {
   cursor: pointer;
   position: relative;
   left: 0;
   background-color: #EEE;
   margin: .5em;
-  padding: .3em 0;
-  height: 1.6em;
+  padding: .3em 0 0 0;
   border-radius: 4px;
 }
-.spotes li:hover {
-  color: #607D8B;
-  background-color: #DDD;
-  left: .1em;
-}
-.spotes li.selected:hover {
-  background-color: #BBD8DC !important;
-  color: white;
-}
-.spotes .text {
+.spotitem .text {
   position: relative;
   top: -3px;
 }
-.spotes .badge {
+.spotitem .badge {
   display: inline-block;
   font-size: small;
   color: white;

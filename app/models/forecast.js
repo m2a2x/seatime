@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-const { wrap: async } = require('co');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const { getToday, time } = require('../utils');
 const Schema = mongoose.Schema;
 
 const FieldsToParse = ['swell', 'wind', 'condition'];
@@ -59,12 +59,17 @@ const ForecastSchema = new Schema({
  */
 
 ForecastSchema.statics = {
-    get: function (id) {
-        var dt = new Date().getTime() / 1000,
-            fields = ['swell', '_spot'];
+    get: function (id, endDate) {
+        var dt = time(getToday()),
+            fields = ['swell'],
+            comparator = {$gt: dt};
+
+        if (endDate && endDate > dt) {
+            comparator['$lt'] = endDate;
+        }
 
         return this
-            .find({_spot: id, 'meta.localTimestamp': {$gt: dt}})
+            .find({_spot: id, 'meta.localTimestamp': comparator})
             .sort('meta.localTimestamp')
             .select(fields)
             .exec()

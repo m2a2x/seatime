@@ -1,5 +1,14 @@
-<div (click)="onSelect()">
-  <span class="badge">{{spot.id}}</span>
-  <span>{{spot.name}}</span>
-  <button class="delete" (click)="delete(); $event.stopPropagation()">x</button>
+<div class="spotitem" (click)="onSelect()">
+    <span class="badge">{{spot.id}}</span>
+    <span>{{spot.name}}</span>
+    <button class="delete" (click)="delete(); $event.stopPropagation()">x</button>
+
+    <div *ngFor="let tide of spot.tide">
+        {{tide.state}}
+    </div>
+
+    <svg viewBox="74 21 201 38">
+        <path d="M274,21.0518476 C258.067141,21.5349956 243.551989,25.4085479 232.132287,33.2463274 C219.89394,41.6459751 199.928811,56 176.947784,56 C156.183953,56 140.385284,48.4199219 125.447784,37.2346191 C110.510284,26.0493164 94.5539995,21 74.4477837,21 C74.2984127,21 74.149151,21.0003442 74,21.0010316 L74.0000001,59 L274,59 L274,21.0518476 L274,21.0518476 Z"
+              stroke="none" fill="#78C5FF"></path>
+    </svg>
 </div>

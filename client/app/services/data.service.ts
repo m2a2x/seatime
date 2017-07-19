@@ -7,6 +7,12 @@ export type Country = {
     name: string;
 };
 
+export type Tide = {
+    shift: number,
+    state: string,
+    timestamp: string
+};
+
 export type Spot = {
     _id: number;
     _country: number;
@@ -14,6 +20,9 @@ export type Spot = {
     meta?: {
         lat: number,
         lon: number
+    },
+    tide?: {
+
     },
     favourite?: boolean
 }

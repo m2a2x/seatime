@@ -11,14 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var _ = require("lodash");
-var router_1 = require("@angular/router");
+var moment = require("moment");
 var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(dataService, apiService, router) {
+    function DashboardComponent(dataService, apiService) {
         this.dataService = dataService;
         this.apiService = apiService;
-        this.router = router;
         this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
@@ -26,14 +25,21 @@ var DashboardComponent = (function () {
         this.dataService.reload({ fields: 'favourite' })
             .then(function (response) {
             var data = response;
+            var timestamp;
             _this.spots = data.spots;
             if (!_this.spots || !_this.spots.length) {
                 return;
             }
-            return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'));
+            //get today forecast
+            timestamp = moment(new Date()).add(1, 'days').startOf('day').unix();
+            return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'), timestamp);
         })
             .then(function (response) {
-            console.log(response);
+            _.each(_this.spots, function (spot) {
+                _.merge(spot, {
+                    tide: response[spot._id].condition[0].tide
+                });
+            });
         });
     };
     DashboardComponent.prototype.syncDevice = function () {
@@ -60,8 +66,7 @@ DashboardComponent = __decorate([
         styleUrls: ['./dashboard.component.css']
     }),
     __metadata("design:paramtypes", [data_service_1.DataService,
-        api_service_1.APIService,
-        router_1.Router])
+        api_service_1.APIService])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map

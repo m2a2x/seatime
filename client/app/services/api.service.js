@@ -33,11 +33,14 @@ var APIService = (function () {
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
-    APIService.prototype.getSpotConditions = function (ids) {
+    APIService.prototype.getSpotConditions = function (ids, time) {
         var url = 'api/spots/getConditions';
         var requestOptions = new http_1.RequestOptions();
         var params = new http_1.URLSearchParams();
         params.set('spots', ids.join(','));
+        if (time) {
+            params.set('end', time.toString());
+        }
         requestOptions.params = params;
         return this.http.get(url, {
             search: params

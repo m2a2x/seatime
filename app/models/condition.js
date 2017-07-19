@@ -6,7 +6,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { getToday } = require('../utils');
+const { getToday, time, daysToTime } = require('../utils');
 
 /**
  * Tide Schema
@@ -61,11 +61,16 @@ const ConditionSchema = new Schema({
  */
 
 ConditionSchema.statics = {
-    get: function (spotId) {
-        var dt = getToday() / 1000,
-            fields = ['tide', '_spot'];
+    get: function (spotId, endDate) {
+        var dt = time(getToday()),
+            fields = ['tide'],
+            comparator = {$gt: dt};
 
-        return this.find({_spot: spotId, 'meta.timestamp': {$gt: dt}})
+        if (endDate && endDate > dt) {
+            comparator['$lt'] = endDate;
+        }
+
+        return this.find({_spot: spotId, 'meta.timestamp': comparator})
             .select(fields)
             .exec()
             .then(function (data) {

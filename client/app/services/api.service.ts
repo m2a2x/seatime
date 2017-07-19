@@ -44,12 +44,15 @@ export class APIService {
             .catch(this.handleError);
     }
 
-    public getSpotConditions(ids: number[]): Promise<any> {
+    public getSpotConditions(ids: number[], time?: number): Promise<any> {
         const url: string = 'api/spots/getConditions';
 
         let requestOptions = new RequestOptions();
         let params: URLSearchParams = new URLSearchParams();
         params.set('spots', ids.join(','));
+        if (time) {
+            params.set('end', time.toString());
+        }
         requestOptions.params = params;
 
         return this.http.get(
