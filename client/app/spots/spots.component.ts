@@ -74,7 +74,7 @@ export class SpotsComponent implements OnInit {
                     this.selectedSpot = this.findSpot(spotId);
                     this.firstLevelId = this.selectedSpot._country;
                     this.items = this.getByCountry(this.firstLevelId);
-                    this.itemSelect(spotId);
+                    this.itemSelect(this.selectedSpot._id, this.selectedSpot.name);
                 } else  {
                     this.items = this.countries;
                 }
@@ -99,9 +99,10 @@ export class SpotsComponent implements OnInit {
         return '';
     }
 
-    public itemSelect(id: number | undefined, name?: string): void {
+    public itemSelect(id: number | undefined, name =''): void {
         this.inited = true;
 
+        this.filter.name = name;
         if (id && this.firstLevelId) {
             this.gotoDetail(this.findSpot(id));
             return;
@@ -113,6 +114,7 @@ export class SpotsComponent implements OnInit {
         if (id) {
             this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
+            this.filter.name = '';
             return;
         }
         this.items = this.countries;
@@ -122,6 +124,15 @@ export class SpotsComponent implements OnInit {
         return _.find(this.spots, {_id: id}) as Spot;
     }
 
+    public onInput($event: EventInit): void {
+        if (this.firstLevelId && !this.filter.name.length) {
+            let name: string = this.getCountry(this.firstLevelId);
+            this.itemSelect(undefined);
+            this.filter.name = name;
+            this.mapProvider.reset();
+        }
+        console.log($event);
+    }
 
     public toggleSpot(spot: Spot, e: Event): void {
         e.stopPropagation();
@@ -140,10 +151,5 @@ export class SpotsComponent implements OnInit {
     private gotoDetail(spot: Spot): void {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
-    }
-
-    public clearFirstLevel(): void {
-        this.itemSelect(undefined);
-        this.mapProvider.reset();
     }
 }

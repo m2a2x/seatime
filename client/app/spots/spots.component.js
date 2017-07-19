@@ -48,7 +48,7 @@ var SpotsComponent = (function () {
                     _this.selectedSpot = _this.findSpot(spotId);
                     _this.firstLevelId = _this.selectedSpot._country;
                     _this.items = _this.getByCountry(_this.firstLevelId);
-                    _this.itemSelect(spotId);
+                    _this.itemSelect(_this.selectedSpot._id, _this.selectedSpot.name);
                 }
                 else {
                     _this.items = _this.countries;
@@ -72,7 +72,9 @@ var SpotsComponent = (function () {
         return '';
     };
     SpotsComponent.prototype.itemSelect = function (id, name) {
+        if (name === void 0) { name = ''; }
         this.inited = true;
+        this.filter.name = name;
         if (id && this.firstLevelId) {
             this.gotoDetail(this.findSpot(id));
             return;
@@ -83,12 +85,22 @@ var SpotsComponent = (function () {
         if (id) {
             this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
+            this.filter.name = '';
             return;
         }
         this.items = this.countries;
     };
     SpotsComponent.prototype.findSpot = function (id) {
         return _.find(this.spots, { _id: id });
+    };
+    SpotsComponent.prototype.onInput = function ($event) {
+        if (this.firstLevelId && !this.filter.name.length) {
+            var name_1 = this.getCountry(this.firstLevelId);
+            this.itemSelect(undefined);
+            this.filter.name = name_1;
+            this.mapProvider.reset();
+        }
+        console.log($event);
     };
     SpotsComponent.prototype.toggleSpot = function (spot, e) {
         e.stopPropagation();
@@ -105,10 +117,6 @@ var SpotsComponent = (function () {
     SpotsComponent.prototype.gotoDetail = function (spot) {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
-    };
-    SpotsComponent.prototype.clearFirstLevel = function () {
-        this.itemSelect(undefined);
-        this.mapProvider.reset();
     };
     return SpotsComponent;
 }());
