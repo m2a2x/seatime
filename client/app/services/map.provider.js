@@ -339,6 +339,11 @@ var MapProvider = (function () {
             }
         });
     };
+    MapProvider.prototype.setByCoodrinate = function (lat, ln, zoom) {
+        var location = new google.maps.LatLng(lat, ln);
+        this.map.panTo(location);
+        this.smoothZoom(this.map, zoom, this.map.getZoom());
+    };
     // the smooth zoom function
     MapProvider.prototype.smoothZoom = function (map, max, cnt) {
         var _this = this;

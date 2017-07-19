@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostBinding, HostListener, Input, OnDestroy} from '@angular/core';
+import {Directive, ElementRef, HostBinding, HostListener, OnDestroy} from '@angular/core';
 import {SmartinputState} from "./smartinput.state";
 import {Subscription} from "rxjs";
 

@@ -6,6 +6,7 @@ import Geocoder = google.maps.Geocoder;
 import GeocoderStatus = google.maps.GeocoderStatus;
 import GeocoderResult = google.maps.GeocoderResult;
 import MapsEventListener = google.maps.MapsEventListener;
+import LatLng = google.maps.LatLng;
 
 
 @Injectable()
@@ -349,6 +350,12 @@ export class MapProvider {
                 this.smoothZoom(this.map, zoom, this.map.getZoom());
             }
         });
+    }
+
+    public setByCoodrinate(lat: number, ln: number, zoom: number): void {
+        let location: LatLng = new google.maps.LatLng(lat, ln);
+        this.map.panTo(location);
+        this.smoothZoom(this.map, zoom, this.map.getZoom());
     }
 
     // the smooth zoom function

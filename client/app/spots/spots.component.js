@@ -35,10 +35,7 @@ var SpotsComponent = (function () {
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
-            _this.spotId = +params['id'];
-            if (_this.spotId) {
-                _this.inited = true;
-            }
+            var spotId = +params['id'];
             _this.dataService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
                 var data = response;
                 _this.countries = _.sortBy(data.countries, 'name');
@@ -46,7 +43,16 @@ var SpotsComponent = (function () {
                     item.favourite = _this.userService.isFavourite(item._id);
                     return item;
                 });
-                _this.items = _this.countries;
+                if (spotId) {
+                    _this.inited = true;
+                    _this.selectedSpot = _this.findSpot(spotId);
+                    _this.firstLevelId = _this.selectedSpot._country;
+                    _this.items = _this.getByCountry(_this.firstLevelId);
+                    _this.itemSelect(spotId);
+                }
+                else {
+                    _this.items = _this.countries;
+                }
                 _this.spot_count = data.spot_count;
             });
             _this.mapProvider.set(_this.map.nativeElement);
@@ -67,12 +73,12 @@ var SpotsComponent = (function () {
     };
     SpotsComponent.prototype.itemSelect = function (id, name) {
         this.inited = true;
-        this.spotId = undefined;
-        this.location.go('/spots');
         if (id && this.firstLevelId) {
-            this.gotoDetail(id);
+            this.gotoDetail(this.findSpot(id));
             return;
         }
+        this.selectedSpot = undefined;
+        this.location.go('/spots');
         this.firstLevelId = id;
         if (id) {
             this.mapProvider.setByName(name, 6);
@@ -80,6 +86,9 @@ var SpotsComponent = (function () {
             return;
         }
         this.items = this.countries;
+    };
+    SpotsComponent.prototype.findSpot = function (id) {
+        return _.find(this.spots, { _id: id });
     };
     SpotsComponent.prototype.toggleSpot = function (spot, e) {
         e.stopPropagation();
@@ -93,9 +102,10 @@ var SpotsComponent = (function () {
             return;
         });
     };
-    SpotsComponent.prototype.gotoDetail = function (id) {
-        this.location.go('/spots/' + id);
-        this.spotId = id;
+    SpotsComponent.prototype.gotoDetail = function (spot) {
+        this.selectedSpot = spot;
+        this.mapProvider.setByCoodrinate(spot.meta.lat, spot.meta.lon, 12);
+        this.location.go('/spots/' + spot._id);
     };
     SpotsComponent.prototype.clearFirstLevel = function () {
         this.itemSelect(undefined);

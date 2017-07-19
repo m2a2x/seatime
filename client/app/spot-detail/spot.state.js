@@ -10,22 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var SmartinputState = (function () {
-    function SmartinputState() {
-        var _this = this;
-        this.isOpenChange = new core_1.EventEmitter();
-        // isDisabledChange = new EventEmitter<boolean>();
-        this.openMenu = new core_1.EventEmitter();
-        this.closeMenu = new core_1.EventEmitter();
-        this.dropdownMenu = new Promise(function (resolve) {
-            _this.resolveDropdownMenu = resolve;
-        });
+var SpotDetailState = (function () {
+    function SpotDetailState() {
+        this.openDetail = new core_1.EventEmitter();
     }
-    return SmartinputState;
+    return SpotDetailState;
 }());
-SmartinputState = __decorate([
+SpotDetailState = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [])
-], SmartinputState);
-exports.SmartinputState = SmartinputState;
-//# sourceMappingURL=smartinput.state.js.map
+], SpotDetailState);
+exports.SpotDetailState = SpotDetailState;
+//# sourceMappingURL=spot.state.js.map

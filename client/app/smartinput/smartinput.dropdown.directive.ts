@@ -56,8 +56,7 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
     private _isInited = false;
     private isShown = false;
 
-    constructor(private _elementRef: ElementRef,
-                private _state: SmartinputState) {}
+    constructor(private _state: SmartinputState) {}
 
     ngOnInit(): void {
         if (this._isInited) {

@@ -11,6 +11,10 @@ export type Spot = {
     _id: number;
     _country: number;
     name: string;
+    meta?: {
+        lat: number,
+        lon: number
+    },
     favourite?: boolean
 }
 

@@ -2,10 +2,10 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable()
 export class SmartinputState {
-    direction: 'down' | 'up' = 'down';
+    // direction: 'down' | 'up' = 'down';
     autoClose: boolean;
     isOpenChange = new EventEmitter<boolean>();
-    isDisabledChange = new EventEmitter<boolean>();
+    // isDisabledChange = new EventEmitter<boolean>();
     openMenu = new EventEmitter<boolean>();
     closeMenu = new EventEmitter<boolean>();
 

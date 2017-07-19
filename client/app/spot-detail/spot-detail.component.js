@@ -24,15 +24,15 @@ var SpotDetailComponent = (function () {
     }
     SpotDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload({ fields: 'spots', spots: [this.spotId].join('') })
-            .then(function (response) {
-            _this.spot = response.spots[0];
-            return _this.apiService.getSpotConditions([_this.spotId]);
-        })
-            .then(function (response) {
-            _this.swellData = response.forecast[0];
-            _this.conditionData = response.condition[0];
-        });
+        /*this.dataService.reload({fields: 'spots', spots: [this.spot._id].join('')})
+            .then((response: Reload) => {
+                this.spot = response.spots[0];
+                return this.apiService.getSpotConditions([this.spotId]);
+            })
+            .then((response) => {
+                this.swellData = response.forecast[0];
+                this.conditionData = response.condition[0] as Condition[];
+            }); */
         /* this.spot = this.apiService.get(+params['id']);
          this.spotId = +params['id'];
 
@@ -41,9 +41,15 @@ var SpotDetailComponent = (function () {
          this.swellData = response.forecast;
          this.conditionData = response.conditions as Condition[];
          }); */
+        this.apiService.getSpotConditions([this.spot._id]).then(function (response) {
+            _this.swellData = response.forecast[0];
+            _this.conditionData = response.condition[0];
+        });
     };
     SpotDetailComponent.prototype.getDate = function (date) {
         return moment(date * 1000).format('DD MMM, hh:mm');
+    };
+    SpotDetailComponent.prototype.update = function () {
     };
     SpotDetailComponent.prototype.goBack = function () {
         this.location.back();
@@ -51,9 +57,9 @@ var SpotDetailComponent = (function () {
     return SpotDetailComponent;
 }());
 __decorate([
-    core_1.Input('spot-id'),
-    __metadata("design:type", Number)
-], SpotDetailComponent.prototype, "spotId", void 0);
+    core_1.Input('spot'),
+    __metadata("design:type", Object)
+], SpotDetailComponent.prototype, "spot", void 0);
 SpotDetailComponent = __decorate([
     core_1.Component({
         selector: 'spot-detail',

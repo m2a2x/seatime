@@ -47,7 +47,7 @@ const SpotSchema = new Schema({
 
 SpotSchema.statics = {
   list: function () {
-    return this.find({}).sort('country');
+    return this.find({}).sort('country').select('_id name _country meta.lon meta.lat').exec();
   },
 
   get: function (id) {
@@ -58,7 +58,7 @@ SpotSchema.statics = {
       return this.find({
               _id: { $in: ids}
           })
-          .select('_id name');
+          .select('_id name').exec();
   }
 };
 

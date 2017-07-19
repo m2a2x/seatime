@@ -12,8 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var smartinput_state_1 = require("./smartinput.state");
 var SmartinputDropdownDirective = (function () {
-    function SmartinputDropdownDirective(_elementRef, _state) {
-        this._elementRef = _elementRef;
+    function SmartinputDropdownDirective(_state) {
         this._state = _state;
         this._subscriptions = [];
         this._isInited = false;
@@ -116,8 +115,7 @@ SmartinputDropdownDirective = __decorate([
             '[class.show]': 'isOpen'
         }
     }),
-    __metadata("design:paramtypes", [core_1.ElementRef,
-        smartinput_state_1.SmartinputState])
+    __metadata("design:paramtypes", [smartinput_state_1.SmartinputState])
 ], SmartinputDropdownDirective);
 exports.SmartinputDropdownDirective = SmartinputDropdownDirective;
 //# sourceMappingURL=smartinput.dropdown.directive.js.map
