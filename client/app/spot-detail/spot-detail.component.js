@@ -24,6 +24,7 @@ var SpotDetailComponent = (function () {
     Object.defineProperty(SpotDetailComponent.prototype, "spot", {
         set: function (spot) {
             var _this = this;
+            this.mapProvider.clearMarkers();
             this.mapProvider
                 .setByCoodrinate(spot.meta.lat, spot.meta.lon, 14)
                 .then(function () {

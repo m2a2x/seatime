@@ -28,6 +28,7 @@ export class SpotDetailComponent {
 
     @Input()
     set spot(spot: Spot) {
+        this.mapProvider.clearMarkers();
         this.mapProvider
             .setByCoodrinate(spot.meta.lat, spot.meta.lon, 14)
             .then(() => {
