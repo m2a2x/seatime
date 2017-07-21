@@ -1,0 +1,29 @@
+<svg [attr.width]="size" height="60px" [attr.viewBox]="'0 0 ' + (100 * tides.length)  + ' 60'" xmlns:svg="http://www.w3.org/1999/html">
+    <svg:defs>
+        <svg:path id="High" d="M100,34.948341 C80.6735823,34.2661305 65.6703302,26.8845598 51.4477837,16.2346191 C36.5102837,5.04931641 20.5539995,0 0.447783684,0 C0.298412721,0 0.149151031,0.000344206681 0,0.00103160074 L5.28818305e-08,38 L100,38 L100,34.948341 L100,34.948341 Z"/>
+        <svg:path id="Low" d="M0,34.8964934 C0.971520036,34.9307875 1.9539646,34.9481524 2.94778368,34.9481524 C25.9288107,34.9481524 45.8939396,20.5941275 58.1322874,12.1944798 C69.5519892,4.35670033 84.0671408,0.483148053 100,0 L100,37.9481524 L1.1937118e-12,37.9481524 L1.1937118e-12,34.8964934 L0,34.8964934 Z"/>
+        <svg:rect id="InfoLine" stroke="none" fill-opacity="0.2" width="1" height="45" y="15"/>
+    </svg:defs>
+
+
+    <svg:g *ngFor="let tide of tides; let i = index; let first = first;" fill="#78C5FF">
+        <svg:use *ngIf="first"
+                 [attr.x]="(i * 100) - 50"
+                 y="22"
+                 [attr.xlink:href] = "'#' + (tide.state === 'Low' ? 'High' : 'Low')"/>
+        <svg:use [attr.x]="(i * 100) + 50"
+                 y="22"
+                 [attr.xlink:href] = "'#' + tide.state"/>
+    </svg:g>
+    <svg:g *ngFor="let tide of tides; let i = index; let first = first;" fill="#656565">
+        <svg:use
+                xlink:href = "#InfoLine"
+                [attr.x]="(i * 100) + 50"
+                y="0"/>
+        <text
+                id="dimension-line"
+                [attr.x]="(i * 100) + 50"
+                [attr.fill]="(tide.state === 'High'? '#ffffff' : '#000000')"
+                y="50">{{tide.state}}</text>
+    </svg:g>
+</svg>

@@ -27,6 +27,7 @@ var smartinput_module_1 = require("./smartinput/smartinput.module");
 require("lodash");
 require("rxjs/add/operator/toPromise");
 var dashboard_card_component_1 = require("./dashboard-card/dashboard-card.component");
+var tide_chart_component_1 = require("./tide-chart/tide-chart.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -46,6 +47,7 @@ AppModule = __decorate([
             app_component_1.AppComponent,
             dashboard_component_1.DashboardComponent,
             dashboard_card_component_1.DashboardCardComponent,
+            tide_chart_component_1.TideChartComponent,
             spot_detail_component_1.SpotDetailComponent,
             spots_component_1.SpotsComponent,
             navigation_component_1.NavigationComponent
