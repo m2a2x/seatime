@@ -10,7 +10,7 @@ export type Country = {
 export type Tide = {
     shift: number,
     state: string,
-    timestamp: string
+    timestamp: number
 };
 
 export type Spot = {

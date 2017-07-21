@@ -11,18 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var moment = require("moment");
+var _ = require("lodash");
 var TideChartComponent = (function () {
     function TideChartComponent() {
     }
-    TideChartComponent.prototype.getDate = function (date) {
-        return moment.unix(date).format('hh:mm');
-    };
+    Object.defineProperty(TideChartComponent.prototype, "tides", {
+        set: function (tides) {
+            this._tides = _.map(tides, function (tide) {
+                return {
+                    state: tide.state,
+                    time: moment.unix(tide.timestamp).locale('en').format('hh:mm a')
+                };
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
     return TideChartComponent;
 }());
 __decorate([
-    core_1.Input('tides'),
-    __metadata("design:type", Array)
-], TideChartComponent.prototype, "tides", void 0);
+    core_1.Input(),
+    __metadata("design:type", Array),
+    __metadata("design:paramtypes", [Array])
+], TideChartComponent.prototype, "tides", null);
 __decorate([
     core_1.Input('size'),
     __metadata("design:type", Number)

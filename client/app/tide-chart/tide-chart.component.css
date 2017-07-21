@@ -3,3 +3,11 @@
     font-family: 'Open Sans';
     font-size: 12px;
 }
+
+#dimension-time {
+    fill: #000000;
+    text-anchor: middle;
+    font-family: 'Open Sans';
+    font-size: 12px;
+    text-transform: uppercase;
+}
