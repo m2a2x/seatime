@@ -61,7 +61,7 @@ const ForecastSchema = new Schema({
 ForecastSchema.statics = {
     get: function (id, endDate) {
         var dt = time(getToday()),
-            fields = ['swell'],
+            fields = 'swell meta.localTimestamp',
             comparator = {$gt: dt};
 
         if (endDate && endDate > dt) {

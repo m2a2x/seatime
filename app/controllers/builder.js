@@ -150,9 +150,8 @@ exports.uploadForecast = asyncf(function* (mswdId, spotId) {
 
     return new Promise(function(resolve){
         q.drain = asyncf(function * () {
-            const data = yield doc.get(spotId);
             yield Counter.setIncreament(idName, idInc);
-            resolve(data);
+            resolve(true);
         });
     });
 });

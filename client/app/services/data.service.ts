@@ -7,6 +7,22 @@ export type Country = {
     name: string;
 };
 
+export type Swell = {
+    components: {
+        combined: {
+            isOffshore: boolean,
+            compassDirection: string,
+            power: number
+        },
+        primary: {},
+        secondary: {}
+    },
+    maxBreakingHeight: number,
+    minBreakingHeight: number,
+    period: number,
+    unit: string
+};
+
 export type Tide = {
     shift: number,
     state: string,
@@ -21,9 +37,8 @@ export type Spot = {
         lat: number,
         lon: number
     },
-    tide?: {
-
-    },
+    tide?: Tide[],
+    swell?: {},
     favourite?: boolean
 }
 

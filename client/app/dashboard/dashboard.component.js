@@ -37,7 +37,8 @@ var DashboardComponent = (function () {
             .then(function (response) {
             _.each(_this.spots, function (spot) {
                 _.merge(spot, {
-                    tide: response[spot._id].condition[0].tide
+                    tide: response[spot._id].condition[0].tide,
+                    swell: response[spot._id].forecast[0].swell
                 });
             });
         });
@@ -65,8 +66,7 @@ DashboardComponent = __decorate([
         templateUrl: './dashboard.component.html',
         styleUrls: ['./dashboard.component.css']
     }),
-    __metadata("design:paramtypes", [data_service_1.DataService,
-        api_service_1.APIService])
+    __metadata("design:paramtypes", [data_service_1.DataService, api_service_1.APIService])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map

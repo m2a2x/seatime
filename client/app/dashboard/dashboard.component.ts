@@ -33,9 +33,7 @@ export class DashboardComponent implements OnInit {
     public selectedSpot: Spot;
     public pair: string = '';
 
-    constructor(private dataService: DataService,
-                private apiService: APIService) {
-    }
+    constructor(private dataService: DataService, private apiService: APIService) {}
 
     public ngOnInit(): void {
         this.dataService.reload({fields: 'favourite'})
@@ -55,7 +53,8 @@ export class DashboardComponent implements OnInit {
             .then((response: Environment) => {
                 _.each(this.spots, (spot: Spot): void => {
                     _.merge(spot, {
-                        tide: response[spot._id].condition[0].tide
+                        tide: response[spot._id].condition[0].tide,
+                        swell: response[spot._id].forecast[0].swell
                     });
                 });
             });

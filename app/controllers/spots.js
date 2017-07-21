@@ -17,11 +17,11 @@ const {uploadForecast, uploadCondition} = require('../controllers/builder');
 const {getToday, time} = require('../utils');
 
 
-var getForecast = async(function*(spotId, endDate) {
+var getForecast = async(function*(spotId, end) {
     var callData,
         spot;
 
-    callData = yield Forecast.get(spotId);
+    callData = yield Forecast.get(spotId, end);
     if (callData) {
         return callData;
     }
@@ -29,7 +29,12 @@ var getForecast = async(function*(spotId, endDate) {
     // get spot
     spot = yield Spot.get(spotId);
     yield uploadForecast(spot.meta.mswd.id, spotId);
+    callData = yield Forecast.get(spotId, end);
 
+    if (callData) {
+        return callData;
+    }
+    return null;
     return callData;
 });
 
