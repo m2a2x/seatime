@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'seatime';
   src:
-    url('fonts/seatime.ttf?gk4ghp') format('truetype'),
-    url('fonts/seatime.woff?gk4ghp') format('woff'),
-    url('fonts/seatime.svg?gk4ghp#seatime') format('svg');
+    url('fonts/seatime.ttf?zfiseb') format('truetype'),
+    url('fonts/seatime.woff?zfiseb') format('woff'),
+    url('fonts/seatime.svg?zfiseb#seatime') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-star:before {
+  content: "\e838";
+}
+.icon-signal_wifi_4_bar:before {
+  content: "\e1d8";
+}
+.icon-signal_wifi_4_bar_lock:before {
+  content: "\e1d9";
+}
+.icon-signal_wifi_off:before {
+  content: "\e1da";
+}
+.icon-watch_later:before {
+  content: "\e924";
+}
 .icon-rain:before {
   content: "\e900";
 }
@@ -76,18 +91,6 @@
 }
 .icon-arrow-down-left:before {
   content: "\ea37";
-}
-.icon-signal_wifi_4_bar:before {
-  content: "\e1d8";
-}
-.icon-signal_wifi_4_bar_lock:before {
-  content: "\e1d9";
-}
-.icon-signal_wifi_off:before {
-  content: "\e1da";
-}
-.icon-watch_later:before {
-  content: "\e924";
 }
 .icon-vk:before {
   content: "\e90b";
