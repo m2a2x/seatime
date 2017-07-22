@@ -8,20 +8,23 @@
 
         <input #search smartinput-in [(ngModel)]="filter.name" (keydown)="onInput($event)"/>
         <span *ngIf="filter.name || !!firstLevelId" (click)="clearSearch()">Clear</span>
-
         <div #dropdown=smartinputdropdown smartinput-dropdown>
-            <ul class="dropdown-menu" role="menu">
-                <li *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id, item.name)" role="menuitem">
-                    <span class="dropdown-item">{{item.name}}</span>
-                    <span *ngIf="!!firstLevelId"
-                        [class.favourite]="item.favourite"
-                        (click)="toggleSpot(item, $event)">{{item.favourite ? 'Remove' : 'Add'}} spot</span>
-                </li>
-
-                <li *ngIf="items && !items.length">
+            <div class="dropdown-menu">
+                <div *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id, item.name)" class="dropdown-item d-flex justify-content-between">
+                    <span>{{item.name}}</span>
+                    <span
+                            *ngIf="!!firstLevelId"
+                            [class.favourite]="item.favourite"
+                            (click)="toggleSpot(item, $event)"
+                            class="star" title=" {item.favourite ? 'Remove' : 'Add'}} spot">
+                            <span class="icon-star"></span>
+                    </span>
+                </div>
+                <div *ngIf="items && !items.length">
                     No spots in this region
-                </li>
-            </ul>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="spots-number" *ngIf="spot_count && !inited">
