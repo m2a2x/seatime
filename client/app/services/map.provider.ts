@@ -319,6 +319,8 @@ export class MapProvider {
         // How zoomed in you want the map to start at (always required)
         zoom: 2,
 
+        backgroundColor: 'none',
+
         // Disabling the default UI
         disableDefaultUI: true,
 
@@ -333,7 +335,7 @@ export class MapProvider {
         disableDoubleClickZoom: true,
 
         // The latitude and longitude to center the map (always required)
-        center: new google.maps.LatLng(53.8838069, 27.4548923), // New York
+        center: new google.maps.LatLng(53.8838069, 27.4548923), // Minsk
 
         // How you would like to style the map.
         // This is where you would paste any style found on Snazzy Maps.

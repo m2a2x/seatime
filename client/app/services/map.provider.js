@@ -310,6 +310,7 @@ var MapProvider = (function () {
         this.mapOptions = {
             // How zoomed in you want the map to start at (always required)
             zoom: 2,
+            backgroundColor: 'none',
             // Disabling the default UI
             disableDefaultUI: true,
             scrollwheel: false,
