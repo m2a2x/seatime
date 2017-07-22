@@ -28,7 +28,6 @@ export class SpotDetailComponent {
         });
     }
 
-
     constructor(private mapProvider: MapProvider,
                 private apiService: APIService) {
     }

@@ -20,9 +20,6 @@ var NavigationComponent = (function () {
         this.dataService = dataService;
         this._subscriptions = [];
     }
-    NavigationComponent.prototype.isLoggedIn = function () {
-        return this.authService.isLoggedIn();
-    };
     NavigationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.router.events

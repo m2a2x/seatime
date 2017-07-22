@@ -14,14 +14,9 @@ export class NavigationComponent implements OnInit {
     private _subscriptions: Subscription[] = [];
     public additionItem: Spot | undefined;
     constructor(
-        private authService: AuthenticationService,
+        public authService: AuthenticationService,
         private router: Router,
         private dataService: DataService) {}
-
-    public isLoggedIn(): boolean {
-        return this.authService.isLoggedIn();
-    }
-
 
     public ngOnInit(): void {
         this.router.events
