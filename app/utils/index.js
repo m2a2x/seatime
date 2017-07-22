@@ -1,4 +1,4 @@
-const _ = require('moment');
+const moment = require('moment');
 
 module.exports = {
     respond,
@@ -38,7 +38,7 @@ function getToday() {
 }
 
 function time(time) {
-    return time/1000;
+    return moment(time).unix();
 }
 
 function daysToTime(days) {
