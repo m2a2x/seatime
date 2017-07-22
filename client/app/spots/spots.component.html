@@ -1,13 +1,15 @@
 <div>
     <div class="mapbg" #bgmap></div>
-    <div smartinput style="position: relative;">
-
-        <span *ngIf="!!firstLevelId">
-            {{getCountry(firstLevelId)}}
-        </span>
-
-        <input #search smartinput-in [(ngModel)]="filter.name" (keydown)="onInput($event)"/>
-        <span *ngIf="filter.name || !!firstLevelId" (click)="clearSearch()">Clear</span>
+    <div smartinput class="search-wrapper">
+        <div class="search-holder">
+            <div *ngIf="!!firstLevelId" class="float-md-left first-level-select">
+                {{getCountry(firstLevelId)}}
+            </div>
+            <div *ngIf="filter.name || !!firstLevelId" (click)="clearSearch()" class="float-sm-right icon-clear"></div>
+            <div class="input-wrapper">
+                <input #search smartinput-in [(ngModel)]="filter.name" (keydown)="onInput($event)" placeholder="Type place for search"/>
+            </div>
+        </div>
         <div #dropdown=smartinputdropdown smartinput-dropdown>
             <div class="dropdown-menu">
                 <div *ngFor="let item of items| smartfilter:filter" (click)="itemSelect(item._id, item.name)" class="dropdown-item d-flex justify-content-between">

@@ -39,4 +39,6 @@ button:disabled {
     border: 1px solid rgba(156,156,156,0.10);
     box-shadow: 0 12px 30px 12px rgba(0,0,0,0.05);
     max-width: 500px;
+    margin-top: 80px;
+    margin-left: 25px;
 }
