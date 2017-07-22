@@ -17,6 +17,10 @@
                         [class.favourite]="item.favourite"
                         (click)="toggleSpot(item, $event)">{{item.favourite ? 'Remove' : 'Add'}} spot</span>
                 </li>
+
+                <li *ngIf="items && !items.length">
+                    No spots in this region
+                </li>
             </ul>
         </div>
     </div>
