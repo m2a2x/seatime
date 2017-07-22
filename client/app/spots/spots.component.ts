@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import * as _ from 'lodash';
 import {Country, Spot} from "../services/data.service";
 import {UserService} from "../services/user.service";
@@ -8,7 +7,6 @@ import {MapProvider} from "../services/map.provider";
 import {DataService} from "../services/data.service";
 import {APIService} from "../services/api.service";
 import {SmartinputDropdownDirective} from "../smartinput/smartinput.dropdown.directive";
-import {SmartinputInputDirective} from "../smartinput/smartinput.input.directive";
 
 type Reload = {
     spots: Spot[];
@@ -56,8 +54,8 @@ export class SpotsComponent implements OnInit {
                 private dataService: DataService,
                 private apiService: APIService,
                 private mapProvider: MapProvider,
-                private location: Location,
-                private route: ActivatedRoute,) {
+                private route: ActivatedRoute,
+                private router: Router) {
     }
 
 
@@ -80,9 +78,11 @@ export class SpotsComponent implements OnInit {
 
                 if (spotId) {
                     this.inited = true;
-                    this.selectedSpot = this.findSpot(spotId);
+                    this.setSpot(this.findSpot(spotId));
+
                     this.firstLevelId = this.selectedSpot._country;
                     this.items = this.getByCountry(this.firstLevelId);
+
                     this.itemSelect(this.selectedSpot._id, this.selectedSpot.name);
                 } else  {
                     this.items = this.countries;
@@ -97,6 +97,11 @@ export class SpotsComponent implements OnInit {
         return _.filter<Spot>(this.spots, {
             _country: id
         });
+    }
+
+    private setSpot(spot: Spot | undefined = undefined): void {
+        this.selectedSpot = spot;
+        this.dataService.setActiveSpot(spot);
     }
 
     public getCountry(id: number): string {
@@ -116,8 +121,9 @@ export class SpotsComponent implements OnInit {
             this.gotoDetail(this.findSpot(id));
             return;
         }
-        this.selectedSpot = undefined;
-        this.location.go('/spots');
+        this.setSpot();
+
+        this.router.navigate(['/spots']);
         this.firstLevelId = id;
 
         if (id) {
@@ -160,8 +166,8 @@ export class SpotsComponent implements OnInit {
     }
 
     private gotoDetail(spot: Spot): void {
-        this.selectedSpot = spot;
-        this.location.go('/spots/' + spot._id);
+        this.setSpot(spot);
+        this.router.navigate(['/spots', spot._id]);
         this.dropdown.hide();
     }
 

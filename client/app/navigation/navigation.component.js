@@ -11,13 +11,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var auth_service_1 = require("../services/auth.service");
+var router_1 = require("@angular/router");
+var data_service_1 = require("../services/data.service");
 var NavigationComponent = (function () {
-    function NavigationComponent(authService) {
+    function NavigationComponent(authService, router, dataService) {
         this.authService = authService;
+        this.router = router;
+        this.dataService = dataService;
+        this._subscriptions = [];
     }
     NavigationComponent.prototype.isLoggedIn = function () {
         return this.authService.isLoggedIn();
-        ;
+    };
+    NavigationComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.router.events
+            .filter(function (event) { return event instanceof router_1.NavigationEnd; })
+            .subscribe(function (event) {
+            var path = event.url.split('/');
+            for (var _i = 0, _a = _this._subscriptions; _i < _a.length; _i++) {
+                var sub = _a[_i];
+                sub.unsubscribe();
+            }
+            if (path[1] === 'spots') {
+                _this._subscriptions.push(_this.dataService
+                    .spotUpdated.subscribe(function (value) { return _this.additionItem = value; }));
+            }
+            else {
+                _this.additionItem = undefined;
+            }
+        });
     };
     return NavigationComponent;
 }());
@@ -27,7 +50,9 @@ NavigationComponent = __decorate([
         templateUrl: './navigation.component.html',
         styleUrls: ['./navigation.component.css']
     }),
-    __metadata("design:paramtypes", [auth_service_1.AuthenticationService])
+    __metadata("design:paramtypes", [auth_service_1.AuthenticationService,
+        router_1.Router,
+        data_service_1.DataService])
 ], NavigationComponent);
 exports.NavigationComponent = NavigationComponent;
 //# sourceMappingURL=navigation.component.js.map

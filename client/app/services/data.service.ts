@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {APIService, DataQuery, Reload} from "./api.service";
 import {UserService} from "./user.service";
 
@@ -44,6 +44,8 @@ export type Spot = {
 
 @Injectable()
 export class DataService {
+    public spotUpdated = new EventEmitter<Spot | undefined>();
+
     constructor(private apiService: APIService, private userService: UserService) {}
 
     public reload(fields?: DataQuery): Promise<Reload> {
@@ -52,5 +54,9 @@ export class DataService {
             delete response.user;
             return response;
         });
+    }
+
+    public setActiveSpot(spot: Spot | undefined): void {
+        this.spotUpdated.emit(spot);
     }
 }

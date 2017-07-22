@@ -1,29 +1,42 @@
 label {
-  display: inline-block;
-  width: 3em;
-  margin: .5em 0;
-  color: #607D8B;
-  font-weight: bold;
+    display: inline-block;
+    width: 3em;
+    margin: .5em 0;
+    color: #607D8B;
+    font-weight: bold;
 }
+
 input {
-  height: 2em;
-  font-size: 1em;
-  padding-left: .4em;
+    height: 2em;
+    font-size: 1em;
+    padding-left: .4em;
 }
+
 button {
-  margin-top: 20px;
-  font-family: Arial;
-  background-color: #eee;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer; cursor: hand;
+    margin-top: 20px;
+    font-family: Arial;
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
 }
+
 button:hover {
-  background-color: #cfd8dc;
+    background-color: #cfd8dc;
 }
+
 button:disabled {
-  background-color: #eee;
-  color: #ccc; 
-  cursor: auto;
+    background-color: #eee;
+    color: #ccc;
+    cursor: auto;
+}
+
+.spot-detailcard {
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid rgba(156,156,156,0.10);
+    box-shadow: 0 12px 30px 12px rgba(0,0,0,0.05);
+    max-width: 500px;
 }

@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var common_1 = require("@angular/common");
 var router_1 = require("@angular/router");
 var _ = require("lodash");
 var user_service_1 = require("../services/user.service");
@@ -19,13 +18,13 @@ var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var smartinput_dropdown_directive_1 = require("../smartinput/smartinput.dropdown.directive");
 var SpotsComponent = (function () {
-    function SpotsComponent(userService, dataService, apiService, mapProvider, location, route) {
+    function SpotsComponent(userService, dataService, apiService, mapProvider, route, router) {
         this.userService = userService;
         this.dataService = dataService;
         this.apiService = apiService;
         this.mapProvider = mapProvider;
-        this.location = location;
         this.route = route;
+        this.router = router;
         this.spots = [];
         this.countries = [];
         this.filter = {
@@ -45,7 +44,7 @@ var SpotsComponent = (function () {
                 });
                 if (spotId) {
                     _this.inited = true;
-                    _this.selectedSpot = _this.findSpot(spotId);
+                    _this.setSpot(_this.findSpot(spotId));
                     _this.firstLevelId = _this.selectedSpot._country;
                     _this.items = _this.getByCountry(_this.firstLevelId);
                     _this.itemSelect(_this.selectedSpot._id, _this.selectedSpot.name);
@@ -62,6 +61,11 @@ var SpotsComponent = (function () {
         return _.filter(this.spots, {
             _country: id
         });
+    };
+    SpotsComponent.prototype.setSpot = function (spot) {
+        if (spot === void 0) { spot = undefined; }
+        this.selectedSpot = spot;
+        this.dataService.setActiveSpot(spot);
     };
     SpotsComponent.prototype.getCountry = function (id) {
         var country;
@@ -80,8 +84,8 @@ var SpotsComponent = (function () {
             this.gotoDetail(this.findSpot(id));
             return;
         }
-        this.selectedSpot = undefined;
-        this.location.go('/spots');
+        this.setSpot();
+        this.router.navigate(['/spots']);
         this.firstLevelId = id;
         if (id) {
             this.mapProvider.setByName(name, 6);
@@ -118,8 +122,8 @@ var SpotsComponent = (function () {
         });
     };
     SpotsComponent.prototype.gotoDetail = function (spot) {
-        this.selectedSpot = spot;
-        this.location.go('/spots/' + spot._id);
+        this.setSpot(spot);
+        this.router.navigate(['/spots', spot._id]);
         this.dropdown.hide();
     };
     SpotsComponent.prototype.clearSearch = function () {
@@ -150,8 +154,8 @@ SpotsComponent = __decorate([
         data_service_1.DataService,
         api_service_1.APIService,
         map_provider_1.MapProvider,
-        common_1.Location,
-        router_1.ActivatedRoute])
+        router_1.ActivatedRoute,
+        router_1.Router])
 ], SpotsComponent);
 exports.SpotsComponent = SpotsComponent;
 //# sourceMappingURL=spots.component.js.map

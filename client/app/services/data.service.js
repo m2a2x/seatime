@@ -16,6 +16,7 @@ var DataService = (function () {
     function DataService(apiService, userService) {
         this.apiService = apiService;
         this.userService = userService;
+        this.spotUpdated = new core_1.EventEmitter();
     }
     DataService.prototype.reload = function (fields) {
         var _this = this;
@@ -24,6 +25,9 @@ var DataService = (function () {
             delete response.user;
             return response;
         });
+    };
+    DataService.prototype.setActiveSpot = function (spot) {
+        this.spotUpdated.emit(spot);
     };
     return DataService;
 }());

@@ -2949,6 +2949,7 @@ tbody.collapse.show {
       .navbar .navbar-nav .nav-item:last-child {
         margin-left: auto;
         border: 0; }
+    .navbar .navbar-nav .nav-item,
     .navbar .navbar-nav .nav-link {
       padding: 0 1rem;
       color: #fff;
