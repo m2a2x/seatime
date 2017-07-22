@@ -11,15 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("rxjs/add/operator/switchMap");
 var core_1 = require("@angular/core");
-var common_1 = require("@angular/common");
-var moment = require("moment");
 var api_service_1 = require("../services/api.service");
 var map_provider_1 = require("../services/map.provider");
 var SpotDetailComponent = (function () {
-    function SpotDetailComponent(mapProvider, apiService, location) {
+    function SpotDetailComponent(mapProvider, apiService) {
         this.mapProvider = mapProvider;
         this.apiService = apiService;
-        this.location = location;
     }
     Object.defineProperty(SpotDetailComponent.prototype, "spot", {
         set: function (spot) {
@@ -30,20 +27,15 @@ var SpotDetailComponent = (function () {
                 .then(function () {
                 _this.mapProvider.setMarker(spot.meta.lat, spot.meta.lon, spot.name);
             });
+            this.activeSpot = spot;
             this.apiService.getSpotConditions([spot._id]).then(function (response) {
-                // this.swellData = response.forecast[0];
-                // this.conditionData = response.condition[0] as Condition[];
+                _this.activeSpot.swell = response[spot._id].forecast[0].swell;
+                _this.activeSpot.tide = response[spot._id].condition[0].tide;
             });
         },
         enumerable: true,
         configurable: true
     });
-    SpotDetailComponent.prototype.getDate = function (date) {
-        return moment(date * 1000).format('DD MMM, hh:mm');
-    };
-    SpotDetailComponent.prototype.goBack = function () {
-        this.location.back();
-    };
     return SpotDetailComponent;
 }());
 __decorate([
@@ -58,8 +50,7 @@ SpotDetailComponent = __decorate([
         styleUrls: ['./spot-detail.component.css']
     }),
     __metadata("design:paramtypes", [map_provider_1.MapProvider,
-        api_service_1.APIService,
-        common_1.Location])
+        api_service_1.APIService])
 ], SpotDetailComponent);
 exports.SpotDetailComponent = SpotDetailComponent;
 //# sourceMappingURL=spot-detail.component.js.map

@@ -1,15 +1,11 @@
-<div *ngIf="spot"  class="spot-detailcard">
-  <h2>{{spot.name}} details!</h2>
+<div *ngIf="activeSpot"  class="spot-detailcard">
   <div>
-    <ul *ngIf="conditionData">
-      <li *ngFor="let condition of conditionData">
-        <div *ngFor="let tide of condition.tide">
+    <ul *ngIf="activeSpot.tide">
+      <li *ngFor="let tide of activeSpot.tide">
           {{ tide.state }}
-          {{ getDate(tide.timestamp) }}
-        </div>
+          {{ tide.timestamp }}
         <br>
       </li>
     </ul>
   </div>
-  <button (click)="goBack()">Back</button>
 </div>

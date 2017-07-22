@@ -2,25 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-import {DataService, Spot, Tide} from '../services/data.service';
+import {DataService, Environment, Spot, Tide} from '../services/data.service';
 import {APIService, Reload} from "../services/api.service";
-
-type Forecast = {
-    swell: any[]
-};
-
-type Condition = {
-    tide: Tide[]
-};
-
-type Environment = {
-    [key: number]: {
-        condition: Condition[],
-        forecast: Forecast[]
-    }
-};
-
-
 
 @Component({
     selector: 'my-dashboard',

@@ -1,21 +1,9 @@
 import 'rxjs/add/operator/switchMap';
 import {Component, Input} from '@angular/core';
-import {Location} from '@angular/common';
-import * as moment from 'moment';
-import {Spot} from "../services/data.service";
+import {Spot, Environment, Condition} from "../services/data.service";
 import {APIService} from "../services/api.service";
 import {MapProvider} from "../services/map.provider";
 
-
-type Condition = {
-    tide: TideDataServer;
-};
-
-type TideDataServer = {
-    shift: number;
-    state: string;
-    timestamp: number;
-}
 
 @Component({
     selector: 'spot-detail',
@@ -24,7 +12,7 @@ type TideDataServer = {
 })
 
 export class SpotDetailComponent {
-
+    public activeSpot: Spot;
 
     @Input()
     set spot(spot: Spot) {
@@ -35,9 +23,10 @@ export class SpotDetailComponent {
                 this.mapProvider.setMarker(spot.meta.lat, spot.meta.lon, spot.name);
             });
 
-        this.apiService.getSpotConditions([spot._id]).then((response) => {
-            // this.swellData = response.forecast[0];
-            // this.conditionData = response.condition[0] as Condition[];
+        this.activeSpot = spot;
+        this.apiService.getSpotConditions([spot._id]).then((response: Environment) => {
+            this.activeSpot.swell = response[spot._id].forecast[0].swell;
+            this.activeSpot.tide = response[spot._id].condition[0].tide;
         });
     }
 
@@ -46,16 +35,6 @@ export class SpotDetailComponent {
     public conditionData: Condition[];
 
     constructor(private mapProvider: MapProvider,
-                private apiService: APIService,
-                private location: Location) {
-    }
-
-
-    public getDate(date: number): string {
-        return moment(date * 1000).format('DD MMM, hh:mm');
-    }
-
-    public goBack(): void {
-        this.location.back();
+                private apiService: APIService) {
     }
 }

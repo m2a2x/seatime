@@ -42,6 +42,21 @@ export type Spot = {
     favourite?: boolean
 }
 
+export type Forecast = {
+    swell: any[]
+};
+
+export type Condition = {
+    tide: Tide[]
+};
+
+export type Environment = {
+    [key: number]: {
+        condition: Condition[],
+        forecast: Forecast[]
+    }
+};
+
 @Injectable()
 export class DataService {
     public spotUpdated = new EventEmitter<Spot | undefined>();
