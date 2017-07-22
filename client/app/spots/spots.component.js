@@ -17,7 +17,7 @@ var user_service_1 = require("../services/user.service");
 var map_provider_1 = require("../services/map.provider");
 var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
-var spot_detail_component_1 = require("../spot-detail/spot-detail.component");
+var smartinput_dropdown_directive_1 = require("../smartinput/smartinput.dropdown.directive");
 var SpotsComponent = (function () {
     function SpotsComponent(userService, dataService, apiService, mapProvider, location, route) {
         this.userService = userService;
@@ -31,7 +31,6 @@ var SpotsComponent = (function () {
         this.filter = {
             name: ''
         };
-        this.previousValue = '';
     }
     SpotsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -73,6 +72,7 @@ var SpotsComponent = (function () {
         return '';
     };
     SpotsComponent.prototype.itemSelect = function (id, name) {
+        var _this = this;
         if (name === void 0) { name = ''; }
         this.inited = true;
         this.filter.name = name;
@@ -87,6 +87,9 @@ var SpotsComponent = (function () {
             this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
             this.filter.name = '';
+            setTimeout(function () {
+                _this.search.nativeElement.focus();
+            }, 0);
             return;
         }
         this.items = this.countries;
@@ -117,6 +120,7 @@ var SpotsComponent = (function () {
     SpotsComponent.prototype.gotoDetail = function (spot) {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
+        this.dropdown.hide();
     };
     SpotsComponent.prototype.clearSearch = function () {
         this.itemSelect(undefined);
@@ -129,9 +133,13 @@ __decorate([
     __metadata("design:type", core_1.ElementRef)
 ], SpotsComponent.prototype, "map", void 0);
 __decorate([
-    core_1.ViewChild('detail'),
-    __metadata("design:type", spot_detail_component_1.SpotDetailComponent)
-], SpotsComponent.prototype, "detail", void 0);
+    core_1.ViewChild('dropdown'),
+    __metadata("design:type", smartinput_dropdown_directive_1.SmartinputDropdownDirective)
+], SpotsComponent.prototype, "dropdown", void 0);
+__decorate([
+    core_1.ViewChild('search'),
+    __metadata("design:type", core_1.ElementRef)
+], SpotsComponent.prototype, "search", void 0);
 SpotsComponent = __decorate([
     core_1.Component({
         selector: 'places-section',

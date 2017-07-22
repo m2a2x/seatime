@@ -7,7 +7,8 @@ import {UserService} from "../services/user.service";
 import {MapProvider} from "../services/map.provider";
 import {DataService} from "../services/data.service";
 import {APIService} from "../services/api.service";
-import {SpotDetailComponent} from "../spot-detail/spot-detail.component";
+import {SmartinputDropdownDirective} from "../smartinput/smartinput.dropdown.directive";
+import {SmartinputInputDirective} from "../smartinput/smartinput.input.directive";
 
 type Reload = {
     spots: Spot[];
@@ -25,8 +26,15 @@ type List = {
     styleUrls: ['./spots.component.css']
 })
 export class SpotsComponent implements OnInit {
-    @ViewChild('bgmap') map: ElementRef;
-    @ViewChild('detail') detail: SpotDetailComponent;
+    @ViewChild('bgmap')
+    map: ElementRef;
+
+    @ViewChild('dropdown')
+    dropdown: SmartinputDropdownDirective;
+
+    @ViewChild('search')
+    search: ElementRef;
+
 
 
     public items: Spot[] | Country[];
@@ -42,7 +50,6 @@ export class SpotsComponent implements OnInit {
         name: ''
     };
 
-    private previousValue: string = '';
 
     constructor(
                 public userService: UserService,
@@ -117,6 +124,9 @@ export class SpotsComponent implements OnInit {
             this.mapProvider.setByName(name, 6);
             this.items = this.getByCountry(id);
             this.filter.name = '';
+            setTimeout(()=> {
+                this.search.nativeElement.focus();
+            }, 0);
             return;
         }
         this.items = this.countries;
@@ -152,6 +162,7 @@ export class SpotsComponent implements OnInit {
     private gotoDetail(spot: Spot): void {
         this.selectedSpot = spot;
         this.location.go('/spots/' + spot._id);
+        this.dropdown.hide();
     }
 
     public clearSearch(): void {

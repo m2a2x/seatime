@@ -13,8 +13,8 @@ var core_1 = require("@angular/core");
 var SmartinputState = (function () {
     function SmartinputState() {
         var _this = this;
+        this.autoClose = true;
         this.isOpenChange = new core_1.EventEmitter();
-        // isDisabledChange = new EventEmitter<boolean>();
         this.openMenu = new core_1.EventEmitter();
         this.closeMenu = new core_1.EventEmitter();
         this.dropdownMenu = new Promise(function (resolve) {

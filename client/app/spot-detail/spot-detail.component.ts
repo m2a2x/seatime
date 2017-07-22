@@ -36,8 +36,8 @@ export class SpotDetailComponent {
             });
 
         this.apiService.getSpotConditions([spot._id]).then((response) => {
-            this.swellData = response.forecast[0];
-            this.conditionData = response.condition[0] as Condition[];
+            // this.swellData = response.forecast[0];
+            // this.conditionData = response.condition[0] as Condition[];
         });
     }
 

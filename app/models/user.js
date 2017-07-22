@@ -29,7 +29,8 @@ const UserSchema = new Schema({
     provider: {
         facebook: {},
         google: {}
-    }
+    },
+    apiKey: {type: String, default: ''}
 });
 
 const validatePresenceOf = value => value && value.length;

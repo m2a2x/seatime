@@ -1,6 +1,4 @@
 import {Pipe, PipeTransform, Type} from '@angular/core';
-import {Spot} from "../services/data.service";
-
 
 @Pipe({
     name: 'smartfilter',
@@ -17,9 +15,6 @@ export class SmartFilterPipe implements PipeTransform {
 
     /**
      * Perform the filtering.
-     *
-     * @param {Spot} Spot The Spot to compare to the filter.
-     * @param {Spot} filter The filter to apply.
      * @return {boolean} True if book satisfies filters, false if not.
      */
     applyFilter(item: Type<any>, filter: Type<any>): boolean {

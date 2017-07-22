@@ -31,8 +31,8 @@ var SpotDetailComponent = (function () {
                 _this.mapProvider.setMarker(spot.meta.lat, spot.meta.lon, spot.name);
             });
             this.apiService.getSpotConditions([spot._id]).then(function (response) {
-                _this.swellData = response.forecast[0];
-                _this.conditionData = response.condition[0];
+                // this.swellData = response.forecast[0];
+                // this.conditionData = response.condition[0] as Condition[];
             });
         },
         enumerable: true,

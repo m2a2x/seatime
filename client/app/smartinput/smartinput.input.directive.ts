@@ -3,7 +3,8 @@ import {SmartinputState} from "./smartinput.state";
 import {Subscription} from "rxjs";
 
 @Directive({
-    selector: '[smartinput-in]'
+    selector: '[smartinput-in]',
+    exportAs: 'smarttext',
 })
 export class SmartinputInputDirective implements OnDestroy {
     @HostListener('keyup.esc')

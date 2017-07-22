@@ -20,9 +20,6 @@ var SmartFilterPipe = (function () {
     };
     /**
      * Perform the filtering.
-     *
-     * @param {Spot} Spot The Spot to compare to the filter.
-     * @param {Spot} filter The filter to apply.
      * @return {boolean} True if book satisfies filters, false if not.
      */
     SmartFilterPipe.prototype.applyFilter = function (item, filter) {

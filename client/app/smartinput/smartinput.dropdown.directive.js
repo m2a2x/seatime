@@ -57,33 +57,32 @@ var SmartinputDropdownDirective = (function () {
         }
         this._isInited = true;
         this.isOpenChange = this._state.isOpenChange;
-        this._state.autoClose = true;
         this._subscriptions.push(this._state
-            .openMenu.subscribe(function () { return _this.toggle(true); }));
+            .openMenu.subscribe(function () { return _this.show(); }));
         this._subscriptions.push(this._state
-            .closeMenu.subscribe(function () { return _this.toggle(false); }));
+            .closeMenu.subscribe(function () { return _this.hide(); }));
     };
     /**
      * Opens an element’s popover. This is considered a “manual” triggering of
      * the popover.
      */
     SmartinputDropdownDirective.prototype.show = function () {
+        this.isShown = true;
         if (this.isOpen) {
             return;
         }
+        this._state.isOpenChange.emit(true);
     };
     /**
      * Closes an element’s popover. This is considered a “manual” triggering of
      * the popover.
      */
     SmartinputDropdownDirective.prototype.hide = function () {
+        this.isShown = false;
         if (!this.isOpen) {
             return;
         }
         this._state.isOpenChange.emit(false);
-    };
-    SmartinputDropdownDirective.prototype.toggle = function (value) {
-        this.isShown = value;
     };
     SmartinputDropdownDirective.prototype.ngOnDestroy = function () {
         // clean up subscriptions and destroy dropdown
@@ -110,7 +109,8 @@ __decorate([
 ], SmartinputDropdownDirective.prototype, "isOpenChange", void 0);
 SmartinputDropdownDirective = __decorate([
     core_1.Directive({
-        selector: '[smartinputdropdown]',
+        selector: '[smartinput-dropdown]',
+        exportAs: 'smartinputdropdown',
         host: {
             '[class.show]': 'isOpen'
         }

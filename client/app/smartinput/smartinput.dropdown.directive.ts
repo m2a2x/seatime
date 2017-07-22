@@ -13,7 +13,8 @@ import {SmartinputState} from "./smartinput.state";
 import {Subscription} from "rxjs";
 
 @Directive({
-    selector: '[smartinputdropdown]',
+    selector: '[smartinput-dropdown]',
+    exportAs: 'smartinputdropdown',
     host: {
         '[class.show]': 'isOpen'
     }
@@ -64,13 +65,12 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
         }
         this._isInited = true;
         this.isOpenChange = this._state.isOpenChange;
-        this._state.autoClose = true;
 
         this._subscriptions.push(this._state
-            .openMenu.subscribe(() => this.toggle(true)));
+            .openMenu.subscribe(() => this.show()));
 
         this._subscriptions.push(this._state
-            .closeMenu.subscribe(() => this.toggle(false)));
+            .closeMenu.subscribe(() => this.hide()));
     }
 
     /**
@@ -78,9 +78,11 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
      * the popover.
      */
     show(): void {
+        this.isShown = true;
         if (this.isOpen) {
             return;
         }
+        this._state.isOpenChange.emit(true);
     }
 
     /**
@@ -88,16 +90,13 @@ export class SmartinputDropdownDirective implements OnInit, OnDestroy {
      * the popover.
      */
     hide(): void {
+        this.isShown = false;
         if (!this.isOpen) {
             return;
         }
         this._state.isOpenChange.emit(false);
     }
 
-
-    toggle(value?: boolean): void {
-        this.isShown = value;
-    }
 
     ngOnDestroy(): void {
         // clean up subscriptions and destroy dropdown
