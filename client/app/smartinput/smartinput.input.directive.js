@@ -56,8 +56,7 @@ __decorate([
 ], SmartinputInputDirective.prototype, "onFocus", null);
 SmartinputInputDirective = __decorate([
     core_1.Directive({
-        selector: '[smartinput-in]',
-        exportAs: 'smarttext',
+        selector: '[smartinput-in]'
     }),
     __metadata("design:paramtypes", [smartinput_state_1.SmartinputState, core_1.ElementRef, core_1.Renderer])
 ], SmartinputInputDirective);
