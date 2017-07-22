@@ -1,13 +1,15 @@
 #dimension-line {
     text-anchor: middle;
+    dominant-baseline: text-before-edge;
     font-family: 'Open Sans';
-    font-size: 12px;
+    font-size: 11px;
 }
 
 #dimension-time {
     fill: #000000;
     text-anchor: middle;
+    dominant-baseline: text-before-edge;
     font-family: 'Open Sans';
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
 }

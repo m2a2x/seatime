@@ -35,6 +35,11 @@ var DashboardComponent = (function () {
             return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'), timestamp);
         })
             .then(function (response) {
+            _.each(response, function (env, key) {
+                var spot = _.find(_this.spots, { _id: _.parseInt(key) });
+                if (spot) {
+                }
+            });
             _.each(_this.spots, function (spot) {
                 _.merge(spot, {
                     tide: response[spot._id].condition[0].tide,

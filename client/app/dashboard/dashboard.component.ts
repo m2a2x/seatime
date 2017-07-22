@@ -51,6 +51,11 @@ export class DashboardComponent implements OnInit {
                 return this.apiService.getSpotConditions(_.map(this.spots, '_id'), timestamp);
             })
             .then((response: Environment) => {
+                _.each(response, (env: Environment, key: string): void => {
+                    let spot: Spot = _.find(this.spots, {_id: _.parseInt(key)});
+                    if (spot) {
+                    }
+                });
                 _.each(this.spots, (spot: Spot): void => {
                     _.merge(spot, {
                         tide: response[spot._id].condition[0].tide,

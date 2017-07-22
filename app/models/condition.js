@@ -6,18 +6,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { getToday, time, daysToTime } = require('../utils');
-
-/**
- * Tide Schema
- */
-
-const TideSchema = new Schema({
-    shift: Number,
-    state: String,
-    timestamp: Number
-});
-
+const { getToday, time } = require('../utils');
 
 /**
  * Port Schema
@@ -29,7 +18,7 @@ const PortSchema = new Schema({
     lon: Number,
     distance: Number,
     unit: String
-})
+});
 
 /**
  * Condition Schema
@@ -38,7 +27,11 @@ const PortSchema = new Schema({
 const ConditionSchema = new Schema({
     _id: Number,
     _spot: { type: Number, ref: 'Spot' },
-    tide: [TideSchema],
+    tide: [{
+        shift: Number,
+        state: String,
+        timestamp: Number
+    }],
     sunriseTwilight: Number,
     sunrise: Number,
     sunsetTwilight: Number,
@@ -54,6 +47,13 @@ const ConditionSchema = new Schema({
     },
     port: PortSchema,
     createdAt: { type : Date, default : Date.now }
+},{
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
 });
 
 /**
@@ -72,7 +72,6 @@ ConditionSchema.statics = {
 
         return this.find({_spot: spotId, 'meta.timestamp': comparator})
             .select(fields)
-            .exec()
             .then(function (data) {
                 if (data.length) {
                     return data;

@@ -35,7 +35,6 @@ var getForecast = async(function*(spotId, end) {
         return callData;
     }
     return null;
-    return callData;
 });
 
 var getCondition = async(function*(spotId, end) {

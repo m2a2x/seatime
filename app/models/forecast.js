@@ -52,7 +52,46 @@ const ForecastSchema = new Schema({
   condition: String, /** TO PARSE */
   createdAt  : { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
+}, {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
 });
+
+ForecastSchema
+    .virtual('swellData')
+    .get(function () {
+        const swell = JSON.parse(this.swell);
+        return _.pick(
+            swell,
+            [
+                'components.combined.power',
+                'compassDirection',
+                'minBreakingHeight',
+                'maxBreakingHeight',
+                'period',
+                'unit'
+            ]
+        );
+    });
+
+ForecastSchema
+    .virtual('windData')
+    .get(function () {
+        const wind = JSON.parse(this.wind);
+        return _.pick(
+            wind,
+            [
+                'speed',
+                'compassDirection',
+                'unit'
+            ]
+        );
+    });
+
 
 /**
  * Statics
@@ -61,7 +100,6 @@ const ForecastSchema = new Schema({
 ForecastSchema.statics = {
     get: function (id, endDate) {
         var dt = time(getToday()),
-            fields = 'swell meta.localTimestamp',
             comparator = {$gt: dt};
 
         if (endDate && endDate > dt) {
@@ -71,18 +109,14 @@ ForecastSchema.statics = {
         return this
             .find({_spot: id, 'meta.localTimestamp': comparator})
             .sort('meta.localTimestamp')
-            .select(fields)
             .exec()
             .then(function (data) {
                 if (data.length) {
-                    return _.map(data, function (model) {
-                        var item = model.toObject();
-                        _.each(FieldsToParse, function (key) {
-                            if (item[key]) {
-                                item[key] = JSON.parse(item[key]);
-                            }
-                        });
-                        return item;
+                    return _.map(data, function (item) {
+                        return {
+                            swell: item.swellData,
+                            wind: item.windData
+                        };
                     });
                 }
                 return null;
@@ -110,8 +144,8 @@ mongoose.model('Forecast', ForecastSchema);
           minBreakingHeight: Number,
           maxBreakingHeight: Number,
           components: {
-          combined: {
-              height: Number,
+              combined: {
+                  height: Number,
                   absHeight: Number,
                   period: Number,
                   windSeaFraction: Number,
@@ -122,49 +156,49 @@ mongoose.model('Forecast', ForecastSchema);
                   compassDirection: String,
                   isOffshore: Boolean,
                   type: Number
-          },
-          primary: {
-              height: Number,
-                  absHeight: Number,
-                  period: Number,
-                  windSeaFraction: Number,
-                  power: Number,
-                  direction: Number,
-                  trueDirection: Number,
-                  directionalSpread: Number,
-                  compassDirection: String,
-                  isOffshore: Boolean,
-                  type: Number,
-                  absBreakingHeight: Number
-          },
-          secondary: {
-              height: Number,
-                  absHeight: Number,
-                  period: Number,
-                  windSeaFraction: Number,
-                  power: Number,
-                  direction: Number,
-                  trueDirection: Number,
-                  directionalSpread: Number,
-                  compassDirection: String,
-                  isOffshore: Boolean,
-                  type: Number,
-                  absBreakingHeight: Number
-          },
-          tertiary: {
-              height: Number,
-                  absHeight: Number,
-                  period: Number,
-                  windSeaFraction: Number,
-                  power: Number,
-                  direction: Number,
-                  trueDirection: Number,
-                  directionalSpread: Number,
-                  compassDirection: String,
-                  isOffshore: Boolean,
-                  type: Number,
-                  absBreakingHeight: Number
-          }
+              },
+              primary: {
+                  height: Number,
+                      absHeight: Number,
+                      period: Number,
+                      windSeaFraction: Number,
+                      power: Number,
+                      direction: Number,
+                      trueDirection: Number,
+                      directionalSpread: Number,
+                      compassDirection: String,
+                      isOffshore: Boolean,
+                      type: Number,
+                      absBreakingHeight: Number
+              },
+              secondary: {
+                  height: Number,
+                      absHeight: Number,
+                      period: Number,
+                      windSeaFraction: Number,
+                      power: Number,
+                      direction: Number,
+                      trueDirection: Number,
+                      directionalSpread: Number,
+                      compassDirection: String,
+                      isOffshore: Boolean,
+                      type: Number,
+                      absBreakingHeight: Number
+              },
+              tertiary: {
+                  height: Number,
+                      absHeight: Number,
+                      period: Number,
+                      windSeaFraction: Number,
+                      power: Number,
+                      direction: Number,
+                      trueDirection: Number,
+                      directionalSpread: Number,
+                      compassDirection: String,
+                      isOffshore: Boolean,
+                      type: Number,
+                      absBreakingHeight: Number
+              }
       }
   },
   wind: {
