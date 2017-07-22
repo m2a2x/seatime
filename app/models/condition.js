@@ -47,13 +47,6 @@ const ConditionSchema = new Schema({
     },
     port: PortSchema,
     createdAt: { type : Date, default : Date.now }
-},{
-    toObject: {
-        virtuals: true
-    },
-    toJSON: {
-        virtuals: true
-    }
 });
 
 /**

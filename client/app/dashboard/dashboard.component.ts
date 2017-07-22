@@ -2,8 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-import {DataService, Environment, Spot, Tide} from '../services/data.service';
+import {Condition, DataService, Environment, Forecast, Spot, Tide} from '../services/data.service';
 import {APIService, Reload} from "../services/api.service";
+
+type spotAdditionalData = {
+    condition: Condition[],
+    forecast: Forecast[]
+};
 
 @Component({
     selector: 'my-dashboard',
@@ -34,16 +39,12 @@ export class DashboardComponent implements OnInit {
                 return this.apiService.getSpotConditions(_.map(this.spots, '_id'), timestamp);
             })
             .then((response: Environment) => {
-                _.each(response, (env: Environment, key: string): void => {
+                _.each(response, (data: spotAdditionalData, key: string): void => {
                     let spot: Spot = _.find(this.spots, {_id: _.parseInt(key)});
                     if (spot) {
+                        spot.tide = data.condition && data.condition[0].tide;
+                        spot.swell = data.forecast && data.forecast[0].swell;
                     }
-                });
-                _.each(this.spots, (spot: Spot): void => {
-                    _.merge(spot, {
-                        tide: response[spot._id].condition[0].tide,
-                        swell: response[spot._id].forecast[0].swell
-                    });
                 });
             });
     }

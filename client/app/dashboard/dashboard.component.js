@@ -35,16 +35,12 @@ var DashboardComponent = (function () {
             return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'), timestamp);
         })
             .then(function (response) {
-            _.each(response, function (env, key) {
+            _.each(response, function (data, key) {
                 var spot = _.find(_this.spots, { _id: _.parseInt(key) });
                 if (spot) {
+                    spot.tide = data.condition && data.condition[0].tide;
+                    spot.swell = data.forecast && data.forecast[0].swell;
                 }
-            });
-            _.each(_this.spots, function (spot) {
-                _.merge(spot, {
-                    tide: response[spot._id].condition[0].tide,
-                    swell: response[spot._id].forecast[0].swell
-                });
             });
         });
     };
