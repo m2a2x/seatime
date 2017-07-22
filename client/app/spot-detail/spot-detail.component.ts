@@ -1,8 +1,7 @@
-import 'rxjs/add/operator/switchMap';
 import {Component, Input} from '@angular/core';
-import {Spot, Environment, Condition} from "../services/data.service";
 import {APIService} from "../services/api.service";
 import {MapProvider} from "../services/map.provider";
+import {Environment, Spot} from "../models/spot";
 
 
 @Component({
@@ -24,15 +23,11 @@ export class SpotDetailComponent {
             });
 
         this.activeSpot = spot;
-        this.apiService.getSpotConditions([spot._id]).then((response: Environment) => {
-            this.activeSpot.swell = response[spot._id].forecast[0].swell;
-            this.activeSpot.tide = response[spot._id].condition[0].tide;
+        this.apiService.getSpotConditions([spot._id]).then((data: Environment) => {
+            spot.setEnvironment(data[spot._id]);
         });
     }
 
-
-    public swellData: any[];
-    public conditionData: Condition[];
 
     constructor(private mapProvider: MapProvider,
                 private apiService: APIService) {

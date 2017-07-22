@@ -10,22 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var api_service_1 = require("./api.service");
-var user_service_1 = require("./user.service");
 var DataService = (function () {
-    function DataService(apiService, userService) {
-        this.apiService = apiService;
-        this.userService = userService;
+    function DataService() {
         this.spotUpdated = new core_1.EventEmitter();
     }
-    DataService.prototype.reload = function (fields) {
-        var _this = this;
-        return this.apiService.reload(fields).then(function (response) {
-            _this.userService.set(response.user);
-            delete response.user;
-            return response;
-        });
-    };
     DataService.prototype.setActiveSpot = function (spot) {
         this.spotUpdated.emit(spot);
     };
@@ -33,7 +21,7 @@ var DataService = (function () {
 }());
 DataService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [api_service_1.APIService, user_service_1.UserService])
+    __metadata("design:paramtypes", [])
 ], DataService);
 exports.DataService = DataService;
 //# sourceMappingURL=data.service.js.map

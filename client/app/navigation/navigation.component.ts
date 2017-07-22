@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../services/auth.service";
 import {NavigationEnd, Router} from "@angular/router";
-import {DataService, Spot} from "../services/data.service";
+import {DataService} from "../services/data.service";
 import {Subscription} from "rxjs";
+import {Spot} from "../models/spot";
 
 @Component({
     selector: 'navigation',

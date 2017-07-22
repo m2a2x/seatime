@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import * as _ from 'lodash';
-import {Country, Spot} from "../services/data.service";
+import {Country, Spot} from "../models/spot";
 import {UserService} from "../services/user.service";
 import {MapProvider} from "../services/map.provider";
-import {DataService} from "../services/data.service";
 import {APIService} from "../services/api.service";
 import {SmartinputDropdownDirective} from "../smartinput/smartinput.dropdown.directive";
+import {DataService} from "../services/data.service";
 
 type Reload = {
     spots: Spot[];
@@ -51,8 +51,8 @@ export class SpotsComponent implements OnInit {
 
     constructor(
                 public userService: UserService,
-                private dataService: DataService,
                 private apiService: APIService,
+                private dataService: DataService,
                 private mapProvider: MapProvider,
                 private route: ActivatedRoute,
                 private router: Router) {
@@ -65,7 +65,7 @@ export class SpotsComponent implements OnInit {
             let spotId: number = +params['id'];
 
 
-            this.dataService.reload({fields: 'countries, spots, spot_count'}).then((response: Reload) => {
+            this.apiService.reload({fields: 'countries, spots, spot_count'}).then((response) => {
                 let data: Reload = response as Reload;
 
 

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {Tide} from "../services/data.service";
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import {Tide} from "../models/spot";
 
 type TideT = {
     state: string,

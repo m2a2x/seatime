@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var api_service_1 = require("../services/api.service");
+var spot_1 = require("../models/spot");
 var DashboardCardComponent = (function () {
     function DashboardCardComponent(apiService, router) {
         this.apiService = apiService;
@@ -32,7 +33,7 @@ var DashboardCardComponent = (function () {
 }());
 __decorate([
     core_1.Input('spot'),
-    __metadata("design:type", Object)
+    __metadata("design:type", spot_1.Spot)
 ], DashboardCardComponent.prototype, "spot", void 0);
 __decorate([
     core_1.Output(),
