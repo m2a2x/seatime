@@ -13,8 +13,7 @@ var core_1 = require("@angular/core");
 var TideService = (function () {
     function TideService() {
     }
-    TideService.prototype.getTide = function () {
-    };
+    TideService.prototype.getTide = function () { };
     return TideService;
 }());
 TideService = __decorate([

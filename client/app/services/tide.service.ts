@@ -4,8 +4,5 @@ import { Injectable } from '@angular/core';
 export class TideService {
     constructor() {}
 
-    public getTide(): void {
-
-
-    }
+    public getTide(): void {}
 }

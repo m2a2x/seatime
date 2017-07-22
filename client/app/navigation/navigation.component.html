@@ -1,6 +1,6 @@
 <nav class="navbar py-0 navbar-toggleable-sm">
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item" *ngIf="isLoggedIn()">
+        <li class="nav-item" *ngIf="authService.isLoggedIn()">
             <a routerLink="/dashboard" class="nav-link" routerLinkActive="active" [routerLinkActive]="['font-weight-bold']">Dashboard</a>
         </li>
         <li class="nav-item">
@@ -12,13 +12,13 @@
     </ul>
 
     <ul class="navbar-nav">
-        <li class="nav-item login" *ngIf="!isLoggedIn()">
+        <li class="nav-item login" *ngIf="!authService.isLoggedIn()">
             <a href="/auth/google" class="nav-link" target="_self">Sign in Google</a>
         </li>
-        <li class="nav-item login" *ngIf="!isLoggedIn()">
+        <li class="nav-item login" *ngIf="!authService.isLoggedIn()">
             <a href="/auth/facebook" class="nav-link" target="_self">Sign in Facebook</a>
         </li>
-        <li class="nav-item login" *ngIf="isLoggedIn()">
+        <li class="nav-item login" *ngIf="authService.isLoggedIn()">
             <a href="/logout" class="nav-link" target="_self">Logout</a>
         </li>
     </ul>

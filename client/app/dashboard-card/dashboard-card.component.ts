@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Spot} from "../services/data.service";
 import {Router} from "@angular/router";
 import {APIService} from "../services/api.service";
+import {Spot} from "../models/spot";
 
 @Component({
     selector: 'dashboard-card',

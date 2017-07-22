@@ -9,10 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("rxjs/add/operator/switchMap");
 var core_1 = require("@angular/core");
 var api_service_1 = require("../services/api.service");
 var map_provider_1 = require("../services/map.provider");
+var spot_1 = require("../models/spot");
 var SpotDetailComponent = (function () {
     function SpotDetailComponent(mapProvider, apiService) {
         this.mapProvider = mapProvider;
@@ -28,9 +28,8 @@ var SpotDetailComponent = (function () {
                 _this.mapProvider.setMarker(spot.meta.lat, spot.meta.lon, spot.name);
             });
             this.activeSpot = spot;
-            this.apiService.getSpotConditions([spot._id]).then(function (response) {
-                _this.activeSpot.swell = response[spot._id].forecast[0].swell;
-                _this.activeSpot.tide = response[spot._id].condition[0].tide;
+            this.apiService.getSpotConditions([spot._id]).then(function (data) {
+                spot.setEnvironment(data[spot._id]);
             });
         },
         enumerable: true,
@@ -40,8 +39,8 @@ var SpotDetailComponent = (function () {
 }());
 __decorate([
     core_1.Input(),
-    __metadata("design:type", Object),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:type", spot_1.Spot),
+    __metadata("design:paramtypes", [spot_1.Spot])
 ], SpotDetailComponent.prototype, "spot", null);
 SpotDetailComponent = __decorate([
     core_1.Component({

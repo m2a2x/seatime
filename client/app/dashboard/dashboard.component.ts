@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {APIService} from "../services/api.service";
+import {Environment, EnvironmentData, Spot} from "../models/spot";
+import {Reload} from "../models/reload";
 
-import {DataService, Environment, Spot, Tide} from '../services/data.service';
-import {APIService, Reload} from "../services/api.service";
 
 @Component({
     selector: 'my-dashboard',
@@ -16,10 +17,10 @@ export class DashboardComponent implements OnInit {
     public selectedSpot: Spot;
     public pair: string = '';
 
-    constructor(private dataService: DataService, private apiService: APIService) {}
+    constructor(private apiService: APIService) {}
 
     public ngOnInit(): void {
-        this.dataService.reload({fields: 'favourite'})
+        this.apiService.reload({fields: 'favourite'})
             .then((response: Reload) => {
                 let data: Reload = response as Reload;
                 let timestamp;
@@ -34,16 +35,11 @@ export class DashboardComponent implements OnInit {
                 return this.apiService.getSpotConditions(_.map(this.spots, '_id'), timestamp);
             })
             .then((response: Environment) => {
-                _.each(response, (env: Environment, key: string): void => {
+                _.each(response, (data: EnvironmentData, key: string): void => {
                     let spot: Spot = _.find(this.spots, {_id: _.parseInt(key)});
                     if (spot) {
+                        spot.setEnvironment(data);
                     }
-                });
-                _.each(this.spots, (spot: Spot): void => {
-                    _.merge(spot, {
-                        tide: response[spot._id].condition[0].tide,
-                        swell: response[spot._id].forecast[0].swell
-                    });
                 });
             });
     }

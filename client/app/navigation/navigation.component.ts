@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../services/auth.service";
 import {NavigationEnd, Router} from "@angular/router";
-import {DataService, Spot} from "../services/data.service";
+import {DataService} from "../services/data.service";
 import {Subscription} from "rxjs";
+import {Spot} from "../models/spot";
 
 @Component({
     selector: 'navigation',
@@ -13,14 +14,9 @@ export class NavigationComponent implements OnInit {
     private _subscriptions: Subscription[] = [];
     public additionItem: Spot | undefined;
     constructor(
-        private authService: AuthenticationService,
+        public authService: AuthenticationService,
         private router: Router,
         private dataService: DataService) {}
-
-    public isLoggedIn(): boolean {
-        return this.authService.isLoggedIn();
-    }
-
 
     public ngOnInit(): void {
         this.router.events

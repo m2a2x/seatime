@@ -2,18 +2,21 @@
     <span>{{spot.name}}</span>
     <button class="delete" (click)="delete(); $event.stopPropagation()">x</button>
 
-    <div *ngIf="spot.swell">
-        <span>{{spot.swell.maxBreakingHeight}}{{spot.swell.unit}}</span>
-        <span>{{spot.swell.period}}s</span>
+    <div *ngIf="spot.todayForecast">
+        <span>
+            {{spot.todayForecast.swell.maxBreakingHeight}}
+            {{spot.todayForecast.swell.unit}}
+        </span>
+        <span>{{spot.todayForecast.swell.period}}s</span>
         <br>
-        <span>{{spot.swell.components.combined.power}} power</span>
+        <span>{{spot.todayForecast.swell.components.combined.power}} power</span>
         <br>
-        <span>{{spot.swell.components.combined.compassDirection}}</span>
+        <span>{{spot.todayForecast.swell.components.combined.compassDirection}}</span>
         <br>
-        <span>{{spot.swell.components.combined.isOffshore ? 'Off' : 'On'}}</span>
+        <span>{{spot.todayForecast.swell.components.combined.isOffshore ? 'Off' : 'On'}}</span>
     </div>
 
-    <div *ngIf="spot.tide">
-        <tide-chart [tides]="spot.tide" [size]="300" style="display: block; height: 60px;"></tide-chart>
+    <div *ngIf="spot.todayCondition">
+        <tide-chart [tides]="spot.todayCondition.tide" [size]="300" style="display: block; height: 60px;"></tide-chart>
     </div>
 </div>

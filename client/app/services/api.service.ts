@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { Country, Spot} from "./data.service";
-import { User } from "./user.service";
 import * as _ from 'lodash';
+import {Reload} from "../models/reload";
+import {UserService} from "./user.service";
 
 export type DataQuery = {
     [key: string]: string;
 }
-
-export type Reload = {
-    spots?: Spot[],
-    countries?: Country[],
-    user?: User
-};
 
 export type Pair = {
     pair: number,
@@ -23,7 +17,7 @@ export type Pair = {
 export class APIService {
     private headers: Headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(private http: Http) {}
+    constructor(private http: Http, private userService: UserService) {}
 
 
     public addFavouriteSpot(id: number): Promise<boolean> {
@@ -83,7 +77,7 @@ export class APIService {
             })
             .toPromise()
             .then((response: Response) => {
-                return response.json() as Reload;
+                return new Reload(response.json(), this.userService);
             })
             .catch(this.handleError);
     }

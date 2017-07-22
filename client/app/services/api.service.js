@@ -12,9 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var _ = require("lodash");
+var reload_1 = require("../models/reload");
+var user_service_1 = require("./user.service");
 var APIService = (function () {
-    function APIService(http) {
+    function APIService(http, userService) {
         this.http = http;
+        this.userService = userService;
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
     }
     APIService.prototype.addFavouriteSpot = function (id) {
@@ -50,6 +53,7 @@ var APIService = (function () {
             .catch(this.handleError);
     };
     APIService.prototype.reload = function (fields) {
+        var _this = this;
         var url = 'api/reload';
         var requestOptions = new http_1.RequestOptions();
         var params = new http_1.URLSearchParams();
@@ -62,7 +66,7 @@ var APIService = (function () {
         })
             .toPromise()
             .then(function (response) {
-            return response.json();
+            return new reload_1.Reload(response.json(), _this.userService);
         })
             .catch(this.handleError);
     };
@@ -87,7 +91,7 @@ var APIService = (function () {
 }());
 APIService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.Http, user_service_1.UserService])
 ], APIService);
 exports.APIService = APIService;
 //# sourceMappingURL=api.service.js.map

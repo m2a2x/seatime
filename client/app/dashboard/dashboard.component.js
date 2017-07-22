@@ -12,17 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var _ = require("lodash");
 var moment = require("moment");
-var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(dataService, apiService) {
-        this.dataService = dataService;
+    function DashboardComponent(apiService) {
         this.apiService = apiService;
         this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.reload({ fields: 'favourite' })
+        this.apiService.reload({ fields: 'favourite' })
             .then(function (response) {
             var data = response;
             var timestamp;
@@ -35,16 +33,11 @@ var DashboardComponent = (function () {
             return _this.apiService.getSpotConditions(_.map(_this.spots, '_id'), timestamp);
         })
             .then(function (response) {
-            _.each(response, function (env, key) {
+            _.each(response, function (data, key) {
                 var spot = _.find(_this.spots, { _id: _.parseInt(key) });
                 if (spot) {
+                    spot.setEnvironment(data);
                 }
-            });
-            _.each(_this.spots, function (spot) {
-                _.merge(spot, {
-                    tide: response[spot._id].condition[0].tide,
-                    swell: response[spot._id].forecast[0].swell
-                });
             });
         });
     };
@@ -71,7 +64,7 @@ DashboardComponent = __decorate([
         templateUrl: './dashboard.component.html',
         styleUrls: ['./dashboard.component.css']
     }),
-    __metadata("design:paramtypes", [data_service_1.DataService, api_service_1.APIService])
+    __metadata("design:paramtypes", [api_service_1.APIService])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map

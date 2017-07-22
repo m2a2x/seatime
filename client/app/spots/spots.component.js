@@ -14,14 +14,14 @@ var router_1 = require("@angular/router");
 var _ = require("lodash");
 var user_service_1 = require("../services/user.service");
 var map_provider_1 = require("../services/map.provider");
-var data_service_1 = require("../services/data.service");
 var api_service_1 = require("../services/api.service");
 var smartinput_dropdown_directive_1 = require("../smartinput/smartinput.dropdown.directive");
+var data_service_1 = require("../services/data.service");
 var SpotsComponent = (function () {
-    function SpotsComponent(userService, dataService, apiService, mapProvider, route, router) {
+    function SpotsComponent(userService, apiService, dataService, mapProvider, route, router) {
         this.userService = userService;
-        this.dataService = dataService;
         this.apiService = apiService;
+        this.dataService = dataService;
         this.mapProvider = mapProvider;
         this.route = route;
         this.router = router;
@@ -35,7 +35,7 @@ var SpotsComponent = (function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             var spotId = +params['id'];
-            _this.dataService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
+            _this.apiService.reload({ fields: 'countries, spots, spot_count' }).then(function (response) {
                 var data = response;
                 _this.countries = _.sortBy(data.countries, 'name');
                 _this.spots = _.map(data.spots, function (item) {
@@ -151,8 +151,8 @@ SpotsComponent = __decorate([
         styleUrls: ['./spots.component.css']
     }),
     __metadata("design:paramtypes", [user_service_1.UserService,
-        data_service_1.DataService,
         api_service_1.APIService,
+        data_service_1.DataService,
         map_provider_1.MapProvider,
         router_1.ActivatedRoute,
         router_1.Router])
