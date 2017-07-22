@@ -330,6 +330,8 @@ export class MapProvider {
 
         draggable: false,
 
+        disableDoubleClickZoom: true,
+
         // The latitude and longitude to center the map (always required)
         center: new google.maps.LatLng(53.8838069, 27.4548923), // New York
 

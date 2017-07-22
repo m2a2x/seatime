@@ -316,6 +316,7 @@ var MapProvider = (function () {
             mapTypeControl: false,
             scaleControl: false,
             draggable: false,
+            disableDoubleClickZoom: true,
             // The latitude and longitude to center the map (always required)
             center: new google.maps.LatLng(53.8838069, 27.4548923),
             // How you would like to style the map.
