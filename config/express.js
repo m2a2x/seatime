@@ -101,10 +101,10 @@ module.exports = function (app, passport) {
 
 
     // api.use(csrf({ cookie: {key: 'x-xsrf-token', path: '/'}}));
-    app.use(csrf({}));
+    api.use(csrf({}));
 
     // This could be moved to view-helpers :-)
-    app.use(function (req, res, next) {
+    api.use(function (req, res, next) {
         if (req.csrfToken) {
             res.cookie('XSRF-TOKEN', req.csrfToken());
         }
