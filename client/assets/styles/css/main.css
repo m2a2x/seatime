@@ -3062,9 +3062,9 @@ tbody.collapse.show {
     .navbar-nav .nav-link {
       padding: 0 1rem;
       color: #fff;
-      font-size: 21px;
+      font-size: 18px;
       line-height: 50px;
-      letter-spacing: 0.6px; }
+      letter-spacing: 1px; }
     .navbar-nav .login .nav-link {
       font-size: 18px; }
 

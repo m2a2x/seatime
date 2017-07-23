@@ -24,6 +24,10 @@ const Condition = mongoose.model('Condition');
 
 exports.merge = function (req, res) {};
 
+
+// country name
+// https://maps.googleapis.com/maps/api/geocode/json?address=Alaska&key=[key]
+
 // test methods, read from file
 exports.test = asyncf(function* (req, res) {
   var file,
