@@ -19,9 +19,8 @@ type List = {
 };
 
 @Component({
-    selector: 'places-section',
-    templateUrl: './spots.component.html',
-    styleUrls: ['./spots.component.css']
+    selector: 'spots-section',
+    templateUrl: './spots.component.html'
 })
 export class SpotsComponent implements OnInit {
     @ViewChild('bgmap')

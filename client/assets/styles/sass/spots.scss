@@ -1,0 +1,82 @@
+@import "custom";
+@import "colors";
+
+$search-panel-height: 45px;
+
+spots-section {
+  display: block;
+  position: absolute;
+  top: $header-height;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  a {
+    text-decoration:none;
+
+  }
+
+  *, *:after, *:before {
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+
+  }
+
+  .grid {
+    margin: 0;
+
+  }
+
+  .search {
+     &-holder {
+       background: #FFFFFF;
+       box-shadow: 0 12px 30px 12px rgba(0, 0, 0, .05);
+       height: $search-panel-height;
+       line-height: $search-panel-height;
+       padding: 0 25px;
+       position:relative;
+       z-index: 100;
+
+
+       .icon-clear {
+         margin-top: 11px;
+         font-size: 21px;
+         color: #D8D8D8;
+
+       }
+     }
+
+    &-wrapper {
+      position:absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      z-index: 1;
+
+    }
+  }
+
+  .input-wrapper {
+    overflow: hidden;
+
+    input {
+      width: 100%;
+      height: $search-panel-height;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-size: 18px;
+    }
+  }
+
+  .first-level-select {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: $search-panel-height;
+    margin-right: 15px;
+    font-family: $font-family-additional;
+    color: $gray-label;
+  }
+}

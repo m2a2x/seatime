@@ -3049,24 +3049,27 @@ tbody.collapse.show {
 
 .navbar {
   background-color: #5B86C2; }
-  .navbar .navbar-nav {
+  .navbar-nav {
     height: 50px; }
-    .navbar .navbar-nav .nav-item {
+    .navbar-nav .nav-item {
       border-right: 1px solid #6D93C8; }
-      .navbar .navbar-nav .nav-item:first-child {
+      .navbar-nav .nav-item:first-child {
         border-left: 1px solid #6D93C8; }
-      .navbar .navbar-nav .nav-item:last-child {
+      .navbar-nav .nav-item:last-child {
         margin-left: auto;
         border: 0; }
-    .navbar .navbar-nav .nav-item,
-    .navbar .navbar-nav .nav-link {
+    .navbar-nav .nav-item,
+    .navbar-nav .nav-link {
       padding: 0 1rem;
       color: #fff;
       font-size: 21px;
       line-height: 50px;
       letter-spacing: 0.6px; }
-    .navbar .navbar-nav .login .nav-link {
+    .navbar-nav .login .nav-link {
       font-size: 18px; }
+
+input {
+  font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; }
 
 .dropdown-menu {
   padding: 0;

@@ -146,9 +146,8 @@ __decorate([
 ], SpotsComponent.prototype, "search", void 0);
 SpotsComponent = __decorate([
     core_1.Component({
-        selector: 'places-section',
-        templateUrl: './spots.component.html',
-        styleUrls: ['./spots.component.css']
+        selector: 'spots-section',
+        templateUrl: './spots.component.html'
     }),
     __metadata("design:paramtypes", [user_service_1.UserService,
         api_service_1.APIService,
