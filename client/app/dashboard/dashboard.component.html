@@ -1,12 +1,20 @@
-<h3>Dashboard</h3>
-<ul class="spotes">
-  <li *ngFor="let spot of spots">
-    <dashboard-card [spot]="spot" (deleteSpot)="deleteSpot($event)"></dashboard-card>
-  </li>
-</ul>
-
-<div>
-  <input [value]="pair" (input)="pair = $event.target.value">
-  <button (click)="syncDevice()">Get Pair</button>
-
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="spotes">
+            <li *ngFor="let spot of spots" style="display: inline-block;">
+                <dashboard-card [spot]="spot" (deleteSpot)="deleteSpot($event)"></dashboard-card>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-4">
+        <div>
+            <input [value]="pair" (input)="pair = $event.target.value">
+            <button (click)="syncDevice()">Get Pair</button>
+            <ul *ngIf="devices">
+                <li *ngFor="let device of devices">
+                    {{device.name}}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

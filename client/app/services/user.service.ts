@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
+export type Device = {_id: string, name: string};
 
 export type User = {
     _id: number;
     name: string;
     preferenses: {
         favouriteSpots: number [],
-        devices: {_id: string, name: string}[]
+        devices: Device[]
     }
 }
 
@@ -30,5 +31,9 @@ export class UserService {
             return false;
         }
         return _.includes(this.user.preferenses.favouriteSpots, id);
+    }
+
+    public getDevices(): Device[] {
+        return this.user.preferenses.devices;
     }
 }

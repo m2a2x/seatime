@@ -26,6 +26,9 @@ var UserService = (function () {
         }
         return _.includes(this.user.preferenses.favouriteSpots, id);
     };
+    UserService.prototype.getDevices = function () {
+        return this.user.preferenses.devices;
+    };
     return UserService;
 }());
 UserService = __decorate([

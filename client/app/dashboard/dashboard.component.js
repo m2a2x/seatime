@@ -13,9 +13,11 @@ var core_1 = require("@angular/core");
 var _ = require("lodash");
 var moment = require("moment");
 var api_service_1 = require("../services/api.service");
+var user_service_1 = require("../services/user.service");
 var DashboardComponent = (function () {
-    function DashboardComponent(apiService) {
+    function DashboardComponent(apiService, userService) {
         this.apiService = apiService;
+        this.userService = userService;
         this.pair = '';
     }
     DashboardComponent.prototype.ngOnInit = function () {
@@ -24,6 +26,7 @@ var DashboardComponent = (function () {
             .then(function (response) {
             var data = response;
             var timestamp;
+            _this.devices = _this.userService.getDevices();
             _this.spots = data.spots;
             if (!_this.spots || !_this.spots.length) {
                 return;
@@ -64,7 +67,7 @@ DashboardComponent = __decorate([
         templateUrl: './dashboard.component.html',
         styleUrls: ['./dashboard.component.css']
     }),
-    __metadata("design:paramtypes", [api_service_1.APIService])
+    __metadata("design:paramtypes", [api_service_1.APIService, user_service_1.UserService])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map

@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import {APIService} from "../services/api.service";
 import {Environment, EnvironmentData, Spot} from "../models/spot";
 import {Reload} from "../models/reload";
+import {Device, UserService} from "../services/user.service";
 
 
 @Component({
@@ -14,10 +15,11 @@ import {Reload} from "../models/reload";
 
 export class DashboardComponent implements OnInit {
     public spots: Spot[];
+    public devices: Device[];
     public selectedSpot: Spot;
     public pair: string = '';
 
-    constructor(private apiService: APIService) {}
+    constructor(private apiService: APIService, private userService: UserService) {}
 
     public ngOnInit(): void {
         this.apiService.reload({fields: 'favourite'})
@@ -25,6 +27,7 @@ export class DashboardComponent implements OnInit {
                 let data: Reload = response as Reload;
                 let timestamp;
 
+                this.devices = this.userService.getDevices();
                 this.spots = data.spots;
                 if (!this.spots || !this.spots.length) {
                     return;
