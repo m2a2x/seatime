@@ -1,0 +1,127 @@
+.spot-card {
+    cursor: pointer;
+    background: #FFFFFF;
+    border: 1px solid rgba(156,156,156,0.10);
+    box-shadow: 0 12px 30px 12px rgba(0,0,0,0.05);
+    margin: .5em;
+    width: 282px;
+    border-radius: 10px;
+
+    &__head {
+        position: relative;
+        background: linear-gradient(#4B5467, #494949);
+        border-radius: 10px 10px 0 0;
+    }
+
+    &__head-primary {
+        padding: 25px 15px;
+        text-align: center;
+    }
+
+    &__delete {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: 0;
+        padding: 0;
+        color: #B6B6B6;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    &__swell-direction {
+        vertical-align: top;
+        display: inline-block;
+        margin-right: 7px;
+        padding-top: 20px;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    &__swell-height {
+        display: inline-block;
+        color: #fff;
+        font-size: 100px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 5px;
+    }
+
+    &__swell-info {
+        display: inline-block;
+        text-align: left;
+    }
+
+    &__swell-unit {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 1.22px;
+    }
+
+    &__swell-period {
+        display: inline-block;
+        color: #fff;
+        font-family: $font-family-additional;
+        font-size: 14px;
+    }
+
+    &__swell-power {
+        position: absolute;
+        top: 30px;
+        left: 15px;
+        color: #fff;
+        font-family: $font-family-additional;
+        font-size: 8px;
+        text-transform: uppercase;
+        text-align: left;
+    }
+
+    &__swell-power-digit {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+    }
+
+    &__foot {
+        padding: 15px 25px 19px;
+    }
+
+    &__name {
+        color: #4A4A4A;
+        font-size: 21px;
+        font-weight: 700;
+    }
+
+    &__wind {
+        font-family: $font-family-additional;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    &__wind-type {
+        display: inline-block;
+        padding: 1px 4px;
+        background-color: #6FC970;
+        border-radius: 30px;
+        color: #fff;
+        letter-spacing: 0.4px;
+    }
+
+    &__wind-speed {
+        display: inline-block;
+        margin-left: 4px;
+        color: #4B5261;
+        text-transform: capitalize;
+        letter-spacing: -0.3px;
+    }
+
+    &__wind-direction {
+        display: inline-block;
+        margin-left: 2px;
+        font-size: 7px;
+        line-height: 1;
+    }
+}

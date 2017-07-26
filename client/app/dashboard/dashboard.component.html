@@ -1,10 +1,10 @@
 <div class="row">
     <div class="col-sm-8">
-        <ul class="spotes">
-            <li *ngFor="let spot of spots" style="display: inline-block;">
+        <div class="spots-list">
+            <div *ngFor="let spot of spots" class="spots-list__item">
                 <dashboard-card [spot]="spot" (deleteSpot)="deleteSpot($event)"></dashboard-card>
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
     <div class="col-sm-4">
         <div>

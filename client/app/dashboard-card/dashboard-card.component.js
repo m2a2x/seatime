@@ -42,8 +42,7 @@ __decorate([
 DashboardCardComponent = __decorate([
     core_1.Component({
         selector: 'dashboard-card',
-        templateUrl: './dashboard-card.component.html',
-        styleUrls: ['./dashboard-card.component.css']
+        templateUrl: './dashboard-card.component.html'
     }),
     __metadata("design:paramtypes", [api_service_1.APIService,
         router_1.Router])

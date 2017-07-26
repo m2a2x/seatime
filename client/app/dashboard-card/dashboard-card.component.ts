@@ -5,8 +5,7 @@ import {Spot} from "../models/spot";
 
 @Component({
     selector: 'dashboard-card',
-    templateUrl: './dashboard-card.component.html',
-    styleUrls: ['./dashboard-card.component.css']
+    templateUrl: './dashboard-card.component.html'
 })
 export class DashboardCardComponent {
     @Input('spot') spot: Spot;

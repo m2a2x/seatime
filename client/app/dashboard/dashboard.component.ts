@@ -9,8 +9,7 @@ import {Device, UserService} from "../services/user.service";
 
 @Component({
     selector: 'my-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css']
+    templateUrl: './dashboard.component.html'
 })
 
 export class DashboardComponent implements OnInit {

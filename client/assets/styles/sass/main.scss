@@ -6,6 +6,7 @@
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";
 @import "custom";
+@import "colors";
 
 // Reset and dependencies
 @import "node_modules/bootstrap/scss/normalize";
@@ -30,10 +31,15 @@
 @import "node_modules/bootstrap/scss/custom-forms";
 @import "node_modules/bootstrap/scss/nav";
 @import "node_modules/bootstrap/scss/navbar";
+@import "node_modules/bootstrap/scss/card";
 @import "navbar";
 @import "inputs";
 @import "spots-dropdown";
 @import "map";
+@import "spots";
+@import "spots-list";
+@import "spot-card";
+@import "compass-direction";
 
 // Utility classes
 @import "node_modules/bootstrap/scss/utilities";

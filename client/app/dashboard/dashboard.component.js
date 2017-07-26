@@ -64,8 +64,7 @@ var DashboardComponent = (function () {
 DashboardComponent = __decorate([
     core_1.Component({
         selector: 'my-dashboard',
-        templateUrl: './dashboard.component.html',
-        styleUrls: ['./dashboard.component.css']
+        templateUrl: './dashboard.component.html'
     }),
     __metadata("design:paramtypes", [api_service_1.APIService, user_service_1.UserService])
 ], DashboardComponent);

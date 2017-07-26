@@ -1,22 +1,53 @@
-<div class="spotitem" (click)="onSelect()">
-    <span>{{spot.name}}</span>
-    <button class="delete" (click)="delete(); $event.stopPropagation()">x</button>
+<div class="spot-card" (click)="onSelect()">
+    <div class="spot-card__head">
+        <div class="spot-card__head-primary" *ngIf="spot.todayForecast">
+            <div class="spot-card__swell-direction">
+                <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection}}">
+                    <span class="icon-arrow-up"></span>
+                </div>
+            </div>
+            <div class="spot-card__swell-height">
+                {{spot.todayForecast.swell.maxBreakingHeight}}
+            </div>
+            <div class="spot-card__swell-info">
+                <div class="spot-card__swell-period">
+                    {{spot.todayForecast.swell.period}}s
+                </div>
+                <div class="spot-card__swell-unit">
+                    {{spot.todayForecast.swell.unit}}
+                </div>
+            </div>
+            <div class="spot-card__swell-power">
+                <div class="spot-card__swell-power-digit">
+                    {{spot.todayForecast.swell.components.combined.power}}
+                </div>
+                power
+            </div>
+        </div>
 
-    <div *ngIf="spot.todayForecast">
-        <span>
-            {{spot.todayForecast.swell.maxBreakingHeight}}
-            {{spot.todayForecast.swell.unit}}
-        </span>
-        <span>{{spot.todayForecast.swell.period}}s</span>
-        <br>
-        <span>{{spot.todayForecast.swell.components.combined.power}} power</span>
-        <br>
-        <span>{{spot.todayForecast.swell.components.combined.compassDirection}}</span>
-        <br>
-        <span>{{spot.todayForecast.swell.components.combined.isOffshore ? 'Off' : 'On'}}</span>
+        <button class="spot-card__delete" (click)="delete(); $event.stopPropagation()">
+            <span class="icon-clear"></span>
+        </button>
+
+        <div *ngIf="spot.todayCondition">
+            <tide-chart [tides]="spot.todayCondition.tide" [size]="280" style="display: block; height: 58px;"></tide-chart>
+        </div>
     </div>
 
-    <div *ngIf="spot.todayCondition">
-        <tide-chart [tides]="spot.todayCondition.tide" [size]="300" style="display: block; height: 60px;"></tide-chart>
+    <div class="spot-card__foot">
+        <div class="spot-card__name">{{spot.name}}</div>
+        <div class="spot-card__wind">
+            <span class="spot-card__wind-type">
+                {{spot.todayForecast.swell.components.combined.isOffshore ? 'Offshore' : 'Onshore'}}
+            </span>
+            <span class="spot-card__wind-speed">
+                {{spot.todayForecast.wind.speed}} {{spot.todayForecast.wind.unit}}
+            </span>
+            <span class="spot-card__wind-direction">
+                <span class="compass-direction compass-direction--{{spot.todayForecast.wind.compassDirection}}">
+                    <span class="icon-arrow-up"></span>
+                </span>
+            </span>
+        </div>
     </div>
 </div>

@@ -1,6 +1,3 @@
-@import "custom";
-@import "colors";
-
 $search-panel-height: 45px;
 
 spots-section {
@@ -13,13 +10,6 @@ spots-section {
 
   a {
     text-decoration:none;
-
-  }
-
-  *, *:after, *:before {
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
 
   }
 

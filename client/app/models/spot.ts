@@ -20,6 +20,12 @@ export type Swell = {
     unit: string
 };
 
+export type Wind = {
+    speed: number,
+    compassDirection: string,
+    unit: string
+};
+
 export type Tide = {
     shift: number,
     state: string,
@@ -34,6 +40,7 @@ export interface SpotI {
 
 export type Forecast = {
     swell: Swell
+    wind: Wind
 };
 
 export type Condition = {
