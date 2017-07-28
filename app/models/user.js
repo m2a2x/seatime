@@ -233,6 +233,17 @@ UserSchema.statics = {
             {safe: true, multi: true});
     },
 
+    getFavouriteByUuid: function (uuid) {
+        return this.findOne({ 'preferenses.devices._id': uuid })
+            .populate({
+                path: 'preferenses.favouriteSpots',
+                select: 'name'
+            })
+            .lean()
+            .exec()
+            .then(data => data.preferenses.favouriteSpots);
+    },
+
     addDevice: function (userId, deviceId, deviceName) {
         return this.update({_id: userId}, {
             $push: {

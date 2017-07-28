@@ -13,12 +13,12 @@ const Spot = mongoose.model('Spot');
 const Forecast = mongoose.model('Forecast');
 const Condition = mongoose.model('Condition');
 
-const {uploadForecast, uploadCondition} = require('../controllers/builder');
-const {getToday, time} = require('../utils');
+const { uploadForecast, uploadCondition } = require('../controllers/builder');
+const { getToday, time } = require('../utils');
 
 
-var getForecast = async(function*(spotId, end) {
-    var callData,
+const getForecast = async(function*(spotId, end) {
+    let callData,
         spot;
 
     callData = yield Forecast.get(spotId, end);
@@ -29,16 +29,16 @@ var getForecast = async(function*(spotId, end) {
     // get spot
     spot = yield Spot.get(spotId);
     yield uploadForecast(spot.meta.mswd.id, spotId);
-    callData = yield Forecast.get(spotId, end);
 
+    callData = yield Forecast.get(spotId, end);
     if (callData) {
         return callData;
     }
     return null;
 });
 
-var getCondition = async(function*(spotId, end) {
-    var callData,
+const getCondition = async(function*(spotId, end) {
+    let callData,
         spot,
         startDate,
         endDate;
@@ -69,24 +69,22 @@ var getCondition = async(function*(spotId, end) {
  * List
  */
 
-exports.index = async(function*(req, res) {
+const index = async(function*(req, res) {
     const spots = yield Spot.list();
     res.json({
         data: spots
     });
 });
 
-exports.condition = async(function*(req, res) {
+const getSpotsEnvironment = function(req, res) {
     const params = req.query;
-    var endDate,
-        paramEnd = _.parseInt(params.end),
-        result = {},
-        spots;
+    const endDate = _.parseInt(params.end) || null;
 
+    let spots;
 
     if (params.spots) {
         spots = _.reduce(params.spots.split(','), function (result, id) {
-            var id = _.parseInt(id.trim());
+            id = _.parseInt(id.trim());
             if (id) {
                 result.push(id);
             }
@@ -94,12 +92,14 @@ exports.condition = async(function*(req, res) {
         }, []);
     }
 
-    if (paramEnd) {
-        endDate = paramEnd;
-    }
+    loadEnvironment(spots, endDate).then(environment => res.json(environment));
+};
 
-    var q = tress(async(function*(id, done) {
-        var forecast = yield getForecast(id, endDate),
+const loadEnvironment = function(spots, endDate) {
+    let result = {};
+
+    const q = tress(async(function*(id, done) {
+        let forecast = yield getForecast(id, endDate),
             condition = yield getCondition(id, endDate),
             envData = {};
 
@@ -109,11 +109,8 @@ exports.condition = async(function*(req, res) {
         };
 
         done(null, envData);
-    }), 2);
+    }), 5);
 
-    q.drain = function () {
-        res.json(result);
-    };
 
     q.error = function (err) {
         console.log('failed with error ' + err);
@@ -124,7 +121,19 @@ exports.condition = async(function*(req, res) {
     };
 
     q.push(spots);
-});
+
+    return new Promise(function(resolve){
+        q.drain = function () {
+            resolve(result);
+        };
+    });
+};
 
 
-module.exports.getCondition = getCondition;
+module.exports = {
+    getCondition,
+    getForecast,
+    getSpotsEnvironment,
+    loadEnvironment,
+    index
+};

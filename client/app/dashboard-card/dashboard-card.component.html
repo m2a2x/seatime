@@ -1,13 +1,13 @@
-<div class="spot-card" (click)="onSelect()">
+<div class="spot-card" (click)="onSelect()" *ngIf="spot && spot.todayForecast">
     <div class="spot-card__head">
-        <div class="spot-card__head-primary" *ngIf="spot.todayForecast">
+        <div class="spot-card__head-primary">
             <div class="spot-card__swell-direction">
                 <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection}}">
                     <span class="icon-arrow-up"></span>
                 </div>
             </div>
             <div class="spot-card__swell-height">
-                {{spot.todayForecast.swell.maxBreakingHeight}}
+                {{spot.todayForecast.swell.maxHeight}}
             </div>
             <div class="spot-card__swell-info">
                 <div class="spot-card__swell-period">
@@ -19,7 +19,7 @@
             </div>
             <div class="spot-card__swell-power">
                 <div class="spot-card__swell-power-digit">
-                    {{spot.todayForecast.swell.components.combined.power}}
+                    {{spot.todayForecast.swell.power}}
                 </div>
                 power
             </div>
@@ -38,7 +38,7 @@
         <div class="spot-card__name">{{spot.name}}</div>
         <div class="spot-card__wind">
             <span class="spot-card__wind-type">
-                {{spot.todayForecast.swell.components.combined.isOffshore ? 'Offshore' : 'Onshore'}}
+                {{'Offshore'}}
             </span>
             <span class="spot-card__wind-speed">
                 {{spot.todayForecast.wind.speed}} {{spot.todayForecast.wind.unit}}

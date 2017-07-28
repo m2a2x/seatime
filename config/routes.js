@@ -1,3 +1,6 @@
+/**
+ * Route middlewares
+ */
 'use strict';
 
 const users = require('../app/controllers/users');
@@ -6,10 +9,7 @@ const global = require('../app/controllers/global');
 const crawler = require('../app/controllers/crawler');
 const builder = require('../app/controllers/builder');
 const auth = require('./middlewares/authorization');
-
-/**
- * Route middlewares
- */
+const wearable = require('../app/controllers/wearable');
 
 const fail = {
   failureRedirect: '/login'
@@ -73,14 +73,11 @@ module.exports = function (app, api, apiDevice, passport) {
     api.get('/reload/', global.index);
 
     /** Get Conditions  Get Forecasts */
-    api.get('/spots/getConditions/', spots.condition);
+    api.get('/spots/getConditions/', spots.getSpotsEnvironment);
 
     /** Set Sync and Pair */
-    api.post('/sync', auth.requiresLogin, global.syncDevice);
-    apiDevice.post('/pair', global.pairDevice);
-
-    /** Get Device Data */
-    api.get('/deviceData', global.getDeviceData);
+    api.post('/sync', auth.requiresLogin, wearable.syncDevice);
+    apiDevice.post('/pair', wearable.pairDevice);
 
     /** Get Favourite Spots */
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);

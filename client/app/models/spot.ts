@@ -5,17 +5,12 @@ export type Country = {
 };
 
 export type Swell = {
-    components: {
-        combined: {
-            isOffshore: boolean,
-            compassDirection: string,
-            power: number
-        },
-        primary: {},
-        secondary: {}
-    },
-    maxBreakingHeight: number,
-    minBreakingHeight: number,
+    primary: {},
+    secondary: {}
+    compassDirection: string,
+    power: number,
+    maxHeight: number,
+    minHeight: number,
     period: number,
     unit: string
 };

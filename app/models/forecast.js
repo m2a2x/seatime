@@ -64,18 +64,18 @@ const ForecastSchema = new Schema({
 ForecastSchema
     .virtual('swellData')
     .get(function () {
-        const swell = JSON.parse(this.swell);
-        return _.pick(
-            swell,
+        let json = JSON.parse(this.swell);
+        let swellData = _.pick(json,
             [
-                'components.combined.power',
                 'compassDirection',
-                'minBreakingHeight',
-                'maxBreakingHeight',
                 'period',
                 'unit'
             ]
         );
+        swellData.power = json.components.combined.power;
+        swellData.minHeight = json.minBreakingHeight;
+        swellData.maxHeight = json.maxBreakingHeight;
+        return swellData;
     });
 
 ForecastSchema
@@ -99,8 +99,8 @@ ForecastSchema
 
 ForecastSchema.statics = {
     get: function (id, endDate) {
-        var dt = time(getToday()),
-            comparator = {$gt: dt};
+        const dt = time(getToday());
+        let comparator = {$gt: dt};
 
         if (endDate && endDate > dt) {
             comparator['$lt'] = endDate;
@@ -115,7 +115,8 @@ ForecastSchema.statics = {
                     return _.map(data, function (item) {
                         return {
                             swell: item.swellData,
-                            wind: item.windData
+                            wind: item.windData,
+                            timestamps: item.meta.localTimestamp
                         };
                     });
                 }
