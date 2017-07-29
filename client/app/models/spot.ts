@@ -35,7 +35,9 @@ export interface SpotI {
 
 export type Forecast = {
     swell: Swell
-    wind: Wind
+    wind: Wind,
+    timestamp: number,
+    rating: number
 };
 
 export type Condition = {
