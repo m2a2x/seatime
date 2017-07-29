@@ -7,11 +7,12 @@
                 </div>
             </div>
             <div class="spot-card__swell-height">
-                {{spot.todayForecast.swell.maxHeight}}
+                {{spot.todayForecast.swell.maxHeight || 'Flat'}}
             </div>
             <div class="spot-card__swell-info">
                 <div class="spot-card__swell-period">
                     {{spot.todayForecast.swell.period}}s
+                    rating {{spot.todayForecast.rating}}
                 </div>
                 <div class="spot-card__swell-unit">
                     {{spot.todayForecast.swell.unit}}

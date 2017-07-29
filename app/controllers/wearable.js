@@ -55,9 +55,9 @@ const isPaired = asyncf(function* (uuid) {
 
 const loadData = function (req, res) {
     const endDate = _.parseInt(req.body.end) || null;
-    const spot = req.body.spot;
+    const spotId = req.body.spot;
 
-    if (!spot || !req.body.uuid) {
+    if (!spotId || !req.body.uuid) {
         respondError(res, 404);
         return;
     }
@@ -67,8 +67,8 @@ const loadData = function (req, res) {
         return;
     }
 
-    loadEnvironment([spot], endDate).then(environment => {
-        res.json(environment);
+    loadEnvironment([spotId], endDate).then(environment => {
+        res.json(environment[spotId]);
     });
 };
 
