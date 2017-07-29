@@ -10,9 +10,11 @@
                 {{spot.todayForecast.swell.maxHeight || 'Flat'}}
             </div>
             <div class="spot-card__swell-info">
+                <div class="spot-card__swell-rating" *ngIf="spot.todayForecast.rating">
+                    <span class="icon-star" *ngFor="let i of range(spot.todayForecast.rating)"></span>
+                </div>
                 <div class="spot-card__swell-period">
                     {{spot.todayForecast.swell.period}}s
-                    rating {{spot.todayForecast.rating}}
                 </div>
                 <div class="spot-card__swell-unit">
                     {{spot.todayForecast.swell.unit}}
@@ -20,7 +22,7 @@
             </div>
             <div class="spot-card__swell-power">
                 <div class="spot-card__swell-power-scale">
-                    <div class="spot-card__swell-power-fill" [ngStyle]="SetSwellPower()"></div>
+                    <div class="spot-card__swell-power-fill" [ngStyle]="setSwellPower()"></div>
                 </div>
                 <div class="spot-card__swell-power-text">
                     <div class="spot-card__swell-power-digit">{{spot.todayForecast.swell.power}}</div>

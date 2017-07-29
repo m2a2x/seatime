@@ -3367,7 +3367,7 @@ spots-section {
     text-align: center; }
   .spot-card__delete {
     position: absolute;
-    top: 10px;
+    top: 5px;
     right: 10px;
     background: none;
     border: 0;
@@ -3384,14 +3384,21 @@ spots-section {
     font-size: 12px; }
   .spot-card__swell-height {
     display: inline-block;
+    margin-right: 5px;
     color: #fff;
     font-size: 100px;
     font-weight: 700;
-    line-height: 1;
-    letter-spacing: 5px; }
+    line-height: 1; }
   .spot-card__swell-info {
+    position: relative;
     display: inline-block;
     text-align: left; }
+  .spot-card__swell-rating {
+    position: absolute;
+    top: -20px;
+    color: #2aa4ff;
+    font-size: 18px;
+    line-height: 1; }
   .spot-card__swell-unit {
     color: #fff;
     font-size: 28px;
