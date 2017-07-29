@@ -2,7 +2,7 @@
     <div class="spot-card__head">
         <div class="spot-card__head-primary">
             <div class="spot-card__swell-direction">
-                <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection}}">
+                <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection.toLowerCase()}}">
                     <span class="icon-arrow-up"></span>
                 </div>
             </div>
@@ -18,10 +18,13 @@
                 </div>
             </div>
             <div class="spot-card__swell-power">
-                <div class="spot-card__swell-power-digit">
-                    {{spot.todayForecast.swell.power}}
+                <div class="spot-card__swell-power-scale">
+                    <div class="spot-card__swell-power-fill" [ngStyle]="SetSwellPower()"></div>
                 </div>
-                power
+                <div class="spot-card__swell-power-text">
+                    <div class="spot-card__swell-power-digit">{{spot.todayForecast.swell.power}}</div>
+                     power
+                </div>
             </div>
         </div>
 
@@ -44,7 +47,7 @@
                 {{spot.todayForecast.wind.speed}} {{spot.todayForecast.wind.unit}}
             </span>
             <span class="spot-card__wind-direction">
-                <span class="compass-direction compass-direction--{{spot.todayForecast.wind.compassDirection}}">
+                <span class="compass-direction compass-direction--{{spot.todayForecast.wind.compassDirection.toLowerCase()}}">
                     <span class="icon-arrow-up"></span>
                 </span>
             </span>

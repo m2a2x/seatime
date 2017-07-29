@@ -3407,11 +3407,30 @@ spots-section {
     position: absolute;
     top: 30px;
     left: 15px;
+    height: 50px;
     color: #fff;
     font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
     font-size: 8px;
     text-transform: uppercase;
     text-align: left; }
+  .spot-card__swell-power-scale, .spot-card__swell-power-text {
+    display: inline-block;
+    vertical-align: top; }
+  .spot-card__swell-power-scale {
+    position: relative;
+    overflow: hidden;
+    width: 10px;
+    height: 100%;
+    margin-right: 5px;
+    background-color: #989898;
+    border-radius: 30px; }
+  .spot-card__swell-power-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #5C71DC; }
+  .spot-card__swell-power-text {
+    padding-top: 15px; }
   .spot-card__swell-power-digit {
     font-size: 9px;
     font-weight: 700;
@@ -3448,52 +3467,52 @@ spots-section {
 .compass-direction {
   display: inline-block; }
 
-.compass-direction--N {
+.compass-direction--n {
   transform: rotate(0deg); }
 
-.compass-direction--NNE {
+.compass-direction--nne {
   transform: rotate(22.5deg); }
 
-.compass-direction--NE {
+.compass-direction--ne {
   transform: rotate(45deg); }
 
-.compass-direction--ENE {
+.compass-direction--ene {
   transform: rotate(67.5deg); }
 
-.compass-direction--E {
+.compass-direction--e {
   transform: rotate(90deg); }
 
-.compass-direction--ESE {
+.compass-direction--ese {
   transform: rotate(112.5deg); }
 
-.compass-direction--SE {
+.compass-direction--se {
   transform: rotate(135deg); }
 
-.compass-direction--SSE {
+.compass-direction--sse {
   transform: rotate(157.5deg); }
 
-.compass-direction--S {
+.compass-direction--s {
   transform: rotate(180deg); }
 
-.compass-direction--SSW {
+.compass-direction--ssw {
   transform: rotate(202.5deg); }
 
-.compass-direction--SW {
+.compass-direction--sw {
   transform: rotate(225deg); }
 
-.compass-direction--WSW {
+.compass-direction--wsw {
   transform: rotate(247.5deg); }
 
-.compass-direction--W {
+.compass-direction--w {
   transform: rotate(270deg); }
 
-.compass-direction--WNW {
+.compass-direction--wnw {
   transform: rotate(292.5deg); }
 
-.compass-direction--NW {
+.compass-direction--nw {
   transform: rotate(315deg); }
 
-.compass-direction--NNW {
+.compass-direction--nnw {
   transform: rotate(337.5deg); }
 
 .align-baseline {

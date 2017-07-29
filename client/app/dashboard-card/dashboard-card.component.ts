@@ -24,4 +24,9 @@ export class DashboardCardComponent {
                 this.deleteSpot.emit(this.spot._id);
             });
     }
+
+    public SetSwellPower(): object {
+        let styles = { 'height': '50%' }
+        return styles;
+    }
 }

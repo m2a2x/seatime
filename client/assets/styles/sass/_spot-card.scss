@@ -1,8 +1,8 @@
 .spot-card {
     cursor: pointer;
     background: #FFFFFF;
-    border: 1px solid rgba(156,156,156,0.10);
-    box-shadow: 0 12px 30px 12px rgba(0,0,0,0.05);
+    border: 1px solid rgba(156, 156, 156, 0.10);
+    box-shadow: 0 12px 30px 12px rgba(0, 0, 0, 0.05);
     margin: .5em;
     width: 282px;
     border-radius: 10px;
@@ -72,11 +72,39 @@
         position: absolute;
         top: 30px;
         left: 15px;
+        height: 50px;
         color: #fff;
         font-family: $font-family-additional;
         font-size: 8px;
         text-transform: uppercase;
         text-align: left;
+    }
+    
+    &__swell-power-scale,
+    &__swell-power-text {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    &__swell-power-scale {
+        position: relative;
+        overflow: hidden;
+        width: 10px;
+        height: 100%;
+        margin-right: 5px;
+        background-color: #989898;
+        border-radius: 30px;
+    }
+
+    &__swell-power-fill {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: #5C71DC;
+    }
+
+    &__swell-power-text {
+        padding-top: 15px;
     }
 
     &__swell-power-digit {

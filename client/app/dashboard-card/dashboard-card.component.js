@@ -29,6 +29,10 @@ var DashboardCardComponent = (function () {
             _this.deleteSpot.emit(_this.spot._id);
         });
     };
+    DashboardCardComponent.prototype.SetSwellPower = function () {
+        var styles = { 'height': '50%' };
+        return styles;
+    };
     return DashboardCardComponent;
 }());
 __decorate([
