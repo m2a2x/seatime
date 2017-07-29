@@ -1,8 +1,7 @@
-'use strict';
-
 /**
  * Module dependencies.
  */
+'use strict';
 
 const _ = require('lodash');
 
@@ -16,6 +15,7 @@ const User = mongoose.model('User');
 const Pair = mongoose.model('Pair');
 
 const { loadEnvironment } = require('./spots');
+const { respondError } = require('../utils/index');
 
 const syncDevice = asyncf(function* (req, res) {
     const pair = yield Pair.getPair(req.body.pair);
@@ -29,75 +29,51 @@ const syncDevice = asyncf(function* (req, res) {
     });
 });
 
-const pairDevice = asyncf(function* (req, res) {
-    const endDate = _.parseInt(req.body.end) || null;
-    const user = yield User.load({
-        criteria: { 'preferenses.devices._id': req.body.uuid }
-    });
+const pairDevice = function (req, res) {
 
-    let pair,
-        data;
-
-    if (!user) {
-        pair = yield Pair.setPair(req.body.uuid, req.body.device);
-        res.json({
+    if (!isPaired(req.body.uuid)) {
+        Pair.setPair(req.body.uuid, req.body.device).then(pair => res.json({
             Pair: pair._id
-        });
+        }));
         return;
     }
 
-    data = yield loadDeviceData(req.body.uuid, endDate);
-    res.json({
-        PairedData: data
-    });
-
-});
-
-const loadDeviceData = asyncf(function* (uuid, endDate) {
-    const spots = yield User.getFavouriteByUuid(uuid);
-
-    if (!spots.length) {
-        return new Promise(function(resolve){
-            resolve({
-                spots: null,
-                conditions: null,
-                tides: null
-            });
-        });
-    }
-
-
-    /* q = tress(function (spot, done) {
-        let id = spot._id;
-
-        getCondition(id).then(function (data) {
-            _.each(data, function (item) {
-                item = item.toObject();
-
-                _.each(item.tide, function(t) {
-                    tides.push(_.extend(t, {
-                        spot_id: id
-                    }));
-                });
-
-                delete item.tide;
-                item.spot_id = id;
-                conditions.push(item);
-            });
-            done();
-        });
-
-    }); */
-
-    return loadEnvironment(_.map(spots, '_id'), endDate).then(environment => {
-        return {
-            environment: environment,
+    User.getFavouriteByUuid(req.body.uuid).then(spots => res.json({
+        PairedData: {
             spots: spots
         }
+    }));
+};
+
+const isPaired = asyncf(function* (uuid) {
+    const user = yield User.load({
+        criteria: { 'preferenses.devices._id': uuid }
     });
+
+    return !!user;
 });
+
+const loadData = function (req, res) {
+    const endDate = _.parseInt(req.body.end) || null;
+    const spot = req.body.spot;
+
+    if (!spot || !req.body.uuid) {
+        respondError(res, 404);
+        return;
+    }
+
+    if (!isPaired(req.body.uuid)) {
+        pairDevice(req, res);
+        return;
+    }
+
+    loadEnvironment([spot], endDate).then(environment => {
+        res.json(environment);
+    });
+};
 
 module.exports = {
     pairDevice,
-    syncDevice
+    syncDevice,
+    loadData
 };

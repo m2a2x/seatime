@@ -1,14 +1,14 @@
-'use strict';
-
 /**
  * Module dependencies.
  */
+'use strict';
 
 const _ = require('lodash');
 
 const mongoose = require('mongoose');
 const { wrap: asyncf } = require('co');
 const tress = require('tress');
+const { parseStringToIds } = require('../utils/index');
 
 const Country = mongoose.model('Country');
 const Spot = mongoose.model('Spot');
@@ -33,13 +33,7 @@ exports.index = asyncf(function* (req, res) {
     }
 
     if (params.spots) {
-        qspots =_.reduce(params.spots.split(','), function (result, id) {
-            id = _.parseInt(id.trim());
-            if (id) {
-                result.push(id);
-            }
-            return result;
-        }, []);
+        qspots = parseStringToIds(params.spots);
     }
 
     if (params.fields) {

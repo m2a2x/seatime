@@ -116,7 +116,8 @@ ForecastSchema.statics = {
                         return {
                             swell: item.swellData,
                             wind: item.windData,
-                            timestamps: item.meta.localTimestamp
+                            timestamp: item.meta.localTimestamp,
+                            rating: item.meta.solidRating
                         };
                     });
                 }

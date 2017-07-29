@@ -77,13 +77,18 @@ module.exports = function (app, api, apiDevice, passport) {
 
     /** Set Sync and Pair */
     api.post('/sync', auth.requiresLogin, wearable.syncDevice);
-    apiDevice.post('/pair', wearable.pairDevice);
 
     /** Get Favourite Spots */
     api.post('/user/spots/:id', auth.requiresLogin, users.addSpot);
 
     /** Get Remove Favouirite Spot */
     api.delete('/user/spots/:id', auth.requiresLogin, users.removeSpot);
+
+    /**
+     * Api Device
+     */
+    apiDevice.post('/pair', wearable.pairDevice);
+    apiDevice.post('/load', wearable.loadData);
 
 
     /**
