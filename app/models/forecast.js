@@ -62,6 +62,20 @@ const ForecastSchema = new Schema({
 });
 
 ForecastSchema
+    .virtual('conditionData')
+    .get(function () {
+        let json = JSON.parse(this.condition);
+        let conditionData = _.pick(json,
+            [
+                'temperature',
+                'weather',
+                'unit'
+            ]
+        );
+        return conditionData;
+    });
+
+ForecastSchema
     .virtual('swellData')
     .get(function () {
         let json = JSON.parse(this.swell);
@@ -73,8 +87,7 @@ ForecastSchema
             ]
         );
         swellData.power = json.components.combined.power;
-        swellData.minHeight = json.minBreakingHeight;
-        swellData.maxHeight = json.maxBreakingHeight;
+        swellData.height = Math.round(json.components.combined.height) || 0;
         return swellData;
     });
 
@@ -87,7 +100,8 @@ ForecastSchema
             [
                 'speed',
                 'compassDirection',
-                'unit'
+                'unit',
+                'stringDirection'
             ]
         );
     });
@@ -114,6 +128,7 @@ ForecastSchema.statics = {
                 if (data.length) {
                     return _.map(data, function (item) {
                         return {
+                            condition: item.conditionData,
                             swell: item.swellData,
                             wind: item.windData,
                             timestamp: item.meta.localTimestamp,
