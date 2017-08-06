@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 
+const _ = require('lodash');
+const moment = require('moment');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const Schema = mongoose.Schema;
@@ -30,7 +32,10 @@ const UserSchema = new Schema({
         facebook: {},
         google: {}
     },
-    apiKey: {type: String, default: ''}
+    apiKey: {type: String, default: ''},
+    timestamp: {type: Number, default: function() {
+        return moment.utc().unix();
+    }}
 });
 
 const validatePresenceOf = value => value && value.length;
@@ -175,8 +180,8 @@ UserSchema.statics = {
     loginUser: function (provider, profile, email, done) {
         const doc = this;
         const providerPath = 'provider.' + provider;
-        var criteria = {};
-        var prom;
+        let criteria = {},
+            prom;
 
         criteria[providerPath + '.id'] = profile.id;
 
@@ -218,6 +223,9 @@ UserSchema.statics = {
 
     addFavourite: function (userId, spotId) {
         return this.update({_id: userId}, {
+            $set: {
+                'timestamp': moment.utc().unix()
+            },
             $push: {
                 'preferenses.favouriteSpots': spotId
             }
@@ -226,6 +234,9 @@ UserSchema.statics = {
 
     removeFavourite: function (userId, spotId) {
         return this.update({_id: userId}, {
+                $set: {
+                    'timestamp': moment.utc().unix()
+                },
                 $pull: {
                     'preferenses.favouriteSpots': spotId
                 }
@@ -233,26 +244,41 @@ UserSchema.statics = {
             {safe: true, multi: true});
     },
 
-    getFavouriteByUuid: function (uuid) {
-        return this.findOne({ 'preferenses.devices._id': uuid })
+    getFavouriteByUuid: function (uuid, updateDate) {
+        let criteria = { 'preferenses.devices._id': uuid };
+        if (updateDate) {
+            criteria['timestamp'] = {$gt: _.parseInt(updateDate)};
+        }
+        return this.findOne(criteria)
             .populate({
                 path: 'preferenses.favouriteSpots',
                 select: 'name'
             })
             .lean()
             .exec()
-            .then(data => data.preferenses.favouriteSpots);
+            .then(data => {
+                if (data) {
+                    return {
+                        spots: data.preferenses.favouriteSpots,
+                        timestamp: data.timestamp
+                    };
+                }
+                return null;
+            });
     },
 
     addDevice: function (userId, deviceId, deviceName) {
-        return this.update({_id: userId}, {
-            $push: {
-                'preferenses.devices': {
-                    _id: deviceId,
-                    name: deviceName
+        return this.update(
+            {_id: userId},
+            {
+                $push: {
+                    'preferenses.devices': {
+                        _id: deviceId,
+                        name: deviceName
+                    }
                 }
             }
-        });
+        );
     }
 };
 

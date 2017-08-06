@@ -9,8 +9,6 @@ const _ = require('lodash');
 const { getToday, time } = require('../utils');
 const Schema = mongoose.Schema;
 
-const FieldsToParse = ['swell', 'wind', 'condition'];
-
 
 /**
  * Forecast Schema

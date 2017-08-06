@@ -4,6 +4,7 @@
 'use strict';
 
 const _ = require('lodash');
+const moment = require('moment');
 
 const mongoose = require('mongoose');
 const { wrap: asyncf } = require('co');
@@ -18,7 +19,7 @@ const { loadEnvironment } = require('./spots');
 const { respondError } = require('../utils/index');
 
 const syncDevice = asyncf(function* (req, res) {
-    const pair = yield Pair.getPair(req.body.pair);
+    let pair = yield Pair.getPair(req.body.pair);
 
     if (pair) {
         yield User.addDevice(req.user, pair.uuid, pair.device);
@@ -27,27 +28,47 @@ const syncDevice = asyncf(function* (req, res) {
     res.json({
         isSuccesful: !!pair
     });
+
 });
 
 const pairDevice = asyncf(function*(req, res) {
-    const isPaired = yield getPaired(req.body.uuid);
+    const timestamp = req.body.timestamp;
+    const endDate = moment().add(1, 'days').unix();
+    let isPaired = yield getPaired(req.body.uuid);
+    let userData;
 
     if (!isPaired) {
         Pair.setPair(req.body.uuid, req.body.device).then(pair => res.json({
-            Pair: pair._id
+            pair: pair._id
         }));
         return;
     }
 
-    User.getFavouriteByUuid(req.body.uuid).then(spots => res.json({
-        PairedData: {
-            spots: spots
-        }
-    }));
+    userData = yield User.getFavouriteByUuid(req.body.uuid, timestamp);
+    if (!userData) {
+        return res.json({
+            result: null
+        });
+    }
+
+    loadEnvironment(_.map(userData.spots, '_id'), endDate).then(environments => {
+        let result = _.merge(userData, {
+            condition: [],
+            forecast: []
+        });
+        _.each(environments, (env, spotId) => {
+            let rich = mapEnvironment(env, _.parseInt(spotId));
+            result.condition = result.condition.concat(rich.condition);
+            result.forecast = result.forecast.concat(rich.forecast);
+        });
+        res.json({
+            result: result
+        });
+    });
 });
 
 const getPaired = asyncf(function* (uuid) {
-    const user = yield User.load({
+    let user = yield User.load({
         criteria: { 'preferenses.devices._id': uuid }
     });
 
@@ -62,19 +83,29 @@ const loadData = asyncf(function*(req, res) {
         respondError(res, 404);
         return;
     }
-    const isPaired = yield getPaired(req.body.uuid);
+    let isPaired = yield getPaired(req.body.uuid);
 
     if (!isPaired) {
         pairDevice(req, res);
         return;
     }
 
-    loadEnvironment([spotId], endDate).then(environment =>
-        res.json(_.merge(environment[spotId], {
-            spot_id: spotId
-        }))
-    );
+    loadEnvironment([spotId], endDate).then(environment => {
+        res.json(mapEnvironment(environment[spotId], spotId));
+    });
 });
+
+function mapEnvironment(fields, spotId) {
+    _.each(fields, (field) => {
+        _.each(field, (v) => {
+           _.merge(v, {
+               spot_id: spotId
+           })
+        });
+    });
+
+    return fields;
+}
 
 module.exports = {
     syncDevice,

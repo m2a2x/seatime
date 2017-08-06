@@ -66,6 +66,7 @@ ConditionSchema.statics = {
 
         return this.find({_spot: spotId, 'meta.timestamp': comparator})
             .select(fields)
+            .lean()
             .then(function (data) {
                 if (data.length) {
                     return data;
