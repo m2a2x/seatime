@@ -7,7 +7,8 @@ module.exports = {
     respondOrRedirect,
     getToday,
     daysToTime,
-    time
+    time,
+    getNow
 };
 
 function respondError(res, status) {
@@ -32,12 +33,16 @@ function respondOrRedirect({req, res}, url = '/', obj = {}, flash) {
     });
 }
 
+function getNow() {
+    return moment.utc().unix();
+}
+
 function getToday() {
-    return moment().startOf('day').valueOf();
+    return moment.utc().startOf('day').valueOf();
 }
 
 function time(time) {
-    return moment(time).unix();
+    return moment(time).utc().unix();
 }
 
 function daysToTime(days) {

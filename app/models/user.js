@@ -6,6 +6,7 @@
 
 const _ = require('lodash');
 const moment = require('moment');
+
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const Schema = mongoose.Schema;
@@ -33,7 +34,7 @@ const UserSchema = new Schema({
         google: {}
     },
     apiKey: {type: String, default: ''},
-    timestamp: {type: Number, default: function() {
+    updatedAt: {type: Number, default: function() {
         return moment.utc().unix();
     }}
 });
@@ -224,7 +225,7 @@ UserSchema.statics = {
     addFavourite: function (userId, spotId) {
         return this.update({_id: userId}, {
             $set: {
-                'timestamp': moment.utc().unix()
+                'updatedAt': moment.utc().unix()
             },
             $push: {
                 'preferenses.favouriteSpots': spotId
@@ -235,7 +236,7 @@ UserSchema.statics = {
     removeFavourite: function (userId, spotId) {
         return this.update({_id: userId}, {
                 $set: {
-                    'timestamp': moment.utc().unix()
+                    'updatedAt': moment.utc().unix()
                 },
                 $pull: {
                     'preferenses.favouriteSpots': spotId
@@ -244,15 +245,15 @@ UserSchema.statics = {
             {safe: true, multi: true});
     },
 
-    getFavouriteByUuid: function (uuid, updateDate) {
+    getFavouriteByUuid: function (uuid, updatedAt) {
         let criteria = { 'preferenses.devices._id': uuid };
-        if (updateDate) {
-            criteria['timestamp'] = {$gt: _.parseInt(updateDate)};
+        if (updatedAt) {
+            criteria['updatedAt'] = {$gt: _.parseInt(updatedAt)};
         }
         return this.findOne(criteria)
             .populate({
                 path: 'preferenses.favouriteSpots',
-                select: 'name'
+                select: 'name updatedAt'
             })
             .lean()
             .exec()
@@ -260,7 +261,7 @@ UserSchema.statics = {
                 if (data) {
                     return {
                         spots: data.preferenses.favouriteSpots,
-                        timestamp: data.timestamp
+                        timestamp: data.updatedAt
                     };
                 }
                 return null;

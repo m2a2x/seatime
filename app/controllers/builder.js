@@ -54,7 +54,7 @@ exports.test = asyncf(function* (req, res) {
   spotsDb = JSON.parse(file);
 
   q = tress(function(job, done) {
-    var item,
+    let item,
         id;
 
     switch (job.type) {
@@ -62,7 +62,7 @@ exports.test = asyncf(function* (req, res) {
         id = idIncContinent++;
         item = new Continent(mswd.mapContinent(job, id));
         item.save(function (err) {
-          var countries = _.remove(countriesDb, function (item) {
+          let countries = _.remove(countriesDb, function (item) {
             return item.continent_id === job._id;
           });
           if (err) {
@@ -82,7 +82,7 @@ exports.test = asyncf(function* (req, res) {
           if (err) {
             console.log(err);
           }
-          var spots = _.remove(spotsDb, function (item) {
+          let spots = _.remove(spotsDb, function (item) {
             return item.country_id === job._id;
           });
 
@@ -124,44 +124,55 @@ exports.test = asyncf(function* (req, res) {
   });
 });
 
-exports.uploadForecast = asyncf(function* (mswdId, spotId) {
-    var q,
+exports.uploadForecast = asyncf(function* (mswdId, spotId, start) {
+    let q,
         idName = 'forecastId',
         idInc,
         items,
+        forecastModels = [],
         doc = Forecast;
 
     idInc = yield Counter.getIncreament(idName);
     items = yield crawler.getForecast(mswdId);
 
-    q = tress(asyncf(function* (job, done) {
-        var item,
-            id,
-            data;
-        id = idInc++;
-
-        data = mswd.mapForecast(job, id, spotId);
-        item = new doc(data);
-        item.save(function (err) {
-            if (err) {
-                console.log(err);
-            }
-            done();
-        });
-    }), 10);
+    q = tress(function (job, done) {
+        const id = idInc++;
+        done(null, new doc(mswd.mapForecast(job, id, spotId)));
+    }, 10);
 
     q.push(items);
 
+    q.success = function (data) {
+        forecastModels.push(data);
+    };
+
     return new Promise(function(resolve){
-        q.drain = asyncf(function * () {
-            yield Counter.setIncreament(idName, idInc);
-            resolve(true);
+        q.drain = asyncf(function* () {
+            yield Forecast.collection.remove({
+                '_spot': spotId,
+                'meta.timestamp': {$gt: start}
+            });
+
+            Forecast.collection.insert(forecastModels, asyncf(function* (err, docs) {
+                if (err) {
+                    console.log('Forecast collection is not updated');
+                    resolve(false);
+                    return;
+                }
+
+                console.log('Forecast collection successfully updated for spotId = ' + spotId);
+
+                yield Spot.setUpdated(spotId, start);
+                Counter.setIncreament(idName, idInc).then(() => {
+                    resolve(true);
+                });
+            }));
         });
     });
 });
 
 exports.uploadCondition = asyncf(function* (mswdId, spotId, start, end) {
-    var q,
+    let q,
         idName = 'conditionId',
         idInc,
         items,
@@ -171,9 +182,8 @@ exports.uploadCondition = asyncf(function* (mswdId, spotId, start, end) {
     items = yield crawler.getCondition(mswdId, start, end);
 
     q = tress(asyncf(function* (job, done) {
-        var item,
-            id,
-            data;
+        let item, id, data;
+
         id = idInc++;
         data = mswd.mapCondition(job, id, spotId);
         item = new doc(data);

@@ -1,33 +1,25 @@
-'use strict';
-
 /**
  * Module dependencies.
  */
+'use strict';
 
 const path = require('path');
 
 const development = require('./env/development');
 const production = require('./env/production');
-
-const notifier = {
-  service: 'postmark',
-  APN: false,
-  email: true, // true
-  actions: ['comment'],
-  tplPath: path.join(__dirname, '..', 'app/mailer/templates'),
-  key: 'POSTMARK_KEY'
-};
+const {daysToTime} = require('../app/utils/index');
 
 const defaults = {
-  root: path.join(__dirname, '..'),
-  notifier: notifier
+    root: path.join(__dirname, '..'),
+    forecastDataLifeTime: daysToTime(1)
 };
+
 
 /**
  * Expose
  */
 
 module.exports = {
-  development: Object.assign({}, development, defaults),
-  production: Object.assign({}, production, defaults)
+    development: Object.assign({}, development, defaults),
+    production: Object.assign({}, production, defaults),
 }[process.env.NODE_ENV || 'development'];

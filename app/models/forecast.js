@@ -48,6 +48,7 @@ const ForecastSchema = new Schema({
   swell: String, /** TO PARSE */
   wind: String, /** TO PARSE */
   condition: String, /** TO PARSE */
+  
   createdAt  : { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
 }, {

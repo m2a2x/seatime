@@ -14,23 +14,35 @@ const Forecast = mongoose.model('Forecast');
 const Condition = mongoose.model('Condition');
 
 const { uploadForecast, uploadCondition } = require('../controllers/builder');
-const { getToday, time } = require('../utils');
+const { getToday, getNow, time } = require('../utils');
+
+const { forecastDataLifeTime } = require('../../config');
 
 
 const getForecast = async(function*(spotId, end) {
-    let callData,
-        spot;
-
-    callData = yield Forecast.get(spotId, end);
-    if (callData) {
-        return callData;
-    }
+    let callData;
+    let start = getNow();
 
     // get spot
-    spot = yield Spot.get(spotId);
-    yield uploadForecast(spot.meta.mswd.id, spotId);
+    const spot = yield Spot.get(spotId);
+
+    /** need to refredh forecast in special period */
+    if (start <= spot.updatedAt + forecastDataLifeTime) {
+        callData = yield Forecast.get(spotId, end);
+
+        if (callData) {
+            return callData;
+        }
+    }
+
+    let isUploaded = yield uploadForecast(spot.meta.mswd.id, spotId, start);
+
+    if (!isUploaded) {
+        return null;
+    }
 
     callData = yield Forecast.get(spotId, end);
+
     if (callData) {
         return callData;
     }
@@ -39,16 +51,15 @@ const getForecast = async(function*(spotId, end) {
 
 const getCondition = async(function*(spotId, end) {
     let callData,
-        spot,
         startDate,
         endDate;
 
+    const spot = yield Spot.get(spotId);
     callData = yield Condition.get(spotId, end);
+
     if (callData) {
         return callData;
     }
-
-    spot = yield Spot.get(spotId);
 
     startDate = time(getToday());
     endDate = new Date(getToday());
@@ -83,8 +94,9 @@ const getSpotsEnvironment = function(req, res) {
     let spots;
 
     if (params.spots) {
-        spots = _.reduce(params.spots.split(','), function (result, id) {
+        spots = _.reduce(params.spots.split(','), (result, id) => {
             id = _.parseInt(id.trim());
+
             if (id) {
                 result.push(id);
             }
@@ -99,9 +111,9 @@ const loadEnvironment = function(spots, endDate) {
     let result = {};
 
     const q = tress(async(function*(id, done) {
-        let forecast = yield getForecast(id, endDate),
-            condition = yield getCondition(id, endDate),
-            envData = {};
+        let forecast = yield getForecast(id, endDate);
+        let condition = yield getCondition(id, endDate);
+        let envData = {};
 
         envData[id] = {
             forecast: forecast,

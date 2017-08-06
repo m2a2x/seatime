@@ -71,7 +71,7 @@ exports.get = function (req, response) {
  */
 
 exports.getCondition = function (spotId, start, end) {
-    var url = getUrl('tide');
+    const url = getUrl('tide');
 
     const params = {
         spot_id: spotId,
@@ -79,8 +79,8 @@ exports.getCondition = function (spotId, start, end) {
         end: end
     };
 
-    return new Promise(function (resolve, reject) {
-        needle.request('get', url, getParams(params), function (err, res) {
+    return new Promise((resolve, reject) => {
+        needle.request('get', url, getParams(params), (err, res) => {
             if (err) {
                 reject(err);
             } else {
@@ -100,8 +100,8 @@ exports.getForecast = function (spotId) {
         spot_id: spotId
     };
 
-    return new Promise(function (resolve, reject) {
-        needle.request('get', url, getParams(params), function (err, res) {
+    return new Promise((resolve, reject) => {
+        needle.request('get', url, getParams(params), (err, res) => {
             if (err) {
                 reject(err);
             } else {
@@ -117,7 +117,7 @@ exports.getForecast = function (spotId) {
 
 function getContinents(q, data, collection) {
     const url = getUrl('country');
-    _.each(data, function (continent) {
+    _.each(data, (continent) => {
         collection[continent._id] = continent;
 
         // next level call
@@ -137,9 +137,9 @@ function getCountries(q, data, path, collection) {
     const parent_id = _.parseInt(myRegexp.exec(path)[1]);
     const url = getUrl('spot');
 
-    _.each(data, function (region) {
+    _.each(data, (region) => {
 
-        _.each(region.countries, function (country) {
+        _.each(region.countries, (country) => {
             collection[country._id] = country;
             country.region_id = region._id;
             country.continent_id = parent_id;
@@ -161,7 +161,7 @@ function getSpots(data, path, collection) {
     const myRegexp = /(?:^|\&)country_id=(.*?)(?:\&|$)/g;
     const parent_id = _.parseInt(myRegexp.exec(path)[1]);
 
-    _.each(data, function (spot) {
+    _.each(data, (spot) => {
         spot.country_id = parent_id;
         collection.push(spot);
     });
