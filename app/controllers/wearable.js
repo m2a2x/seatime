@@ -1,22 +1,20 @@
-/**
- * Module dependencies.
- */
 'use strict';
 
-const _ = require('lodash');
-const moment = require('moment');
 
 const mongoose = require('mongoose');
-const { wrap: asyncf } = require('co');
-const tress = require('tress');
-
 const Country = mongoose.model('Country');
 const Spot = mongoose.model('Spot');
 const User = mongoose.model('User');
 const Pair = mongoose.model('Pair');
 
+const _ = require('lodash');
+const moment = require('moment');
+const { wrap: asyncf } = require('co');
+const tress = require('tress');
+
+const SeaError = require('../libs/SeaError');
 const { loadEnvironment } = require('./spots');
-const { respondError } = require('../utils/index');
+
 
 const syncDevice = asyncf(function* (req, res) {
     let pair = yield Pair.getPair(req.body.pair);
@@ -31,9 +29,14 @@ const syncDevice = asyncf(function* (req, res) {
 
 });
 
-const pairDevice = asyncf(function*(req, res) {
+const pairDevice = asyncf(function*(req, res, next) {
     const timestamp = req.body.timestamp;
-    const endDate = moment().add(1, 'days').unix();
+    const endDate = _.parseInt(req.body.end) || moment().add(1, 'days').unix();
+
+    if (!req.body.uuid) {
+        return next(new SeaError('UUID required', 406));
+    }
+
     let isPaired = yield getPaired(req.body.uuid);
     let userData;
 
@@ -75,14 +78,18 @@ const getPaired = asyncf(function* (uuid) {
     return !!user;
 });
 
-const loadData = asyncf(function*(req, res) {
+const loadData = asyncf(function*(req, res, next) {
     const endDate = _.parseInt(req.body.end) || null;
     const spotId = _.parseInt(req.body.spot);
 
-    if (!spotId || !req.body.uuid) {
-        respondError(res, 404);
-        return;
+    if (!req.body.uuid) {
+        return next(new SeaError('UUID Reqoured.', 406));
     }
+
+    if (!spotId) {
+        return next(new SeaError('Requested spot not found.', 406));
+    }
+
     let isPaired = yield getPaired(req.body.uuid);
 
     if (!isPaired) {

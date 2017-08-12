@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Module dependencies
- */
-
 require('dotenv').config();
 
 const fs = require('fs');
@@ -44,7 +40,7 @@ function listen () {
 }
 
 function connect () {
-  var options = { server: { socketOptions: { keepAlive: 1 } } };
+  const options = { server: { socketOptions: { keepAlive: 1 } } };
   mongoose.Promise = global.Promise;
   return mongoose.connect(config.db, options).connection;
 }

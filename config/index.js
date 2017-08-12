@@ -1,19 +1,15 @@
-/**
- * Module dependencies.
- */
 'use strict';
 
 const path = require('path');
 
 const development = require('./env/development');
 const production = require('./env/production');
-const {daysToTime} = require('../app/utils/index');
+const { daysToTime } = require('../app/utils/index');
 
 const defaults = {
     root: path.join(__dirname, '..'),
     forecastDataLifeTime: daysToTime(1)
 };
-
 
 /**
  * Expose

@@ -3,25 +3,12 @@ const _ = require('lodash');
 
 module.exports = {
     parseStringToIds,
-    respondError,
     respondOrRedirect,
     getToday,
     daysToTime,
     time,
     getNow
 };
-
-function respondError(res, status) {
-    res.format({
-        json: () => {
-            let obj = {
-                isSuccesful: false
-            };
-            if (status) return res.status(status).json(obj);
-            res.json(obj);
-        }
-    });
-}
 
 function respondOrRedirect({req, res}, url = '/', obj = {}, flash) {
     res.format({

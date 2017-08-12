@@ -29,6 +29,9 @@ const fs = require('fs');
  */
 
 module.exports = function (app, passport) {
+    // create routes
+    const api = new express.Router();
+    const apiDevice = new express.Router();
 
     // Compression middleware (should be placed before express.static)
     app.use(compression({
@@ -80,10 +83,6 @@ module.exports = function (app, passport) {
         }
     }));
 
-    // create api router
-    var api = new express.Router();
-    var apiDevice = new express.Router();
-
 
     // CookieParser should be above session
     app.use(cookieParser());
@@ -125,6 +124,8 @@ module.exports = function (app, passport) {
     app.use('/node_modules', express.static(path.join(config.root, '/node_modules')));
     app.set('view engine', 'ejs');
     app.set('views', path.join(config.root, 'client'));
+
+    require(path.join(config.root, '/config/status'))([api, apiDevice]);
     app.use(function (req, res) {
         res.render('index', {
             MAP_API_KEY: process.env.GOOGLE_MAP
