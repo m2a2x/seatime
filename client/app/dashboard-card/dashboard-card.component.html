@@ -2,12 +2,12 @@
     <div class="spot-card__head">
         <div class="spot-card__head-primary">
             <div class="spot-card__swell-direction">
-                <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection.toLowerCase()}}">
+                <div class="compass-direction compass-direction--{{spot.todayForecast.swell.compassDirection | lowercase}}">
                     <span class="icon-arrow-up"></span>
                 </div>
             </div>
             <div class="spot-card__swell-height">
-                {{spot.todayForecast.swell.maxHeight || 'Flat'}}
+                {{spot.todayForecast.swell.height || 'Flat'}}
             </div>
             <div class="spot-card__swell-info">
                 <div class="spot-card__swell-rating" *ngIf="spot.todayForecast.rating">
@@ -50,7 +50,7 @@
                 {{spot.todayForecast.wind.speed}} {{spot.todayForecast.wind.unit}}
             </span>
             <span class="spot-card__wind-direction">
-                <span class="compass-direction compass-direction--{{spot.todayForecast.wind.compassDirection.toLowerCase()}}">
+                <span class="compass-direction compass-direction--{{spot.todayForecast.wind.compassDirection | lowercase}}">
                     <span class="icon-arrow-up"></span>
                 </span>
             </span>
