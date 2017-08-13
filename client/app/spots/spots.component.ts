@@ -7,6 +7,7 @@ import {MapProvider} from "../services/map.provider";
 import {APIService} from "../services/api.service";
 import {SmartinputDropdownDirective} from "../smartinput/smartinput.dropdown.directive";
 import {DataService} from "../services/data.service";
+import {AuthenticationService} from "../services/auth.service";
 
 type Reload = {
     spots: Spot[];
@@ -52,6 +53,7 @@ export class SpotsComponent implements OnInit {
                 public userService: UserService,
                 private apiService: APIService,
                 private dataService: DataService,
+                public authService: AuthenticationService,
                 private mapProvider: MapProvider,
                 private route: ActivatedRoute,
                 private router: Router) {
@@ -154,6 +156,8 @@ export class SpotsComponent implements OnInit {
         e.stopPropagation();
         let isRemove = spot.favourite;
         let action: string = isRemove ? 'removeFavouriteSpot' : 'addFavouriteSpot';
+
+        if (!this.authService.isLoggedIn()) { return; }
 
         this.apiService[action](spot._id)
             .then((response: any)=> {

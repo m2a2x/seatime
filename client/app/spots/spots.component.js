@@ -17,11 +17,13 @@ var map_provider_1 = require("../services/map.provider");
 var api_service_1 = require("../services/api.service");
 var smartinput_dropdown_directive_1 = require("../smartinput/smartinput.dropdown.directive");
 var data_service_1 = require("../services/data.service");
+var auth_service_1 = require("../services/auth.service");
 var SpotsComponent = (function () {
-    function SpotsComponent(userService, apiService, dataService, mapProvider, route, router) {
+    function SpotsComponent(userService, apiService, dataService, authService, mapProvider, route, router) {
         this.userService = userService;
         this.apiService = apiService;
         this.dataService = dataService;
+        this.authService = authService;
         this.mapProvider = mapProvider;
         this.route = route;
         this.router = router;
@@ -113,6 +115,9 @@ var SpotsComponent = (function () {
         e.stopPropagation();
         var isRemove = spot.favourite;
         var action = isRemove ? 'removeFavouriteSpot' : 'addFavouriteSpot';
+        if (!this.authService.isLoggedIn()) {
+            return;
+        }
         this.apiService[action](spot._id)
             .then(function (response) {
             if (response.isSuccessful) {
@@ -152,6 +157,7 @@ SpotsComponent = __decorate([
     __metadata("design:paramtypes", [user_service_1.UserService,
         api_service_1.APIService,
         data_service_1.DataService,
+        auth_service_1.AuthenticationService,
         map_provider_1.MapProvider,
         router_1.ActivatedRoute,
         router_1.Router])
