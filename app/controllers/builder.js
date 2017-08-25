@@ -126,18 +126,14 @@ exports.test = asyncf(function* (req, res) {
 
 exports.uploadForecast = asyncf(function* (mswdId, spotId, start) {
     let q,
-        idName = 'forecastId',
-        idInc,
         items,
         forecastModels = [],
         doc = Forecast;
 
-    idInc = yield Counter.getIncreament(idName);
     items = yield crawler.getForecast(mswdId);
 
     q = tress(function (job, done) {
-        const id = idInc++;
-        done(null, new doc(mswd.mapForecast(job, id, spotId)));
+        done(null, new doc(mswd.mapForecast(job, spotId)));
     }, 10);
 
     q.push(items);
@@ -163,29 +159,24 @@ exports.uploadForecast = asyncf(function* (mswdId, spotId, start) {
                 console.log('Forecast collection successfully updated for spotId = ' + spotId);
 
                 yield Spot.setUpdated(spotId, start);
-                Counter.setIncreament(idName, idInc).then(() => {
-                    resolve(true);
-                });
             }));
         });
     });
 });
 
-exports.uploadCondition = asyncf(function* (mswdId, spotId, start, end) {
+exports.uploadCondition = asyncf(function* (spot, start, end) {
     let q,
-        idName = 'conditionId',
-        idInc,
         items,
+        timezone,
         doc = Condition;
 
-    idInc = yield Counter.getIncreament(idName);
-    items = yield crawler.getCondition(mswdId, start, end);
+
+    items = yield crawler.getCondition(spot.meta.mswd.id, start, end);
+    timezone = spot.timezone;
 
     q = tress(asyncf(function* (job, done) {
-        let item, id, data;
-
-        id = idInc++;
-        data = mswd.mapCondition(job, id, spotId);
+        let item, data;
+        data = mswd.mapCondition(job, spot._id, timezone);
         item = new doc(data);
         item.save(function (err) {
             if (err) {
@@ -199,7 +190,6 @@ exports.uploadCondition = asyncf(function* (mswdId, spotId, start, end) {
 
     return new Promise(function(resolve){
         q.drain = asyncf(function * () {
-            yield Counter.setIncreament(idName, idInc);
             resolve(true);
         });
     });

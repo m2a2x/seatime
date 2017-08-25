@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const {timeToUnixByTimezone} = require('../app/utils');
 
 exports.mapContinent = function(item, id) {
     var _item = new ItemWrapper(item);
@@ -61,10 +62,9 @@ exports.mapSpot = function (item, id, parentId) {
     };
 };
 
-exports.mapForecast = function(item, id, parentId) {
-    var _item = new ItemWrapper(item);
+exports.mapForecast = function(item, parentId) {
+    let _item = new ItemWrapper(item);
     return {
-        _id: id,
         _spot: parentId,
 
         meta: {
@@ -100,18 +100,20 @@ exports.mapForecast = function(item, id, parentId) {
     };
 };
 
-exports.mapCondition = function (item, id, parentId) {
-    var _item = new ItemWrapper(item);
+exports.mapCondition = function (item, parentId, timezone) {
+    let _item = new ItemWrapper(item);
     return {
-        _id: id,
         _spot: parentId,
-        tide: _item.get('tide'),
+        tide: _.map(_item.get('tide'), (tide) => {
+            tide.timestamp =  timeToUnixByTimezone(tide.timestamp, timezone);
+            return tide;
+        }),
         sunriseTwilight: _item.get('sunriseTwilight'),
         sunrise: _item.get('sunrise'),
         sunsetTwilight: _item.get('sunsetTwilight'),
         sunset: _item.get('sunset'),
         meta: {
-            timestamp: _item.get('timestamp'),
+            timestamp: timeToUnixByTimezone(_item.get('timestamp'), timezone),
             mswd: {
                 images: {
                     full: _item.get('images.full')
@@ -124,19 +126,17 @@ exports.mapCondition = function (item, id, parentId) {
 };
 
 function ItemWrapper(item) {
-    var _this = this;
+    let _this = this;
 
     _.extend(_this, {
         get: function (key) {
-            return _.reduce(key.split('.'), function (result, key) {
+            return _.reduce(key.split('.'), (result, key) => {
                 if (result) {
                     return result[key] || null;
                 }
                 return result;
             }, item);
         },
-        toString: function (key) {
-            return JSON.stringify(this.get(key));
-        }
+        toString: (key) => JSON.stringify(this.get(key))
     });
 }

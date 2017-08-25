@@ -66,7 +66,7 @@ const getCondition = async(function*(spotId, end) {
     endDate.setMonth(endDate.getMonth() + 1);
     endDate = time(endDate.setDate(endDate.getDate() - 1));
 
-    yield uploadCondition(spot.meta.mswd.id, spot._id, startDate, endDate);
+    yield uploadCondition(spot, startDate, endDate);
     callData = yield Condition.get(spotId, end);
 
     if (callData) {

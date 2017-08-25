@@ -47,7 +47,7 @@ const pairDevice = asyncf(function*(req, res, next) {
         return;
     }
 
-    userData = yield User.getFavouriteByUuid(req.body.uuid, timestamp);
+    userData = yield getUserData(req.body.uuid, timestamp);
     if (!userData) {
         return res.json({
             result: null
@@ -113,6 +113,19 @@ function mapEnvironment(fields, spotId) {
 
     return fields;
 }
+
+const getUserData = asyncf(function* (uuid, timestamp) {
+    let userData = yield User.getFavouriteByUuid(uuid, timestamp);
+    if (userData) {
+        return null;
+    }
+    userData.spots = _.map(userData.spots, (spot) => {
+        _.merge(spot, spot.meta);
+        delete spot.meta;
+        return spot;
+    });
+    return userData;
+});
 
 module.exports = {
     syncDevice,

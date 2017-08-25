@@ -253,7 +253,7 @@ UserSchema.statics = {
         return this.findOne(criteria)
             .populate({
                 path: 'preferenses.favouriteSpots',
-                select: 'name updatedAt'
+                select: 'name updatedAt meta.timezone'
             })
             .lean()
             .exec()

@@ -15,7 +15,6 @@ const Schema = mongoose.Schema;
  */
 
 const ForecastSchema = new Schema({
-  _id: Number,
   _spot: { type: Number, ref: 'Spot' },
 
   meta: {
@@ -77,25 +76,36 @@ ForecastSchema
 ForecastSchema
     .virtual('swellData')
     .get(function () {
+        const fields = ['height', 'period', 'power', 'compassDirection'];
         let json = JSON.parse(this.swell);
-        let swellData = _.pick(json,
-            [
-                'compassDirection',
-                'period',
-                'unit'
-            ]
-        );
-        swellData.power = json.components.combined.power;
-        swellData.height = Math.round(json.components.combined.height) || 0;
-        return swellData;
+        let swell = {};
+
+        _.each(['primary', 'secondary', 'combined'], (k) => {
+            if (json.components[k]) {
+                swell[k] = _.pick(json.components[k], fields);
+            } else {
+                swell[k] = _.pick(json, fields);
+            }
+        });
+
+        _.each(swell, (s, k) => {
+            if (!s.height) {
+                swell[k].height = json.absHeight;
+            }
+            s.height = Math.round(s.height);
+        });
+
+        swell.unit = json.unit;
+
+        return swell;
     });
 
 ForecastSchema
     .virtual('windData')
     .get(function () {
-        const wind = JSON.parse(this.wind);
-        return _.pick(
-            wind,
+        const windData = JSON.parse(this.wind);
+        let wind = _.pick(
+            windData,
             [
                 'speed',
                 'compassDirection',
@@ -103,6 +113,16 @@ ForecastSchema
                 'stringDirection'
             ]
         );
+        if (wind.stringDirection) {
+            if (wind.stringDirection.toLowerCase().indexOf('onshore')) {
+                wind.direction = 'On';
+            } else if(wind.stringDirection.toLowerCase().indexOf('offshore')) {
+                wind.direction = 'Off';
+            } else {
+                wind.direction = 'Cross';
+            }
+        }
+        return wind;
     });
 
 
@@ -140,8 +160,6 @@ ForecastSchema.statics = {
     }
 };
 
-
-
 mongoose.model('Forecast', ForecastSchema);
 
 /*
@@ -177,13 +195,13 @@ mongoose.model('Forecast', ForecastSchema);
                   height: Number,
                       absHeight: Number,
                       period: Number,
+                      compassDirection: String,
+                      isOffshore: Boolean,
                       windSeaFraction: Number,
                       power: Number,
                       direction: Number,
                       trueDirection: Number,
                       directionalSpread: Number,
-                      compassDirection: String,
-                      isOffshore: Boolean,
                       type: Number,
                       absBreakingHeight: Number
               },

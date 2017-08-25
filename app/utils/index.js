@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment-timezone');
 const _ = require('lodash');
 
 module.exports = {
@@ -7,7 +7,8 @@ module.exports = {
     getToday,
     daysToTime,
     time,
-    getNow
+    getNow,
+    timeToUnixByTimezone
 };
 
 function respondOrRedirect({req, res}, url = '/', obj = {}, flash) {
@@ -34,6 +35,20 @@ function time(time) {
 
 function daysToTime(days) {
     return days * 24 * 60 * 60;
+}
+
+function timeToUnixByTimezone(time, timezone) {
+    // get a moment representing the current time
+    let now = moment.unix(time).utcOffset(0);
+    // create a new moment based on the original one
+    let another = now.clone();
+
+    // change the time zone of the new moment
+    another.tz(timezone); // or whatever time zone you desire
+
+    // shift the moment by the difference in offsets
+    another.add(now.utcOffset() - another.utcOffset(), 'minutes');
+    return another.unix();
 }
 
 function parseStringToIds(strIds) {

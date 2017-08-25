@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 const { getToday, time } = require('../utils');
 
 /**
- * Port Schema
+ * Condition Port Sub Schema
  */
 
 const PortSchema = new Schema({
@@ -18,33 +18,44 @@ const PortSchema = new Schema({
     lon: Number,
     distance: Number,
     unit: String
-});
+}, { _id : false });
+
+/**
+ * Condition Tide Sub Schema
+ */
+
+const TideSchema = new Schema({
+    shift: Number,
+    state: String,
+    timestamp: Number
+}, { _id : false });
+
+/**
+ * Condition Meta Sub Schema
+ */
+
+const MetaSchema = new Schema({
+    timestamp: Number,
+    mswd: {
+        images: {
+            full: String
+        }
+    },
+    unit: String
+}, { _id : false });
 
 /**
  * Condition Schema
  */
 
 const ConditionSchema = new Schema({
-    _id: Number,
     _spot: { type: Number, ref: 'Spot' },
-    tide: [{
-        shift: Number,
-        state: String,
-        timestamp: Number
-    }],
+    tide: [TideSchema],
     sunriseTwilight: Number,
     sunrise: Number,
     sunsetTwilight: Number,
     sunset: Number,
-    meta: {
-        timestamp: Number,
-        mswd: {
-            images: {
-                full: String
-            }
-        },
-        unit: String
-    },
+    meta: MetaSchema,
     port: PortSchema,
     createdAt: { type : Date, default : Date.now }
 });
@@ -56,16 +67,14 @@ const ConditionSchema = new Schema({
 
 ConditionSchema.statics = {
     get: function (spotId, endDate) {
-        var dt = time(getToday()),
-            fields = ['tide'],
+        let dt = time(getToday()),
             comparator = {$gt: dt};
 
         if (endDate && endDate > dt) {
             comparator['$lt'] = endDate;
         }
 
-        return this.find({_spot: spotId, 'meta.timestamp': comparator})
-            .select(fields)
+        return this.find({_spot: spotId, 'meta.timestamp': comparator}, '-_id tide')
             .lean()
             .then(function (data) {
                 if (data.length) {

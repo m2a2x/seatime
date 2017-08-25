@@ -4,8 +4,6 @@
  * Module dependencies.
  */
 
-const moment = require('moment');
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -41,8 +39,20 @@ const SpotSchema = new Schema({
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Number, default: 0 }
+}, {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
 });
 
+SpotSchema
+    .virtual('timezone')
+    .get(function () {
+        return this.meta.timezone;
+    });
 
 /**
  * Statics
@@ -66,6 +76,14 @@ SpotSchema.statics = {
 
     get: function (id) {
         return this.findOne({_id: id});
+    },
+
+    getTimezone: function (id) {
+        return this.findOne({_id: id})
+            .exec()
+            .then((data) => {
+                return data.timezone;
+            });
     },
 
     getMany: function (ids) {
