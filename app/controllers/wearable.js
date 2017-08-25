@@ -116,7 +116,7 @@ function mapEnvironment(fields, spotId) {
 
 const getUserData = asyncf(function* (uuid, timestamp) {
     let userData = yield User.getFavouriteByUuid(uuid, timestamp);
-    if (userData) {
+    if (!userData) {
         return null;
     }
     userData.spots = _.map(userData.spots, (spot) => {
