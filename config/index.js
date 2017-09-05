@@ -8,6 +8,7 @@ const { daysToTime } = require('../app/utils/index');
 
 const defaults = {
     root: path.join(__dirname, '..'),
+    deprecateUnixTimeDifference: 6 * 60 * 60,
     forecastDataLifeTime: daysToTime(1)
 };
 

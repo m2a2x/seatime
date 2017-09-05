@@ -13,7 +13,9 @@ const { wrap: asyncf } = require('co');
 const tress = require('tress');
 
 const SeaError = require('../libs/SeaError');
+const { getNow } = require('../utils/index');
 const { loadEnvironment } = require('./spots');
+const { deprecateUnixTimeDifference } = require('../../config');
 
 
 const syncDevice = asyncf(function* (req, res) {
@@ -30,8 +32,9 @@ const syncDevice = asyncf(function* (req, res) {
 });
 
 const pairDevice = asyncf(function*(req, res, next) {
-    const timestamp = req.body.timestamp;
+    const startDate = _.parseInt(req.body.deviceTime) || null;
     const endDate = _.parseInt(req.body.end) || moment().add(1, 'days').unix();
+    const timestamp = req.body.timestamp;
 
     if (!req.body.uuid) {
         return next(new SeaError('UUID required', 406));
@@ -48,6 +51,7 @@ const pairDevice = asyncf(function*(req, res, next) {
     }
 
     userData = yield getUserData(req.body.uuid, timestamp);
+    checkTime(startDate, res);
     if (!userData) {
         return res.json({
             result: null
@@ -79,11 +83,12 @@ const getPaired = asyncf(function* (uuid) {
 });
 
 const loadData = asyncf(function*(req, res, next) {
+    const startDate = _.parseInt(req.body.deviceTime) || null;
     const endDate = _.parseInt(req.body.end) || null;
     const spotId = _.parseInt(req.body.spot);
 
     if (!req.body.uuid) {
-        return next(new SeaError('UUID Reqoured.', 406));
+        return next(new SeaError('UUID Required.', 406));
     }
 
     if (!spotId) {
@@ -91,7 +96,7 @@ const loadData = asyncf(function*(req, res, next) {
     }
 
     let isPaired = yield getPaired(req.body.uuid);
-
+    checkTime(startDate, res);
     if (!isPaired) {
         pairDevice(req, res);
         return;
@@ -112,6 +117,14 @@ function mapEnvironment(fields, spotId) {
     });
 
     return fields;
+}
+
+function checkTime(timestamp, res) {
+    if (Math.abs(timestamp - getNow()) > deprecateUnixTimeDifference) {
+        res.status(206);
+        return false;
+    }
+    return true;
 }
 
 const getUserData = asyncf(function* (uuid, timestamp) {
